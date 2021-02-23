@@ -20,7 +20,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -34,10 +33,5 @@ public class HomeActivity extends AppCompatActivity {
         Intent loginIntent = new Intent( this, LoginActivity.class);
         mAuth.signOut();
         startActivity(loginIntent);
-//        googleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-//            public void onComplete(Task<Void> task) {
-//                startActivity(loginIntent);
-//            }
-//        });
     }
 }
