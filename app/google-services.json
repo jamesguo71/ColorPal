@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "209218954678",
+    "project_id": "calm-axis-304505",
+    "storage_bucket": "calm-axis-304505.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209218954678:android:30fb4685abcd0f17464d17",
+        "android_client_info": {
+          "package_name": "com.cs65.colorpal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209218954678-fvn8uoua9bqvmofhpdu12aboerh1lles.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cs65.colorpal",
+            "certificate_hash": "024f01f2e7f1848930829826e427d341e86f6a7a"
+          }
+        },
+        {
+          "client_id": "209218954678-3nnph8pfpl9oln7ncv7j0o0clfej5p8h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs1x8SWvcQmTa32UrY_uyKlsjzOgZrc4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209218954678-3nnph8pfpl9oln7ncv7j0o0clfej5p8h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
