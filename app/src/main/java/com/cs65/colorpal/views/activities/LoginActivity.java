@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initializeSignInButton(){
-        SignInButton signInButton = findViewById(R.id.google_sign_in_button);
+        MaterialButton signInButton = findViewById(R.id.google_sign_in_button);
         signInButton.setOnClickListener(v -> signIn());
     }
 
@@ -82,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signInWithAuthCredential(AuthCredential authCredential){
         loginViewModel.signInWithGoogle(authCredential);
         loginViewModel.authenticatedUserLiveData.observe(this, authenticatedUser ->{
-            Intent homeIntent = new Intent(this, HomeFragment.class);
+            Intent homeIntent = new Intent(this, MainActivity.class);
             startActivity(homeIntent);
         });
     }
