@@ -1,4 +1,4 @@
-package com.cs65.colorpal.view;
+package com.cs65.colorpal.views.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +14,8 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.viewmodel.PaletteViewModel;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
+import com.cs65.colorpal.views.adapter.SwatchListAdapter;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
@@ -23,7 +24,7 @@ import java.util.List;
 public class InspectActivity extends AppCompatActivity {
     private PaletteViewModel paletteViewModel;
     private RecyclerView swatchesView;
-    private  SwatchListAdapter swatchesViewAdapter;
+    private SwatchListAdapter swatchesViewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

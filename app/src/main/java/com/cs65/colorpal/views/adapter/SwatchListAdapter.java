@@ -1,4 +1,4 @@
-package com.cs65.colorpal.view;
+package com.cs65.colorpal.views.adapter;
 
 import android.content.res.Resources;
 import android.view.LayoutInflater;

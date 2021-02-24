@@ -1,4 +1,4 @@
-package com.cs65.colorpal.view;
+package com.cs65.colorpal.views.activities;
 
 import android.os.Bundle;
 import android.util.Log;
