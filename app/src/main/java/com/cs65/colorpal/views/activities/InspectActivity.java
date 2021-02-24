@@ -1,10 +1,9 @@
-package com.cs65.colorpal.view;
+package com.cs65.colorpal.views.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.viewmodel.PaletteViewModel;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
 
 public class InspectActivity extends AppCompatActivity {
     private static final int DEFAULT_COLOR = 0;
