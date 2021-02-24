@@ -1,4 +1,4 @@
-package com.cs65.colorpal.repos;
+package com.cs65.colorpal.data;
 
 import android.util.Log;
 

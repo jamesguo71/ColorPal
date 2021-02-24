@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.views.fragments.LibraryFragment;
+import com.cs65.colorpal.views.fragments.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 openFragment(libraryFragment);
                 return true;
             case R.id.settings_button:
+                SettingsFragment settingsFragment = new SettingsFragment();
+                openFragment(settingsFragment);
                 return true;
         }
         return false;

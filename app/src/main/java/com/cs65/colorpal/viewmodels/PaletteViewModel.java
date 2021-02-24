@@ -1,4 +1,4 @@
-package com.cs65.colorpal.viewmodel;
+package com.cs65.colorpal.viewmodels;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

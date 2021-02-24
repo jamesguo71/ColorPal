@@ -4,7 +4,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import com.cs65.colorpal.models.User;
-import com.cs65.colorpal.repos.LoginRepository;
+import com.cs65.colorpal.data.LoginRepository;
 import com.google.firebase.auth.AuthCredential;
 
 public class LoginViewModel extends AndroidViewModel {
