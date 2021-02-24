@@ -2,8 +2,12 @@ package com.cs65.colorpal.views.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,16 +27,4 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         return view;
     }
-
-//    public void onStart() {
-//        super.onStart();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        Log.d("papelog", String.valueOf(currentUser));
-//    }
-//
-//    public void signOut(View v) {
-//        Intent loginIntent = new Intent( this, LoginActivity.class);
-//        mAuth.signOut();
-//        startActivity(loginIntent);
-//    }
 }
