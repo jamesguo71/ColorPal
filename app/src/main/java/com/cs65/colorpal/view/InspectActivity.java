@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -13,13 +11,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodel.PaletteViewModel;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+
+import java.util.List;
 
 public class InspectActivity extends AppCompatActivity {
-    private static final int DEFAULT_COLOR = 0;
     private PaletteViewModel paletteViewModel;
+    private RecyclerView swatchesView;
+    private  SwatchListAdapter swatchesViewAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class InspectActivity extends AppCompatActivity {
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
 
         ImageView imageView = findViewById(R.id.img);
+        swatchesView = findViewById(R.id.colors);
 
         paletteViewModel.getSelectedImage().observe(this, new Observer<Uri>() {
             @Override
@@ -50,20 +55,13 @@ public class InspectActivity extends AppCompatActivity {
     }
 
     private void addSwatches(Palette palette) {
-        View dominantView = findViewById(R.id.dominant);
-        View vibrantView = findViewById(R.id.vibrant);
-        View darkVibrantView = findViewById(R.id.dark_vibrant);
-        View lightVibrantView = findViewById(R.id.light_vibrant);
-        View mutedView = findViewById(R.id.muted);
-        View darkMutedView = findViewById(R.id.dark_muted);
-        View lightMutedView = findViewById(R.id.light_muted);
-
-        dominantView.setBackgroundColor(palette.getDominantColor(DEFAULT_COLOR));
-        vibrantView.setBackgroundColor(palette.getVibrantColor(DEFAULT_COLOR));
-        darkVibrantView.setBackgroundColor(palette.getDarkVibrantColor(DEFAULT_COLOR));
-        lightVibrantView.setBackgroundColor(palette.getLightVibrantColor(DEFAULT_COLOR));
-        mutedView.setBackgroundColor(palette.getMutedColor(DEFAULT_COLOR));
-        darkMutedView.setBackgroundColor(palette.getDarkMutedColor(DEFAULT_COLOR));
-        lightMutedView.setBackgroundColor(palette.getLightMutedColor(DEFAULT_COLOR));
+        List<Palette.Swatch> swatches = palette.getSwatches();
+        if (!swatches.isEmpty()) {
+            swatchesViewAdapter = new SwatchListAdapter(swatches);
+            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+            layoutManager.setFlexDirection(FlexDirection.ROW);
+            swatchesView.setLayoutManager(layoutManager);
+            swatchesView.setAdapter(swatchesViewAdapter);
+        }
     }
 }
