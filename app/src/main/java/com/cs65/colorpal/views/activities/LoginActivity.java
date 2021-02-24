@@ -1,4 +1,4 @@
-package com.cs65.colorpal.views;
+package com.cs65.colorpal.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cs65.colorpal.HomeActivity;
+import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.acvitity_login);
+        setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
         initializeSignInButton();
         initializeLoginViewModel();
@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     private void signInWithAuthCredential(AuthCredential authCredential){
         loginViewModel.signInWithGoogle(authCredential);
         loginViewModel.authenticatedUserLiveData.observe(this, authenticatedUser ->{
-            Intent homeIntent = new Intent(this, HomeActivity.class);
+            Intent homeIntent = new Intent(this, HomeFragment.class);
             startActivity(homeIntent);
         });
     }

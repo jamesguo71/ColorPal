@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">ColorPal</string>
-    <string name="sign_out">Sign Out</string>
     <string name="client_id">209218954678-84clv80qb4auecj1ug9815b9f2k0i6sc.apps.googleusercontent.com</string>
+    <string name="home">Home</string>
+    <string name="my_palettes">My Palettes</string>
+    <string name="settings">Settings</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
