@@ -11,22 +11,31 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONArray;
+
 public class HomeFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient googleSignInClient;
-
     private View view;
+    private PaletteViewModel paletteViewModel;
+    private JSONArray palettes;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_home, container, false);
-        mAuth = FirebaseAuth.getInstance();
+        initializeVariables();
         return view;
+    }
+
+    public void initializeVariables(){
+        paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
+        palettes = paletteViewModel.getHomePagePalettes();
+        Log.d("papelog", String.valueOf(palettes));
     }
 }

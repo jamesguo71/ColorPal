@@ -7,15 +7,15 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.palette.graphics.Palette;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.data.PaletteRepo;
+
+import org.json.JSONArray;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -28,10 +28,25 @@ public class PaletteViewModel extends AndroidViewModel {
     private CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<Palette> extractedColorPaletteData = new MutableLiveData<>();
     private MutableLiveData<Uri> selectedImage = new MutableLiveData<>();
+    public JSONArray homePagePalettes;
 
     public PaletteViewModel(Application application) {
         super(application);
         paletteRepo = new PaletteRepo(application);
+        fetchHomePagePalettes();
+    }
+
+    public void createNew(Uri uri) throws IOException {
+        Bitmap bitmap = convertUriToBitmap(uri);
+        paletteRepo.createNew(bitmap);
+    }
+
+    private Bitmap convertUriToBitmap(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor = getApplication().getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap img = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return img;
     }
 
     public void extractColorPalette(Bitmap bitmap) {
@@ -54,17 +69,12 @@ public class PaletteViewModel extends AndroidViewModel {
         return selectedImage;
     }
 
-    public void createNew(Uri uri) throws IOException {
-        Bitmap bitmap = convertUriToBitmap(uri);
-        paletteRepo.createNew(bitmap);
+    public JSONArray getHomePagePalettes(){
+        return homePagePalettes;
     }
 
-    private Bitmap convertUriToBitmap(Uri uri) throws IOException {
-        ParcelFileDescriptor parcelFileDescriptor = getApplication().getContentResolver().openFileDescriptor(uri, "r");
-        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-        Bitmap img = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-        parcelFileDescriptor.close();
-        return img;
+    public void fetchHomePagePalettes(){
+        homePagePalettes = paletteRepo.fetchHomePagePalettes();
     }
 
     public void setSelectedImage(Uri photoURI) throws IOException {

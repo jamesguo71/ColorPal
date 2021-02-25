@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 public class ColourLoversService {
 
@@ -22,26 +23,27 @@ public class ColourLoversService {
  */
     private RequestQueue requestQueue;
     private static final String LOG_TAG =  "ColourLoversService";
-    private static final String apiUrl = "https://www.colourlovers.com/api/palettes";
+    private static final String apiUrl = "https://www.colourlovers.com/api/palettes?format=json";
+    private JSONArray palettes;
 
     public ColourLoversService(Context context){
         requestQueue = Volley.newRequestQueue(context);
+        palettes = new JSONArray();
     }
 
-    public void fetchPalettes(){
+    public JSONArray fetchPalettes(){
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, apiUrl, null,
                         new Response.Listener<JSONArray>() {
 
                     public void onResponse(JSONArray response) {
-                        Log.d("papelog", String.valueOf(response));
+                        palettes = response;
                     }
                 }, new Response.ErrorListener() {
-
                     public void onErrorResponse(VolleyError error) {
-
                     }
                 });
         requestQueue.add(jsonArrayRequest);
+        return palettes;
     }
 }

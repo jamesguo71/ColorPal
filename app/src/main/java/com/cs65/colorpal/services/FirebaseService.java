@@ -74,7 +74,6 @@ public class FirebaseService implements Runnable{
                 if (!task.isSuccessful()) {
                     throw task.getException();
                 }
-                Log.d("papelog", String.valueOf(imageRef.getDownloadUrl()));
                 return imageRef.getDownloadUrl();
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {

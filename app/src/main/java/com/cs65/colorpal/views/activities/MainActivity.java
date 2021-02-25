@@ -17,6 +17,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.views.fragments.LibraryFragment;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
     private PaletteViewModel paletteViewModel;
+    private Uri photoURI;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +64,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = createImageFile();
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                paletteViewModel.setSelectedImage(photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
             }
         }
@@ -86,7 +87,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
+        if(resultCode != RESULT_OK) return;
         if(requestCode == CAMERA_REQUEST_CODE){
+            try {
+                paletteViewModel.setSelectedImage(photoURI);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if ( requestCode == GALLERY_REQUEST_CODE){
             if(intent != null){
                 try {
@@ -112,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.my_palettes_button:
                 LibraryFragment libraryFragment = new LibraryFragment();
                 openFragment(libraryFragment);
+                return true;
+            case R.id.unsplash_button:
+
                 return true;
             case R.id.settings_button:
                 SettingsFragment settingsFragment = new SettingsFragment();

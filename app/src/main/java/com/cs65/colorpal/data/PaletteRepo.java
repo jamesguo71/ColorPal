@@ -2,12 +2,15 @@ package com.cs65.colorpal.data;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.palette.graphics.Palette;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.services.ColourLoversService;
 import com.cs65.colorpal.services.FirebaseService;
+
+import org.json.JSONArray;
+
 import io.reactivex.Single;
 
 public class PaletteRepo {
@@ -19,7 +22,6 @@ public class PaletteRepo {
     public PaletteRepo(Application application){
         firebaseService = new FirebaseService();
         colourLoversService = new ColourLoversService(application);
-        getHomePagePalettes();
     }
 
     public Single<Palette> extractColorPalette(Bitmap bitmap) {
@@ -32,7 +34,9 @@ public class PaletteRepo {
         firebaseService.createNewPalette(newColorPalette);
     }
 
-    public void getHomePagePalettes(){
-        colourLoversService.fetchPalettes();
+    public JSONArray fetchHomePagePalettes(){
+        JSONArray temp = colourLoversService.fetchPalettes();
+        Log.d("papelog", String.valueOf(temp));
+       return temp;
     }
 }
