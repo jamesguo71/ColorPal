@@ -17,7 +17,6 @@ public class PaletteRepo {
     private static final int MAX_COLOR_COUNT = 32;
     private static FirebaseService firebaseService;
     private static ColourLoversService colourLoversService;
-    private Application application;
 
     public PaletteRepo(Application application){
         firebaseService = new FirebaseService();
