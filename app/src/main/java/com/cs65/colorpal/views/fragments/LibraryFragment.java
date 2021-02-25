@@ -1,12 +1,10 @@
 package com.cs65.colorpal.views.fragments;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
@@ -78,7 +75,6 @@ public class LibraryFragment extends Fragment {
         super.onResume();
         initializeVariables();
         if(paletteViewModel.getSelectedImage().getValue() != null){
-            Log.d("papelog",paletteViewModel.getSelectedImage().getValue().toString());
             setImage(paletteViewModel.getSelectedImage().getValue());
         }
     }

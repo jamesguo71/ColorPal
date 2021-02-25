@@ -22,6 +22,4 @@ public class LoginViewModel extends AndroidViewModel {
     public void signInWithGoogle(AuthCredential googleAuthCredential) {
         authenticatedUserLiveData = loginRepository.firebaseSignInWithGoogle(googleAuthCredential);
     }
-
-
 }

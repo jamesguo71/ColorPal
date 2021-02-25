@@ -89,8 +89,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if(requestCode == CAMERA_REQUEST_CODE){
         } else if ( requestCode == GALLERY_REQUEST_CODE){
             if(intent != null){
-                paletteViewModel.setSelectedImage(intent.getData());
-                Log.d("papelog",paletteViewModel.getSelectedImage().getValue().toString());
+                try {
+                    paletteViewModel.setSelectedImage(intent.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
