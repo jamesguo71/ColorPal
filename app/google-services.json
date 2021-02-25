@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "888867330143-h4oom6pc8nqbnjch2s2toaceap1s3no3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cs65.colorpal",
+            "certificate_hash": "b8c4e12df0d5fe4eb696c932f0f1dfc8ea980ad6"
+          }
+        },
+        {
           "client_id": "888867330143-mmm37njkdf0a7vuhkdr6d4ehb6sk2saq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
