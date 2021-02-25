@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -38,7 +40,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         openFragment(new HomeFragment());
         setBottomNavigationView();
+        setUpTopNavigationView();
+
         mAuth = FirebaseAuth.getInstance();
+    }
+
+    public void setUpTopNavigationView(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
+        return true;
     }
 
     public void dispatchTakePictureIntent() throws IOException {
@@ -76,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
         if(requestCode == CAMERA_REQUEST_CODE){
-            Log.d("papelog camera", String.valueOf(currentPhotoPath));
         } else if ( requestCode == GALLERY_REQUEST_CODE){
             if(intent != null){
                 Uri uri = intent.getData();
@@ -104,14 +117,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public boolean onOptionsItemSelected( MenuItem item) {
-
-        Log.d("papelog", String.valueOf(item.getItemId()));
         switch (item.getItemId()) {
             case R.id.more:
                 signOut();
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     public void onStart() {

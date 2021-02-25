@@ -27,7 +27,6 @@ public class HomeFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_home, container, false);
         mAuth = FirebaseAuth.getInstance();
-        Log.d("papelog",mAuth.getCurrentUser().getDisplayName());
         return view;
     }
 }

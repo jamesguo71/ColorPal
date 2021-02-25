@@ -44,6 +44,7 @@ dependencies {
     implementation 'com.google.android:flexbox:2.0.1'
 
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
     implementation 'com.google.firebase:firebase-auth:20.0.2'
     implementation "com.google.firebase:firebase-core:18.0.2"
     implementation "com.google.firebase:firebase-firestore:22.1.0"
