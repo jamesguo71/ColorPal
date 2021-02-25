@@ -38,6 +38,14 @@
           }
         },
         {
+          "client_id": "888867330143-qejremgberd9f51aga1pbohaufbkeluh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cs65.colorpal",
+            "certificate_hash": "97448d59f9a1f80aafd5d4facd73cf37743591dd"
+          }
+        },
+        {
           "client_id": "888867330143-0vbvbgsksb16spqo62ba32r083nslj9v.apps.googleusercontent.com",
           "client_type": 3
         }
