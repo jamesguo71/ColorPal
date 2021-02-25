@@ -13,8 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.views.fragments.LibraryFragment;
 import com.cs65.colorpal.views.fragments.SettingsFragment;
@@ -28,31 +31,30 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private BottomNavigationView bottomNavigationView;
+    private static final String LOG_TAG = "MainActvity";
     public static final int CAMERA_REQUEST_CODE = 1;
     public static final int GALLERY_REQUEST_CODE = 2;
     public static final String CAMERA_IMAGE_FILENAME = "mycolorpal";
     public static final String CAMERA_IMAGE_SUFFIX = ".jpg";
-    public Uri currentPhotoPath;
+    private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
+    private PaletteViewModel paletteViewModel;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        openFragment(new HomeFragment());
+        if(savedInstanceState == null){
+            openFragment(new HomeFragment());
+        }
         setBottomNavigationView();
         setUpTopNavigationView();
-
-        mAuth = FirebaseAuth.getInstance();
+        initializeVariables();
     }
 
-    public void setUpTopNavigationView(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.topAppBar);
-        setSupportActionBar(toolbar);
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
-        return true;
+    private File createImageFile() throws IOException {
+        File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File  image = File.createTempFile(CAMERA_IMAGE_FILENAME, CAMERA_IMAGE_SUFFIX, storageDirectory );
+        return image;
     }
 
     public void dispatchTakePictureIntent() throws IOException {
@@ -63,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile);
-                currentPhotoPath = photoURI;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                paletteViewModel.setSelectedImage(photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
             }
         }
@@ -76,26 +78,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         startActivityForResult(pickIntent, GALLERY_REQUEST_CODE);
     }
 
-    private File createImageFile() throws IOException {
-        File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File  image = File.createTempFile(CAMERA_IMAGE_FILENAME, CAMERA_IMAGE_SUFFIX, storageDirectory );
-        return image;
+    public void initializeVariables(){
+        paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
+        mAuth = FirebaseAuth.getInstance();
+        currentPhotoPath = new MutableLiveData<>();
     }
-
-    public Uri getCurrentPhotoPath(){
-        return currentPhotoPath;
-    }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
         if(requestCode == CAMERA_REQUEST_CODE){
         } else if ( requestCode == GALLERY_REQUEST_CODE){
             if(intent != null){
-                Uri uri = intent.getData();
-                currentPhotoPath = intent.getData();
+                paletteViewModel.setSelectedImage(intent.getData());
+                Log.d("papelog",paletteViewModel.getSelectedImage().getValue().toString());
             }
         }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
+        return true;
     }
 
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -127,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     private void openFragment(Fragment fragment) {
@@ -140,6 +141,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public void setBottomNavigationView(){
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
+    }
+
+    public void setUpTopNavigationView(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.topAppBar);
+        setSupportActionBar(toolbar);
     }
 
     public void signOut() {

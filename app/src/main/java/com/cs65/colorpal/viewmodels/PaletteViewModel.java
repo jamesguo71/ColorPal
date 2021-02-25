@@ -42,4 +42,12 @@ public class PaletteViewModel extends ViewModel {
     public LiveData<Uri> getSelectedImage() {
         return selectedImage;
     }
+
+    public void createNew(String imageUrl){
+        paletteRepo.createNew(imageUrl);
+    }
+
+    public void setSelectedImage(Uri photoURI) {
+        selectedImage.setValue(photoURI);
+    }
 }

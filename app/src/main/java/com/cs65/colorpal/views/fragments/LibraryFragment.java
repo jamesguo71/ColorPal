@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.activities.MainActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,6 +29,7 @@ import java.io.InputStream;
 
 public class LibraryFragment extends Fragment {
 
+    private static final String LOG_TAG = "LibraryFragment";
     private FloatingActionButton addPictureButton;
     private ImageView imageView;
     private MainActivity activity;
@@ -34,6 +38,7 @@ public class LibraryFragment extends Fragment {
             "Select a picture from your gallery",
             "Get an image from your Instagram"};
     private View view;
+    private PaletteViewModel paletteViewModel;
 
     private final String DIALOG_TITLE = "Choose or take an image";
 
@@ -45,11 +50,14 @@ public class LibraryFragment extends Fragment {
         } else if (userChoice == 2){
 
         }
+        paletteViewModel.getSelectedImage().observe(this, Observer -> {
+            Log.d(LOG_TAG, "A new image was selected");
+        });
     }
 
     private void initializeButtons(){
-//        addPictureButton = view.findViewById(R.id.add_button);
-//        addPictureButton.setOnClickListener(v -> showImageOptionsDialog());
+        addPictureButton = view.findViewById(R.id.add_button);
+        addPictureButton.setOnClickListener(v -> showImageOptionsDialog());
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,19 +70,21 @@ public class LibraryFragment extends Fragment {
     public void initializeVariables(){
         activity = ((MainActivity) getActivity());
         imageView = (ImageView) activity.findViewById(R.id.image);
+        paletteViewModel = new ViewModelProvider(requireActivity()).get(PaletteViewModel.class);
         initializeButtons();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         initializeVariables();
-        if(activity.getCurrentPhotoPath() != null){
-            setImage(activity.getCurrentPhotoPath());
+        if(paletteViewModel.getSelectedImage().getValue() != null){
+            Log.d("papelog",paletteViewModel.getSelectedImage().getValue().toString());
+            setImage(paletteViewModel.getSelectedImage().getValue());
         }
     }
 
     public void setImage(Uri uri)  {
+        if(uri == null) return;
         try {
             InputStream imageStream = activity.getContentResolver().openInputStream(uri);
             Bitmap image = BitmapFactory.decodeStream(imageStream);
