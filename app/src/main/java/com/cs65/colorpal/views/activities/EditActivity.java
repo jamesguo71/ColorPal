@@ -1,18 +1,34 @@
 package com.cs65.colorpal.views.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.graphics.Color;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.viewmodels.EditViewModel;
+import com.cs65.colorpal.views.adapter.SwatchGridAdapter;
 
+import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.Math.min;
+
 public class EditActivity extends AppCompatActivity {
+
+    private static final String TAG = "EditActivity";
+
+    private EditViewModel editViewModel;
 
     private SeekBar hSlider;
     private SeekBar sSlider;
@@ -32,15 +48,21 @@ public class EditActivity extends AppCompatActivity {
     private String hexCode;
     private float[] hsb = new float[3];
 
-    //TMP
-    private View[] mColorViews = new View[5];
-    private int[] mColors = new int[5];     //test
-    private int mSelectedColor;
+    //TMP: colors
+    private int mColorNum = 16;
+    private int[] mColors = new int[mColorNum];
+
+    //RecyclerView and swatches
+    private ArrayList<Palette.Swatch> mSwatches;
+    private ArrayList<Palette.Swatch> mSwatches0;
+    private SwatchGridAdapter swatchGridAdapter;
+    private RecyclerView swatchesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        editViewModel = ViewModelProviders.of(this).get(EditViewModel.class);
 
         hSlider = (SeekBar) findViewById(R.id.H_slider);
         sSlider = (SeekBar) findViewById(R.id.S_slider);
@@ -68,30 +90,43 @@ public class EditActivity extends AppCompatActivity {
         //hex code
         hexTextView = (TextView) findViewById(R.id.color_hex);
 
-        mColorViews[0] = (View) findViewById(R.id.selected_color1);
-        mColorViews[1] = (View) findViewById(R.id.selected_color2);
-        mColorViews[2] = (View) findViewById(R.id.selected_color3);
-        mColorViews[3] = (View) findViewById(R.id.selected_color4);
-        mColorViews[4] = (View) findViewById(R.id.selected_color5);
-
-        //TMP
-        for(int i = 0; i < 5; i++) {
+        //TMP: create random colors
+        mSwatches = new ArrayList<Palette.Swatch>();
+        for(int i = 0; i < mColorNum; i++) {
             Random rnd = new Random();
             int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
             mColors[i] = color;
-            mColorViews[i].setBackgroundColor(color);
-            mColorViews[i].setOnClickListener(colorOnClickListener);
+            Palette.Swatch swatch = new Palette.Swatch(color,1);
+            mSwatches.add(swatch);
         }
-        mSelectedColor = 0;         //default selection: 0
+        mSwatches0 = (ArrayList<Palette.Swatch>) mSwatches.clone();
+
+        //set swatch adapter
+        swatchesView = findViewById(R.id.swatches_grid);
+        swatchGridAdapter = new SwatchGridAdapter(mSwatches,editViewModel,true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, min(mSwatches.size(),8));
+        swatchesView.setLayoutManager(gridLayoutManager);
+        swatchesView.setAdapter(swatchGridAdapter);
+
+        //set observer for selected color
+        editViewModel.getSelectedColor().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                onSelectedColorChanged();
+            }
+        });
+        editViewModel.setSelectedColor(0);
+    }
+
+    //reset all colors
+    public void onResetClick(View view){
+        for(int i = 0; i < mSwatches.size(); i++){
+            Palette.Swatch s = mSwatches0.get(i);
+            Palette.Swatch swatch = new Palette.Swatch(s.getRgb(),1);
+            mSwatches.set(i,swatch);
+        }
+        swatchGridAdapter.notifyDataSetChanged();
         onSelectedColorChanged();
-    }
-
-    public void onSavePaletteEdit(){
-
-    }
-
-    public void onCancelPaletteEdit(){
-
     }
 
     //set color when RGB is changed
@@ -120,8 +155,6 @@ public class EditActivity extends AppCompatActivity {
         rSlider.setProgress(r);
         gSlider.setProgress(g);
         bSlider.setProgress(b);
-//        Log.d("zwang", Color.red(color)+" "+Color.green(color)+" "+Color.blue(color));
-        //set color
         onColorChange(r,g,b);
     }
 
@@ -131,30 +164,20 @@ public class EditActivity extends AppCompatActivity {
         hexCode = String.format("#%02x%02x%02x", r, g, b);
         hexTextView.setText(hexCode);
 
-        //set selected color
-        mColorViews[mSelectedColor].setBackgroundColor(Color.rgb(r,g,b));
+        //set selected color in grid view
+        Palette.Swatch swatch = new Palette.Swatch(Color.rgb(r,g,b),1);
+        mSwatches.set(editViewModel.getSelectedColor().getValue(),swatch);      //TODO
+        swatchGridAdapter.notifyDataSetChanged();
     }
 
     //Update sliders on selected color changed
     private void onSelectedColorChanged(){
-        rSlider.setProgress(Color.red(mColors[mSelectedColor]));
-        gSlider.setProgress(Color.green(mColors[mSelectedColor]));
-        bSlider.setProgress(Color.blue(mColors[mSelectedColor]));
+        int idx = editViewModel.getSelectedColor().getValue();
+        rSlider.setProgress(Color.red(mColors[idx]));
+        gSlider.setProgress(Color.green(mColors[idx]));
+        bSlider.setProgress(Color.blue(mColors[idx]));
         onRGBChanged();
     }
-
-    //TODO: CHANGE TO LIST VIEW
-    View.OnClickListener colorOnClickListener = new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            for(int i = 0;i < 5; i++){
-                if(mColorViews[i]==v){
-                    mSelectedColor = i;
-                    onSelectedColorChanged();
-                }
-            }
-        }
-    };
 
     SeekBar.OnSeekBarChangeListener hSliderChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override

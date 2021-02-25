@@ -1,5 +1,6 @@
 package com.cs65.colorpal.views.adapter;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.views.activities.InspectActivity;
+import com.cs65.colorpal.views.activities.SwatchesDetailActivity;
 
 import java.util.List;
 
@@ -50,6 +53,11 @@ public class SwatchListAdapter  extends RecyclerView.Adapter<SwatchListAdapter.S
             ViewGroup.LayoutParams layoutParams = swatchView.getLayoutParams();
             int width = Resources.getSystem().getDisplayMetrics().widthPixels;
             layoutParams.width = width / swatches.size();
+
+            swatchView.setOnClickListener(v -> {
+                InspectActivity context = (InspectActivity) itemView.getContext();
+                context.openSwatchDetails();
+            });
         }
 
         public View getSwatchView() {
