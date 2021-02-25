@@ -15,6 +15,7 @@ public class LoginRepository {
 
     public MutableLiveData<User> firebaseSignInWithGoogle(AuthCredential googleAuthCredential) {
         MutableLiveData<User> authenticatedUserMutableLiveData = new MutableLiveData<>();
+        Log.d("papelog", String.valueOf("here"));
         firebaseAuth.signInWithCredential(googleAuthCredential).addOnCompleteListener(authTask -> {
             if (authTask.isSuccessful()) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();

@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "209218954678",
-    "project_id": "calm-axis-304505",
-    "storage_bucket": "calm-axis-304505.appspot.com"
+    "project_number": "888867330143",
+    "project_id": "colorpal-305900",
+    "storage_bucket": "colorpal-305900.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:209218954678:android:30fb4685abcd0f17464d17",
+        "mobilesdk_app_id": "1:888867330143:android:daaaa99accf7f3d5f4e3ea",
         "android_client_info": {
           "package_name": "com.cs65.colorpal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "209218954678-fvn8uoua9bqvmofhpdu12aboerh1lles.apps.googleusercontent.com",
+          "client_id": "888867330143-ujo28t5uhdal2jrqu6vhu84kot83mjm5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.cs65.colorpal",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "209218954678-3nnph8pfpl9oln7ncv7j0o0clfej5p8h.apps.googleusercontent.com",
+          "client_id": "888867330143-0vbvbgsksb16spqo62ba32r083nslj9v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDs1x8SWvcQmTa32UrY_uyKlsjzOgZrc4s"
+          "current_key": "AIzaSyDlqziOFZIUC604fd4OlnSFWnRNPIH3cXo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "209218954678-3nnph8pfpl9oln7ncv7j0o0clfej5p8h.apps.googleusercontent.com",
+              "client_id": "888867330143-0vbvbgsksb16spqo62ba32r083nslj9v.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

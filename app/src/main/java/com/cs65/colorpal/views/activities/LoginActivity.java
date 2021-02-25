@@ -53,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-        googleSignInClient.revokeAccess();
     }
 
     public  void signIn() {
