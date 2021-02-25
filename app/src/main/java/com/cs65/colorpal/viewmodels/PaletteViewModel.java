@@ -49,5 +49,6 @@ public class PaletteViewModel extends ViewModel {
 
     public void setSelectedImage(Uri photoURI) {
         selectedImage.setValue(photoURI);
+        paletteRepo.createNew(photoURI.toString());
     }
 }
