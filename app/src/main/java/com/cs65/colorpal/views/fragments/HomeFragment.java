@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import androidx.databinding.DataBindingUtil;
@@ -15,8 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.databinding.FragmentHomeBinding;
+import com.cs65.colorpal.models.User;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.activities.MainActivity;
@@ -50,9 +53,8 @@ public class HomeFragment extends Fragment {
 
         MainActivity activity = (MainActivity) getActivity();
         if( activity.getLoginViewModelInstance().authenticatedUser!= null){
-            String username = activity.getLoginViewModelInstance().authenticatedUser.getValue().getName();
-            String welomeMessage = " Welcome, " + username + "!";
-            fragmentHomeBinding.setName(welomeMessage);
+            User user = activity.getLoginViewModelInstance().authenticatedUser.getValue();
+            fragmentHomeBinding.setMessage(" Welcome, " + user.getName() + "!");
         }
     }
 }

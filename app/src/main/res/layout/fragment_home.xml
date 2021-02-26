@@ -6,9 +6,10 @@
 
     <data>
         <variable
-            name="name"
+            name="message"
             type="String" />
     </data>
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,6 +17,7 @@
         android:background="@color/polar"
         android:layout_height="match_parent"
         tools:context=".views.fragments.HomeFragment">
+
 
         <TextView
             android:padding="20dp"
@@ -49,7 +51,7 @@
                         android:textSize="23dp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:text="@{name}"/>
+                        android:text="@{message}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:paddingVertical="5dp"
@@ -61,6 +63,5 @@
 
 
         </com.google.android.material.card.MaterialCardView>
-
     </LinearLayout>
 </layout>

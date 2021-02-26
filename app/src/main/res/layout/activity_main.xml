@@ -22,7 +22,20 @@
                 app:title="Explore"
                 app:menu="@menu/menu_top_navigation"
                 app:navigationIcon="@drawable/logo"
-                />
+                >
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="250dp"
+                            android:layout_gravity="right">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/profile_image"
+                                app:tint="@color/black" />
+
+                        </androidx.cardview.widget.CardView>
+            </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
