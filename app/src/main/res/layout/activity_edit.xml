@@ -1,7 +1,8 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -173,16 +174,11 @@
                 android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        style="@style/Theme.ColorPal"
+        android:id="@+id/edit_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true">
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_restart_alt_black_48dp"
-            android:background="@null"
-            android:onClick="onResetClick"/>
-    </LinearLayout>
+        app:menu="@menu/menu_bottom_edit" />
 </FrameLayout>

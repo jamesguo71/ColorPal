@@ -14,11 +14,14 @@ import androidx.palette.graphics.Palette;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.data.PaletteRepo;
+import com.cs65.colorpal.models.ColorPalette;
 
 import org.json.JSONArray;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -40,7 +43,7 @@ public class PaletteViewModel extends AndroidViewModel {
         paletteRepo.createNew(bitmap);
     }
 
-    private Bitmap convertUriToBitmap(Uri uri) throws IOException {
+    public Bitmap convertUriToBitmap(Uri uri) throws IOException {
         ParcelFileDescriptor parcelFileDescriptor = getApplication().getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
         Bitmap img = BitmapFactory.decodeFileDescriptor(fileDescriptor);
@@ -60,6 +63,20 @@ public class PaletteViewModel extends AndroidViewModel {
         selectedImage.postValue(uri);
     }
 
+    public void updateSelectedImage(Uri uri){
+        selectedImage.postValue(uri);
+    }
+    public ArrayList<Integer> getSwatchesArrayList(){
+        ArrayList<Integer> swatchValues = new ArrayList<>();
+        List<Palette.Swatch> swatches = getColorPalette().getValue().getSwatches();
+        if(swatches!=null) {
+            for (Palette.Swatch swatch : swatches) {
+                swatchValues.add(swatch.getRgb());
+            }
+        }
+        return swatchValues;
+    }
+
     public LiveData<Palette> getColorPalette() {
         return extractedColorPaletteData;
     }
@@ -75,5 +92,12 @@ public class PaletteViewModel extends AndroidViewModel {
     public void setSelectedImage(Uri photoURI) throws IOException {
         selectedImage.setValue(photoURI);
         createNew(photoURI);
+    }
+
+    public void savePaletteToDB() throws IOException {
+        ColorPalette newColorPalette = new ColorPalette();
+        newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
+        newColorPalette.setSwatches(getSwatchesArrayList());
+        paletteRepo.savePaletteToDB(newColorPalette);
     }
 }

@@ -67,4 +67,7 @@ public class PaletteRepo {
         return data;
     }
 
+    public void savePaletteToDB(ColorPalette colorPalette){
+        firebaseService.savePalette(colorPalette);
+    }
 }

@@ -20,11 +20,11 @@ import static java.lang.Math.min;
 
 public class SwatchGridAdapter extends RecyclerView.Adapter<SwatchGridAdapter.SwatchGridViewHolder> {
 
-    List<Palette.Swatch> swatches;
+    List<Integer> swatches;
     EditViewModel editViewModel;
     boolean clickable;
 
-    public SwatchGridAdapter(List<Palette.Swatch> swatches, EditViewModel editViewModel, boolean clickable) {
+    public SwatchGridAdapter(List<Integer> swatches, EditViewModel editViewModel, boolean clickable) {
         this.swatches = swatches;
         this.editViewModel = editViewModel;
         this.clickable = clickable;
@@ -40,10 +40,10 @@ public class SwatchGridAdapter extends RecyclerView.Adapter<SwatchGridAdapter.Sw
 
     @Override
     public void onBindViewHolder(@NonNull SwatchGridViewHolder holder, int position) {
-        Palette.Swatch swatch = swatches.get(position);
+        int swatch = swatches.get(position);
 
         View swatchView = holder.getSwatchView();
-        swatchView.setBackgroundColor(swatch.getRgb());
+        swatchView.setBackgroundColor(swatch);
         if(clickable) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

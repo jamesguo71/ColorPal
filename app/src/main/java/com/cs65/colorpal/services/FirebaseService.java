@@ -20,6 +20,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseService implements Runnable{
 
@@ -34,6 +37,7 @@ public class FirebaseService implements Runnable{
 
     public void createNewPalette(ColorPalette colorPalette){
         uploadImage(colorPalette.getBitmap());
+        savePalette(colorPalette);
 //        db.collection(PALETTES_COLLECTION)
 //                .add(colorPalette)
 //                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -54,7 +58,27 @@ public class FirebaseService implements Runnable{
 
     @Override
     public void run() {
-
+    }
+    public void savePalette(ColorPalette colorPalette){
+        ArrayList<Integer> swatches = colorPalette.getSwatches();
+        Map<String, Integer> swatchMap= new HashMap<>();
+        for(int i = 0; i<swatches.size(); i++){
+            swatchMap.put(String.valueOf(i),swatches.get(i));
+        }
+        db.collection(PALETTES_COLLECTION)
+                .add(swatchMap)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(LOG_TAG, "Error adding document", e);
+                    }
+                });
     }
 
     public void uploadImage(Bitmap bitmap) {
