@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -22,6 +24,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FirebaseService implements Runnable{
@@ -53,12 +56,8 @@ public class FirebaseService implements Runnable{
 //                    }
 //                })
 //        ;
-
     }
 
-    @Override
-    public void run() {
-    }
     public void savePalette(ColorPalette colorPalette){
         ArrayList<Integer> swatches = colorPalette.getSwatches();
         Map<String, Integer> swatchMap= new HashMap<>();
@@ -66,19 +65,56 @@ public class FirebaseService implements Runnable{
             swatchMap.put(String.valueOf(i),swatches.get(i));
         }
         db.collection(PALETTES_COLLECTION)
-                .add(swatchMap)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+            .add(swatchMap)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(LOG_TAG, "Error adding document", e);
+                }
+            });
+    }
+
+    public void fetchAllPalettes(FirebaseCallback callback){
+        List<ColorPalette> colorPaletteList = new ArrayList<ColorPalette>();
+        //TODO
+        db.collection(PALETTES_COLLECTION)
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            ColorPalette newColorPalette = new ColorPalette();
+                            ArrayList<Integer> newSwatches = new ArrayList<Integer>();
+                            for(int i=0; i<document.getData().size(); i++){
+                                String str = String.valueOf(document.getData().get(String.valueOf(i)));
+                                newSwatches.add(Integer.parseInt(str));
+                            }
+                            newColorPalette.setSwatches(newSwatches);
+                            colorPaletteList.add(newColorPalette);
+                            Log.d(LOG_TAG, document.getId() + " => " + document.getData());
+                        }
+                        callback.onCallback(colorPaletteList);
+                    } else {
+                        Log.d(LOG_TAG, "Error getting documents: ", task.getException());
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(LOG_TAG, "Error adding document", e);
-                    }
-                });
+                }
+            });
+    }
+
+    //TODO
+    public void fetchPalettesByUser(String username){}
+    //TODO
+    public void savePaletteByUser(String username){}
+
+    @Override
+    public void run() {
     }
 
     public void uploadImage(Bitmap bitmap) {
