@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
         paletteViewModel.fetchHomePagePalettes();
         paletteViewModel.homePagePalettes.observe(getViewLifecycleOwner(), Observer -> {
-            // paletteViewModel.homePagePalettes.getValue();
+//             Log.d("papelog", String.valueOf(paletteViewModel.homePagePalettes.getValue()));
         });
 
         MainActivity activity = (MainActivity) getActivity();

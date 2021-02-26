@@ -15,11 +15,9 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.palette.graphics.Palette;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
-import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.views.fragments.LibraryFragment;
 import com.cs65.colorpal.views.fragments.UnsplashFragment;
@@ -29,10 +27,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.cs65.colorpal.views.activities.SwatchesDetailActivity.SWATCH_VALUES;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -45,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public static final String PHOTO_URI = "photoUri";
     private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
-    private PaletteViewModel paletteViewModel;
     private Uri photoURI;
     private MaterialToolbar materialToolbar;
     private LoginViewModel loginViewModel;
@@ -88,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void initializeVariables(){
-        paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         mAuth = FirebaseAuth.getInstance();
         currentPhotoPath = new MutableLiveData<>();
@@ -103,13 +95,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onActivityResult(requestCode, resultCode, intent);
         if(resultCode != RESULT_OK) return;
         if(requestCode == CAMERA_REQUEST_CODE){
-            //paletteViewModel.setSelectedImage(photoURI);
+
             Intent inspectIntent = new Intent(this, InspectActivity.class);
             inspectIntent.putExtra(PHOTO_URI, photoURI.toString());
             startActivity(inspectIntent);
         } else if ( requestCode == GALLERY_REQUEST_CODE){
             if(intent != null){
-                //paletteViewModel.setSelectedImage(intent.getData());
+
             }
         }
     }
