@@ -57,10 +57,15 @@
                         android:textSize="16dp"
                         android:lineHeight="25dp"
                         android:text="We have been expecting you! It's so nice to get to beautiful color palettes with you again"/>
+
                 </LinearLayout>
-
-
         </com.google.android.material.card.MaterialCardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/homePalettes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
     </LinearLayout>
 </layout>

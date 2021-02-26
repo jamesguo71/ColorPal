@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.views.adapter.SearchResultAdapter;
+import com.cs65.colorpal.views.adapter.PaletteListAdapter;
 
 public class SearchableActivity extends AppCompatActivity{
     private RecyclerView.Adapter adapter;
@@ -20,7 +19,7 @@ public class SearchableActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchable);
         RecyclerView recyclerView = findViewById(R.id.searchRecyclerView);
-        adapter = new SearchResultAdapter(this);
+        adapter = new PaletteListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Intent intent = getIntent();
