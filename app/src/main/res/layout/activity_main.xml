@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/polar"
+    android:background="@color/light_grey"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -21,7 +21,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:title="Explore"
                 app:menu="@menu/menu_top_navigation"
-                app:navigationIcon="@drawable/logo"
+                app:navigationIcon="@drawable/logo_icon"
                 >
                         <androidx.cardview.widget.CardView
                             android:layout_width="40dp"
