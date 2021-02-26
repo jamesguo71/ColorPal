@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -44,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initializeLoginViewModel(){
-        loginViewModel = new LoginViewModel(getApplication());
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
     }
 
     private void initializeGoogleSignInClient(){
@@ -53,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+        googleSignInClient.revokeAccess();
     }
 
     public  void signIn() {
@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("papelog", String.valueOf(data));
         if (requestCode == SIGN_IN_CODE) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {

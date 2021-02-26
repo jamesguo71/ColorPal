@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".views.fragments.HomeFragment">
 
-<!--      <TextView-->
-<!--          android:layout_width="wrap_content"-->
-<!--          android:layout_height="wrap_content"-->
-<!--            android:text="@string/app_name"/>-->
+    <TextView
+        android:paddingHorizontal="20dp"
+        android:text="Explore color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
