@@ -22,7 +22,7 @@ public class LoginRepository {
                     String uid = firebaseUser.getUid();
                     String name = firebaseUser.getDisplayName();
                     String email = firebaseUser.getEmail();
-                    User user = new User(uid, name, email);
+                    User user = new User(name, email, uid);
                     authenticatedUserMutableLiveData.setValue(user);
                 }
             } else {

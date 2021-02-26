@@ -10,7 +10,7 @@ import com.google.firebase.auth.AuthCredential;
 public class LoginViewModel extends AndroidViewModel {
 
     private LoginRepository loginRepository;
-    public LiveData<User> authenticatedUserLiveData; // Not changing data
+    public static LiveData<User> authenticatedUser; // Not changing data
 
     public LoginViewModel(Application application){
         super(application);
@@ -18,6 +18,6 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void signInWithGoogle(AuthCredential googleAuthCredential) {
-        authenticatedUserLiveData = loginRepository.firebaseSignInWithGoogle(googleAuthCredential);
+        authenticatedUser = loginRepository.firebaseSignInWithGoogle(googleAuthCredential);
     }
 }

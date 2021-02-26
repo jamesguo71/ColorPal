@@ -17,14 +17,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.data.PaletteRepo;
+import com.cs65.colorpal.viewmodels.LoginViewModel;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.views.fragments.LibraryFragment;
-import com.cs65.colorpal.views.fragments.SettingsFragment;
+import com.cs65.colorpal.views.fragments.UnsplashFragment;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private FirebaseAuth mAuth;
     private PaletteViewModel paletteViewModel;
     private Uri photoURI;
+    private MaterialToolbar materialToolbar;
+    private LoginViewModel loginViewModel;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +83,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void initializeVariables(){
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         mAuth = FirebaseAuth.getInstance();
         currentPhotoPath = new MutableLiveData<>();
+        materialToolbar = (MaterialToolbar) findViewById(R.id.topAppBar);
+    }
+
+    public LoginViewModel getLoginViewModelInstance(){
+        return loginViewModel;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
@@ -113,19 +121,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.home_button:
+                materialToolbar.setTitle("Explore");
                 HomeFragment homeFragment = new HomeFragment();
                 openFragment(homeFragment);
                 return true;
             case R.id.my_palettes_button:
+                materialToolbar.setTitle("My Palettes");
                 LibraryFragment libraryFragment = new LibraryFragment();
                 openFragment(libraryFragment);
                 return true;
             case R.id.unsplash_button:
-
-                return true;
-            case R.id.settings_button:
-                SettingsFragment settingsFragment = new SettingsFragment();
-                openFragment(settingsFragment);
+                materialToolbar.setTitle("Unsplash Images");
+                UnsplashFragment unsplashFragment = new UnsplashFragment();
+                openFragment(unsplashFragment);
                 return true;
         }
         return false;
