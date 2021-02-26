@@ -43,7 +43,7 @@ public class PaletteViewModel extends AndroidViewModel {
         paletteRepo.createNew(bitmap);
     }
 
-    public Bitmap convertUriToBitmap(Uri uri) throws IOException {
+    private Bitmap convertUriToBitmap(Uri uri) throws IOException {
         ParcelFileDescriptor parcelFileDescriptor = getApplication().getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
         Bitmap img = BitmapFactory.decodeFileDescriptor(fileDescriptor);
@@ -63,8 +63,21 @@ public class PaletteViewModel extends AndroidViewModel {
         selectedImage.postValue(uri);
     }
 
+    public void extractNewFromUri(Uri photoUri){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap bitmap = convertUriToBitmap(photoUri);
+                    extractColorPalette(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }}).start();
+    }
+
     public void updateSelectedImage(Uri uri){
-        selectedImage.postValue(uri);
+        selectedImage.setValue(uri);
     }
     public ArrayList<Integer> getSwatchesArrayList(){
         ArrayList<Integer> swatchValues = new ArrayList<>();

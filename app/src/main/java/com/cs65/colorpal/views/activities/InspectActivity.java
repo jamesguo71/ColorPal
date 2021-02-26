@@ -1,11 +1,8 @@
 package com.cs65.colorpal.views.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -22,6 +19,7 @@ import com.cs65.colorpal.views.adapter.SwatchListAdapter;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     private PaletteViewModel paletteViewModel;
     private RecyclerView swatchesView;
     private BottomNavigationView bottomNavigationView;
+    private ImageView imageView;
 
     public static final String PHOTO_URI = "photoUri";
 
@@ -41,9 +40,9 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inspect);
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
-        ImageView imageView = findViewById(R.id.img);
+        imageView = findViewById(R.id.img);
         swatchesView = findViewById(R.id.colors);
-        paletteViewModel.getSelectedImage().observe(this, uri -> imageView.setImageURI(uri));
+        paletteViewModel.getSelectedImage().observe(this, uri -> onImageChanged(uri));
 
         paletteViewModel.getColorPalette().observe(this, palette -> addSwatches(palette));
 
@@ -51,12 +50,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         if(intent!=null) {
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
             paletteViewModel.updateSelectedImage(photoUri);
-            try {
-                Bitmap bitmap = paletteViewModel.convertUriToBitmap(photoUri);
-                paletteViewModel.extractColorPalette(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            paletteViewModel.extractNewFromUri(photoUri);
         }
 
 //        paletteViewModel.testDummyPic();
@@ -69,6 +63,10 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         bottomNavigationView.getMenu().getItem(0).setCheckable(false);
         bottomNavigationView.getMenu().getItem(1).setCheckable(false);
         bottomNavigationView.getMenu().getItem(2).setCheckable(false);
+    }
+
+    private void onImageChanged(Uri uri){
+        Picasso.with(this).load(uri).centerCrop().resize(700, 700).into(imageView);
     }
 
     private void addSwatches(Palette palette) {

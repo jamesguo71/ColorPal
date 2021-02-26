@@ -106,14 +106,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
+        Intent inspectIntent = new Intent(this, InspectActivity.class);
         if(resultCode != RESULT_OK) return;
         if(requestCode == CAMERA_REQUEST_CODE){
-            Intent inspectIntent = new Intent(this, InspectActivity.class);
             inspectIntent.putExtra(PHOTO_URI, photoURI.toString());
             startActivity(inspectIntent);
         } else if ( requestCode == GALLERY_REQUEST_CODE){
             if(intent != null){
-
+                Uri galleryUri = intent.getData();
+                inspectIntent.putExtra(PHOTO_URI, galleryUri.toString());
+                startActivity(inspectIntent);
             }
         }
     }

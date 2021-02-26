@@ -3,18 +3,13 @@ package com.cs65.colorpal.views.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,10 +19,7 @@ import com.cs65.colorpal.views.adapter.SwatchGridAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import static com.cs65.colorpal.views.activities.SwatchesDetailActivity.SWATCH_VALUES;
 import static java.lang.Math.min;
 
 public class EditActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
@@ -109,12 +101,7 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         swatchesView.setAdapter(swatchGridAdapter);
 
         //set observer for selected color
-        editViewModel.getSelectedColor().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                onSelectedColorChanged();
-            }
-        });
+        editViewModel.getSelectedColor().observe(this, integer -> onSelectedColorChanged());
         editViewModel.setSelectedColor(0);
 
         bottomNavigationView = findViewById(R.id.edit_footer);
