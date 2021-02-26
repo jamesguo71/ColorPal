@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.User;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
+import com.cs65.colorpal.viewmodels.UnsplashViewModel;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.views.fragments.LibraryFragment;
 import com.cs65.colorpal.views.fragments.UnsplashFragment;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Uri photoURI;
     private MaterialToolbar materialToolbar;
     private LoginViewModel loginViewModel;
+    UnsplashFragment unsplashFragment;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setBottomNavigationView();
         setUpTopNavigationView();
         initializeVariables();
+
+        unsplashFragment = new UnsplashFragment();
     }
 
     private File createImageFile() throws IOException {
@@ -123,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if( loginViewModel.authenticatedUser!= null){
             User user = loginViewModel.authenticatedUser.getValue();
             ImageView profileImage = (ImageView) findViewById(R.id.profile_image);
-            Log.d("papelog",user.getImage().toString());
             Glide.with(this).load(user.getImage().toString()).into(profileImage);
         }
         return true;
@@ -142,8 +145,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 openFragment(libraryFragment);
                 return true;
             case R.id.unsplash_button:
-                materialToolbar.setTitle("Unsplash Images");
-                UnsplashFragment unsplashFragment = new UnsplashFragment();
+                materialToolbar.setTitle("Images");
                 openFragment(unsplashFragment);
                 return true;
         }

@@ -12,8 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UnsplashViewModel extends AndroidViewModel {
-    private UnsplashRepo unsplashRepo;
-    public LiveData<JSONObject> unsplashImages;
+    private static UnsplashRepo unsplashRepo;
+    private static LiveData<JSONObject> unsplashImages;
 
     public UnsplashViewModel(Application application) throws JSONException {
         super(application);
@@ -23,5 +23,9 @@ public class UnsplashViewModel extends AndroidViewModel {
 
     public void  runQuery (String query) throws JSONException {
         unsplashImages = unsplashRepo.fetchImages(query);
+    }
+
+    public static LiveData<JSONObject> getUnsplashImages() {
+        return unsplashImages;
     }
 }

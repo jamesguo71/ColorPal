@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable
-            name="numberOfPics"
-            type="String" />
-    </data>
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/black"
         tools:context=".views.fragments.HomeFragment">
 
         <SearchView
-            android:queryBackground="@android:color/transparent"
+            android:theme="@style/SearchViewStyle"
+            android:background="@android:color/transparent"
+            android:foregroundTint="@color/white"
             android:id="@+id/unsplash_searchview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:background="@drawable/background"
+            android:backgroundTint="@color/white"
             android:focusable="auto"
             android:focusableInTouchMode="false"
             android:focusedByDefault="false"
+
             android:forceHasOverlappingRendering="false"
             android:queryHint="Looking for an image?" />
 
@@ -32,6 +29,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="40dp"
-            android:text="@{numberOfPics}"/>
+            android:text="@{viewmodel.unsplashImages.toString()}"/>
     </LinearLayout>
-</layout>

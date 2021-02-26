@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.databinding.FragmentUnsplashBinding;
 import com.cs65.colorpal.viewmodels.UnsplashViewModel;
 
 import org.json.JSONException;
@@ -21,14 +20,11 @@ public class UnsplashFragment extends Fragment {
 
     private View view;
     private  SearchView searchView;
-    private FragmentUnsplashBinding fragmentUnsplashBinding;
     private UnsplashViewModel unsplashViewModel;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        fragmentUnsplashBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_unsplash, container, false);
-        fragmentUnsplashBinding.setLifecycleOwner(requireActivity());
-        view = fragmentUnsplashBinding.getRoot();
+        view = inflater.inflate(R.layout.fragment_unsplash, container, false);
         setupSearchView();
         return view;
     }
@@ -36,9 +32,8 @@ public class UnsplashFragment extends Fragment {
     public void setupSearchView(){
 
         unsplashViewModel = ViewModelProviders.of(requireActivity()).get(UnsplashViewModel.class);
-        unsplashViewModel.unsplashImages.observe(getViewLifecycleOwner(), Observer -> {
+        UnsplashViewModel.getUnsplashImages().observe(getViewLifecycleOwner(), Observer -> {
             Log.d("papelog fragment", "data fetched");
-            fragmentUnsplashBinding.setNumberOfPics(Observer.toString());
         });
 
         searchView = (SearchView) view.findViewById(R.id.unsplash_searchview);
