@@ -48,8 +48,10 @@ public class HomeFragment extends Fragment {
         });
 
         MainActivity activity = (MainActivity) getActivity();
-        String username = activity.getLoginViewModelInstance().authenticatedUser.getValue().getName();
-        String welomeMessage = " Welcome, " + username + "!";
-        fragmentHomeBinding.setName(welomeMessage);
+        if( activity.getLoginViewModelInstance().authenticatedUser!= null){
+            String username = activity.getLoginViewModelInstance().authenticatedUser.getValue().getName();
+            String welomeMessage = " Welcome, " + username + "!";
+            fragmentHomeBinding.setName(welomeMessage);
+        }
     }
 }
