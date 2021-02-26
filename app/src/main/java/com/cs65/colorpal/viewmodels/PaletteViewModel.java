@@ -28,12 +28,11 @@ public class PaletteViewModel extends AndroidViewModel {
     private CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<Palette> extractedColorPaletteData = new MutableLiveData<>();
     private MutableLiveData<Uri> selectedImage = new MutableLiveData<>();
-    public JSONArray homePagePalettes;
+    public LiveData<JSONArray> homePagePalettes;
 
     public PaletteViewModel(Application application) {
         super(application);
         paletteRepo = new PaletteRepo(application);
-        fetchHomePagePalettes();
     }
 
     public void createNew(Uri uri) throws IOException {
@@ -69,12 +68,8 @@ public class PaletteViewModel extends AndroidViewModel {
         return selectedImage;
     }
 
-    public JSONArray getHomePagePalettes(){
-        return homePagePalettes;
-    }
-
     public void fetchHomePagePalettes(){
-        homePagePalettes = paletteRepo.fetchHomePagePalettes();
+        homePagePalettes = paletteRepo.fetchData(PaletteRepo.COLOUR_LOVERS_URL);
     }
 
     public void setSelectedImage(Uri photoURI) throws IOException {

@@ -24,7 +24,6 @@ public class HomeFragment extends Fragment {
 
     private View view;
     private PaletteViewModel paletteViewModel;
-    private JSONArray palettes;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -35,7 +34,9 @@ public class HomeFragment extends Fragment {
 
     public void initializeVariables(){
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
-        palettes = paletteViewModel.getHomePagePalettes();
-        Log.d("papelog", String.valueOf(palettes));
+        paletteViewModel.fetchHomePagePalettes();
+        paletteViewModel.homePagePalettes.observe(getViewLifecycleOwner(), Observer -> {
+            // paletteViewModel.homePagePalettes.getValue();
+        });
     }
 }

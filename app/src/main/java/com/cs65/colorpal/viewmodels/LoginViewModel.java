@@ -1,8 +1,6 @@
 package com.cs65.colorpal.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
-
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import com.cs65.colorpal.models.User;
