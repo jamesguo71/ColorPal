@@ -1,8 +1,6 @@
 package com.cs65.colorpal.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
-
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import com.cs65.colorpal.models.User;
@@ -12,7 +10,7 @@ import com.google.firebase.auth.AuthCredential;
 public class LoginViewModel extends AndroidViewModel {
 
     private LoginRepository loginRepository;
-    public LiveData<User> authenticatedUserLiveData; // Not changing data
+    public static LiveData<User> authenticatedUser; // Not changing data
 
     public LoginViewModel(Application application){
         super(application);
@@ -20,6 +18,6 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     public void signInWithGoogle(AuthCredential googleAuthCredential) {
-        authenticatedUserLiveData = loginRepository.firebaseSignInWithGoogle(googleAuthCredential);
+        authenticatedUser = loginRepository.firebaseSignInWithGoogle(googleAuthCredential);
     }
 }

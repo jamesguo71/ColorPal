@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signInWithAuthCredential(AuthCredential authCredential){
         loginViewModel.signInWithGoogle(authCredential);
-        loginViewModel.authenticatedUserLiveData.observe(this, authenticatedUser ->{
+        loginViewModel.authenticatedUser.observe(this, authenticatedUser ->{
             Intent homeIntent = new Intent(this, MainActivity.class);
             startActivity(homeIntent);
         });
