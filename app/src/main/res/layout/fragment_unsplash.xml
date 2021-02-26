@@ -17,5 +17,5 @@
         android:focusableInTouchMode="false"
         android:focusedByDefault="false"
         android:forceHasOverlappingRendering="false"
-        android:queryHint="Search pictures on Unsplash" />
+        android:queryHint="Looking for an image?" />
 </LinearLayout>

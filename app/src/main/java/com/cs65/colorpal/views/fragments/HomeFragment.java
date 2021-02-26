@@ -31,16 +31,17 @@ public class HomeFragment extends Fragment {
     private PaletteViewModel paletteViewModel;
     private FragmentHomeBinding fragmentHomeBinding;
 
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         fragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         fragmentHomeBinding.setLifecycleOwner(requireActivity());
+        view = fragmentHomeBinding.getRoot();
         initializeVariables();
-        return fragmentHomeBinding.getRoot();
+        return view;
     }
 
     public void initializeVariables(){
+
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
         paletteViewModel.fetchHomePagePalettes();
         paletteViewModel.homePagePalettes.observe(getViewLifecycleOwner(), Observer -> {

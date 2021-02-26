@@ -19,12 +19,27 @@ public class UnsplashFragment extends Fragment {
 
     private FloatingActionButton addPictureButton;
     private View view;
+    private  SearchView searchView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_unsplash, container, false);
-         SearchView searchView = (SearchView) view.findViewById(R.id.unsplash_searchview);
-         searchView.onActionViewExpanded();
+        setupSearchView();
         return view;
+    }
+
+    public void setupSearchView(){
+        searchView = (SearchView) view.findViewById(R.id.unsplash_searchview);
+        searchView.onActionViewExpanded();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("papelog submit ", query);
+                return false;
+            }
+
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 }
