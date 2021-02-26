@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <item
+        android:id="@+id/edit_cancel_button"
+        android:enabled="true"
+        android:checkable="false"
+        android:icon="@drawable/ic_close_black_48dp"
+        android:title="Cancel"/>
+    <item
+        android:id="@+id/edit_reset_button"
+        android:enabled="true"
+        android:checkable="false"
+        android:icon="@drawable/ic_restart_alt_black_48dp"
+        android:title="Reset"/>
+    <item
+        android:id="@+id/edit_save_button"
+        android:enabled="true"
+        android:checkable="false"
+        android:icon="@drawable/ic_done_black_48dp"
+        android:title="Save"/>
+</menu>
