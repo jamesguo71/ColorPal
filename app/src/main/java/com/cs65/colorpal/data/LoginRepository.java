@@ -1,5 +1,6 @@
 package com.cs65.colorpal.data;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -22,7 +23,8 @@ public class LoginRepository {
                     String uid = firebaseUser.getUid();
                     String name = firebaseUser.getDisplayName();
                     String email = firebaseUser.getEmail();
-                    User user = new User(name, email, uid);
+                    Uri image = firebaseUser.getPhotoUrl();
+                    User user = new User(name, email, uid, image);
                     authenticatedUserMutableLiveData.setValue(user);
                 }
             } else {

@@ -9,7 +9,7 @@ import com.google.firebase.auth.AuthCredential;
 
 public class LoginViewModel extends AndroidViewModel {
 
-    private LoginRepository loginRepository;
+    private static LoginRepository loginRepository;
     public static LiveData<User> authenticatedUser; // Not changing data
 
     public LoginViewModel(Application application){

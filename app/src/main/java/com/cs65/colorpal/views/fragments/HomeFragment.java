@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.SearchView;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -14,9 +16,15 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.databinding.FragmentHomeBinding;
+
 import com.cs65.colorpal.models.ColorPalette;
+
+import com.cs65.colorpal.models.User;
+import com.cs65.colorpal.viewmodels.LoginViewModel;
+
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.PaletteListAdapter;
 import com.cs65.colorpal.views.activities.MainActivity;
@@ -36,14 +44,15 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding fragmentHomeBinding;
     private RecyclerView palettesRecyclerView;
 
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         fragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         fragmentHomeBinding.setLifecycleOwner(requireActivity());
+        view = fragmentHomeBinding.getRoot();
         initializeVariables();
-        displaySavedPalettes(fragmentHomeBinding.getRoot());
-        return fragmentHomeBinding.getRoot();
+        displaySavedPalettes(view);
+        return view;
+
     }
 
     private void displaySavedPalettes(View view) {
@@ -74,17 +83,17 @@ public class HomeFragment extends Fragment {
     }
 
     public void initializeVariables(){
+
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
         paletteViewModel.fetchHomePagePalettes();
         paletteViewModel.homePagePalettes.observe(getViewLifecycleOwner(), Observer -> {
-            // paletteViewModel.homePagePalettes.getValue();
+//             Log.d("papelog", String.valueOf(paletteViewModel.homePagePalettes.getValue()));
         });
 
         MainActivity activity = (MainActivity) getActivity();
         if( activity.getLoginViewModelInstance().authenticatedUser!= null){
-            String username = activity.getLoginViewModelInstance().authenticatedUser.getValue().getName();
-            String welomeMessage = " Welcome, " + username + "!";
-            fragmentHomeBinding.setName(welomeMessage);
+            User user = activity.getLoginViewModelInstance().authenticatedUser.getValue();
+            fragmentHomeBinding.setMessage(" Welcome, " + user.getName() + "!");
         }
     }
 }
