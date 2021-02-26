@@ -20,7 +20,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     private final LayoutInflater mInflater;
     private final Context context;
-    private List<Palette> mPalettes;
+    private List<MyPalette> mPalettes;
 
     public SearchResultAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -37,13 +37,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public void onBindViewHolder(@NonNull SearchResultViewHolder holder, int position) {
         if (mPalettes != null) {
-            Palette entry = mPalettes.get(position);
+            MyPalette entry = mPalettes.get(position);
         } else {
             holder.textView.setText("just a placeholder...");
         }
     }
 
-    public void setPalettes(List<Palette> palettes) {
+    public void setPalettes(List<MyPalette> palettes) {
         mPalettes = palettes;
         notifyDataSetChanged();
     }
@@ -68,9 +68,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         @Override
         public void onClick(View v) {
             int pos = getLayoutPosition();
-            Palette palette =  mPalettes.get(pos);
+            MyPalette palette =  mPalettes.get(pos);
             Intent intent = new Intent(context, InspectActivity.class);
             context.startActivity(intent);
-            }
         }
+    }
+
+    public class MyPalette {
+
+    }
 }
