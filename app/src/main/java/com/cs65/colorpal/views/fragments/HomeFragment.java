@@ -44,7 +44,7 @@ public class HomeFragment extends Fragment {
         fragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
         fragmentHomeBinding.setLifecycleOwner(requireActivity());
         initializeVariables();
-        displaySavedPalettes(view);
+//        displaySavedPalettes(view);
         return fragmentHomeBinding.getRoot();
     }
 
