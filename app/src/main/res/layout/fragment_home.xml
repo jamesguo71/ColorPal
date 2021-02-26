@@ -6,9 +6,10 @@
 
     <data>
         <variable
-            name="name"
+            name="message"
             type="String" />
     </data>
+
 
     <LinearLayout
         android:orientation="vertical"
@@ -17,11 +18,12 @@
         android:layout_height="match_parent"
         tools:context=".views.fragments.HomeFragment">
 
+
         <TextView
             android:padding="20dp"
             android:text="Dashboard"
             android:textSize="25dp"
-            android:textStyle="bold"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -49,14 +51,17 @@
                         android:textSize="23dp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:text="@{name}"/>
+                        android:text="@{message}"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:paddingVertical="5dp"
                         android:layout_height="wrap_content"
                         android:textSize="16dp"
                         android:lineHeight="25dp"
-                        android:text="We have been expecting you! It's so nice to get to beautiful color palettes with you again"/>
+
+                        android:text="We have been expecting you! It's so nice to get to make beautiful color palettes with you again"/>
+                </LinearLayout>
+
 
                 </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -66,6 +71,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
-
     </LinearLayout>
 </layout>
