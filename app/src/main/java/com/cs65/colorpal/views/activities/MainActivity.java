@@ -15,6 +15,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.palette.graphics.Palette;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
@@ -28,6 +29,10 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.cs65.colorpal.views.activities.SwatchesDetailActivity.SWATCH_VALUES;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public static final int GALLERY_REQUEST_CODE = 2;
     public static final String CAMERA_IMAGE_FILENAME = "mycolorpal";
     public static final String CAMERA_IMAGE_SUFFIX = ".jpg";
+    public static final String PHOTO_URI = "photoUri";
     private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
     private PaletteViewModel paletteViewModel;
@@ -97,18 +103,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onActivityResult(requestCode, resultCode, intent);
         if(resultCode != RESULT_OK) return;
         if(requestCode == CAMERA_REQUEST_CODE){
-            try {
-                paletteViewModel.setSelectedImage(photoURI);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //paletteViewModel.setSelectedImage(photoURI);
+            Intent inspectIntent = new Intent(this, InspectActivity.class);
+            inspectIntent.putExtra(PHOTO_URI, photoURI.toString());
+            startActivity(inspectIntent);
         } else if ( requestCode == GALLERY_REQUEST_CODE){
             if(intent != null){
-                try {
-                    paletteViewModel.setSelectedImage(intent.getData());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                //paletteViewModel.setSelectedImage(intent.getData());
             }
         }
     }

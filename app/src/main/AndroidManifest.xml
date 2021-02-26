@@ -33,6 +33,7 @@
 <!--                </intent-filter>-->
         </activity>
         <activity android:name=".views.activities.SwatchesDetailActivity" />
+        <activity android:name=".views.activities.EditActivity"/>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.android.fileprovider"

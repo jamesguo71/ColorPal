@@ -1,12 +1,15 @@
 package com.cs65.colorpal.views.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -18,16 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodels.EditViewModel;
 import com.cs65.colorpal.views.adapter.SwatchGridAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import static com.cs65.colorpal.views.activities.SwatchesDetailActivity.SWATCH_VALUES;
 import static java.lang.Math.min;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "EditActivity";
-
+    public static final String SWATCH_VALUES = "values";
     private EditViewModel editViewModel;
 
     private SeekBar hSlider;
@@ -48,21 +54,26 @@ public class EditActivity extends AppCompatActivity {
     private String hexCode;
     private float[] hsb = new float[3];
 
-    //TMP: colors
-    private int mColorNum = 16;
-    private int[] mColors = new int[mColorNum];
-
     //RecyclerView and swatches
-    private ArrayList<Palette.Swatch> mSwatches;
-    private ArrayList<Palette.Swatch> mSwatches0;
+    private ArrayList<Integer> mSwatches;
+    private ArrayList<Integer> mSwatches0;
     private SwatchGridAdapter swatchGridAdapter;
     private RecyclerView swatchesView;
+
+    //footer
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         editViewModel = ViewModelProviders.of(this).get(EditViewModel.class);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            mSwatches = intent.getIntegerArrayListExtra(SWATCH_VALUES);
+            mSwatches0 = (ArrayList<Integer>) mSwatches.clone();
+        }
 
         hSlider = (SeekBar) findViewById(R.id.H_slider);
         sSlider = (SeekBar) findViewById(R.id.S_slider);
@@ -90,17 +101,6 @@ public class EditActivity extends AppCompatActivity {
         //hex code
         hexTextView = (TextView) findViewById(R.id.color_hex);
 
-        //TMP: create random colors
-        mSwatches = new ArrayList<Palette.Swatch>();
-        for(int i = 0; i < mColorNum; i++) {
-            Random rnd = new Random();
-            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-            mColors[i] = color;
-            Palette.Swatch swatch = new Palette.Swatch(color,1);
-            mSwatches.add(swatch);
-        }
-        mSwatches0 = (ArrayList<Palette.Swatch>) mSwatches.clone();
-
         //set swatch adapter
         swatchesView = findViewById(R.id.swatches_grid);
         swatchGridAdapter = new SwatchGridAdapter(mSwatches,editViewModel,true);
@@ -116,14 +116,22 @@ public class EditActivity extends AppCompatActivity {
             }
         });
         editViewModel.setSelectedColor(0);
+
+        bottomNavigationView = findViewById(R.id.edit_footer);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.getMenu().getItem(0).setCheckable(false);
+        bottomNavigationView.getMenu().getItem(1).setCheckable(false);
+        bottomNavigationView.getMenu().getItem(2).setCheckable(false);
+    }
+
+    public void onSaveClicked(){
+
     }
 
     //reset all colors
-    public void onResetClick(View view){
+    public void onResetClicked(){
         for(int i = 0; i < mSwatches.size(); i++){
-            Palette.Swatch s = mSwatches0.get(i);
-            Palette.Swatch swatch = new Palette.Swatch(s.getRgb(),1);
-            mSwatches.set(i,swatch);
+            mSwatches.set(i,mSwatches0.get(i));
         }
         swatchGridAdapter.notifyDataSetChanged();
         onSelectedColorChanged();
@@ -165,18 +173,35 @@ public class EditActivity extends AppCompatActivity {
         hexTextView.setText(hexCode);
 
         //set selected color in grid view
-        Palette.Swatch swatch = new Palette.Swatch(Color.rgb(r,g,b),1);
-        mSwatches.set(editViewModel.getSelectedColor().getValue(),swatch);      //TODO
+        mSwatches.set(editViewModel.getSelectedColor().getValue(),Color.rgb(r,g,b));
         swatchGridAdapter.notifyDataSetChanged();
     }
 
     //Update sliders on selected color changed
     private void onSelectedColorChanged(){
         int idx = editViewModel.getSelectedColor().getValue();
-        rSlider.setProgress(Color.red(mColors[idx]));
-        gSlider.setProgress(Color.green(mColors[idx]));
-        bSlider.setProgress(Color.blue(mColors[idx]));
+        rSlider.setProgress(Color.red(mSwatches.get(idx)));
+        gSlider.setProgress(Color.green(mSwatches.get(idx)));
+        bSlider.setProgress(Color.blue(mSwatches.get(idx)));
         onRGBChanged();
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit_cancel_button:
+                finish();
+                return true;
+            case R.id.edit_reset_button:
+                onResetClicked();
+                return true;
+            case R.id.edit_save_button:
+                onSaveClicked();
+                finish();
+                return true;
+        }
+        return false;
     }
 
     SeekBar.OnSeekBarChangeListener hSliderChangeListener = new SeekBar.OnSeekBarChangeListener() {
