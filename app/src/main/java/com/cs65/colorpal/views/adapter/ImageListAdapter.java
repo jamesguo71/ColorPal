@@ -2,7 +2,6 @@ package com.cs65.colorpal.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.models.UnsplashImage;
 import com.cs65.colorpal.views.activities.InspectActivity;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
 
     private final LayoutInflater mInflater;
     private final Context context;
-    private List<String> imageUrls;
+    private List<UnsplashImage> images;
 
     public ImageListAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -37,21 +37,21 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        Glide.with(context).load(imageUrls.get(position)).into(holder.imageView);
+        Glide.with(context).load(images.get(position).getImage_view_url()).into(holder.imageView);
     }
 
-    public void setImageUrls(List<String> imageUrls) {
-        this.imageUrls = imageUrls;
+    public void setImages(List<UnsplashImage> images) {
+        this.images = images;
         notifyDataSetChanged();
     }
 
 
     @Override
     public int getItemCount() {
-        if (imageUrls == null)
+        if (images == null)
             return 0;
         else
-            return imageUrls.size();
+            return images.size();
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -67,7 +67,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         public void onClick(View v) {
             int pos = getLayoutPosition();
             Intent intent = new Intent(context, InspectActivity.class);
-            intent.putExtra(InspectActivity.PHOTO_URI, imageUrls.get(pos));
+            intent.putExtra(InspectActivity.PHOTO_URI, images.get(pos).getImage_view_url());
             context.startActivity(intent);
         }
     }
