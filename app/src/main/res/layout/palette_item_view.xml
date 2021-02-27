@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
 
@@ -19,16 +21,24 @@
             android:textColor="@color/white"
             android:paddingVertical="12dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/paletteTitle"
+                android:textSize="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/paletteSwatches"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/paletteSwatches"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                />
 
 
-    </LinearLayout>
+        </LinearLayout>
 
 </LinearLayout>

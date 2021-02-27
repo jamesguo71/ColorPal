@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.cs65.colorpal.models.ColorPalette;
 import com.google.android.gms.tasks.Continuation;
@@ -13,8 +14,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -23,6 +27,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,38 +85,9 @@ public class FirebaseService implements Runnable{
             });
     }
 
-    public void fetchAllPalettes(FirebaseCallback callback){
-        List<ColorPalette> colorPaletteList = new ArrayList<ColorPalette>();
-        //TODO
-        db.collection(PALETTES_COLLECTION)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            ColorPalette newColorPalette = new ColorPalette();
-                            ArrayList<Integer> newSwatches = new ArrayList<Integer>();
-                            for(int i=0; i<document.getData().size(); i++){
-                                String str = String.valueOf(document.getData().get(String.valueOf(i)));
-                                newSwatches.add(Integer.parseInt(str));
-                            }
-                            newColorPalette.setSwatches(newSwatches);
-                            colorPaletteList.add(newColorPalette);
-                            Log.d(LOG_TAG, document.getId() + " => " + document.getData());
-                        }
-                        callback.onCallback(colorPaletteList);
-                    } else {
-                        Log.d(LOG_TAG, "Error getting documents: ", task.getException());
-                    }
-                }
-            });
+    public CollectionReference fetchHomePalettesRef(){
+        return db.collection(PALETTES_COLLECTION);
     }
-
-    //TODO
-    public void fetchPalettesByUser(String username){}
-    //TODO
-    public void savePaletteByUser(String username){}
 
     @Override
     public void run() {
