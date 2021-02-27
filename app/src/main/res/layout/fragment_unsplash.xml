@@ -25,9 +25,11 @@
             android:forceHasOverlappingRendering="false"
             android:queryHint="Looking for an image?" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="40dp"
-            android:text="@{viewmodel.unsplashImages.toString()}"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:scrollbars="vertical"
+        android:id="@+id/searchRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
