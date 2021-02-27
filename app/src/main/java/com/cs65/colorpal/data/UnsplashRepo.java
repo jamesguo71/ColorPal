@@ -63,7 +63,7 @@ public class UnsplashRepo {
 
             String description = imageResult.getString("description");
             String nameOfUser = imageResult.getJSONObject("user").getString("name");
-            String image_view_url = imageResult.getJSONObject("urls").getString("regular");
+            String image_view_url = imageResult.getJSONObject("urls").getString("small");
             String image_download_url = imageResult.getJSONObject("links").getString("download");
 
             UnsplashImage unsplashImage = new UnsplashImage(nameOfUser, description, image_view_url, image_download_url);
