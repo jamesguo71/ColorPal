@@ -15,8 +15,13 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.services.FirebaseService;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import io.reactivex.Single;
 
@@ -34,7 +39,7 @@ public class PaletteRepo {
     private RequestQueue requestQueue;
     private MutableLiveData<JSONArray> data;
     private static final String LOG_TAG =  "ColourLoversService";
-    public static final String COLOUR_LOVERS_URL = "https://www.colourlovers.com/api/palettes?format=json";
+    public static final String COLOUR_LOVERS_URL = "https://www.colourlovers.com/api/palettes/random?format=json";
 
     public PaletteRepo(Application application){
         requestQueue = Volley.newRequestQueue(application);
@@ -53,17 +58,27 @@ public class PaletteRepo {
 
     public MutableLiveData<JSONArray> fetchData(String apiUrl){
         data = new MutableLiveData<>();
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, apiUrl, null,
-                        new Response.Listener<JSONArray>() {
-                            public void onResponse(JSONArray response) {
-                                data.setValue(response);
-                            }
-                        }, new Response.ErrorListener() {
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-        requestQueue.add(jsonArrayRequest);
+        ArrayList<Object> temp = new ArrayList<>();
+
+        for(int i = 0; i < 5; i++){
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.GET, apiUrl, null,
+                            new Response.Listener<JSONArray>() {
+                                public void onResponse(JSONArray response) {
+                                    data.setValue(response);
+                                    try {
+                                        temp.add(response.get(0));
+                                        Log.d("papelog",temp.toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    });
+            requestQueue.add(jsonArrayRequest);
+        }
         return data;
     }
 

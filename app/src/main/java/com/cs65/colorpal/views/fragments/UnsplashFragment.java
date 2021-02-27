@@ -44,15 +44,29 @@ public class UnsplashFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        try {
-            unsplashViewModel.runQuery("senegal");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        Log.d("papelog", "onStart");
+//    }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Log.d("papelog","onResume");
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        Log.d("papelog", "onPause");
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        Log.d("papelog", "onStop");
+//    }
 
     public void setupSearchView(){
 

@@ -1,6 +1,7 @@
 package com.cs65.colorpal.views.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,7 @@ public class HomeFragment extends Fragment implements FirebaseCallback {
     //Display palettes when fetching is done
     @Override
     public void onCallback(List<ColorPalette> list) {
+        Log.d("HomeFragmentPape",list.get(0).toString());
         displaySavedPalettes(view,list);
         mainActivity.doneLoadingHanddler();
     }

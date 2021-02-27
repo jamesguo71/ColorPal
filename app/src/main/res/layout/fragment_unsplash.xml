@@ -12,6 +12,7 @@
         <SearchView
             android:theme="@style/SearchViewStyle"
             android:background="@android:color/transparent"
+            android:alpha="50"
             android:foregroundTint="@color/white"
             android:id="@+id/unsplash_searchview"
             android:layout_width="match_parent"

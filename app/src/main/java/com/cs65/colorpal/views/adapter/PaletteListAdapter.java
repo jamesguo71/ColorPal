@@ -3,6 +3,7 @@ package com.cs65.colorpal.views.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
     private List<ColorPalette> mPalettes;
 
     public PaletteListAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);     // Crashes here sometimes
         this.context = context;
     }
 
@@ -64,9 +65,18 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
 
     private List<Palette.Swatch> toSwatches(ArrayList<Integer> swatches) {
         int DUMMY = 100;
+//        swatches = new ArrayList<>();
+//        swatches.add(1);
+//        swatches.add(2);
+//        swatches.add(3);
+//        swatches.add(4);
+//        swatches.add(5);
+//        swatches.add(6);
         List<Palette.Swatch> newSwatches = new ArrayList<>();
-        for (Integer swatch: swatches)
+
+        for (Integer swatch: swatches){
             newSwatches.add(new Palette.Swatch(swatch, DUMMY));
+        }
         return newSwatches;
     }
 

@@ -1,24 +1,18 @@
 package com.cs65.colorpal.views.activities;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -26,7 +20,6 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.bumptech.glide.Glide;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.User;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
@@ -38,6 +31,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private Uri photoURI;
     private TextView toolbarTitleView;
     private LoginViewModel loginViewModel;
-    private UnsplashFragment unsplashFragment;
+    private static UnsplashFragment unsplashFragment;
     private MaterialToolbar materialToolbar;
     private FragmentContainerView fragmentContainerView;
     private LinearLayout progressBarContainer;
@@ -70,9 +65,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
         setBottomNavigationView();
         setUpTopNavigationView();
-        initializeVariables();
-
-        unsplashFragment = new UnsplashFragment();
+        try {
+            initializeVariables();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         startActivityForResult(pickIntent, GALLERY_REQUEST_CODE);
     }
 
-    public void initializeVariables(){
+    public void initializeVariables() throws JSONException {
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         mAuth = FirebaseAuth.getInstance();
         currentPhotoPath = new MutableLiveData<>();
@@ -121,10 +118,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         fragmentContainerView = (FragmentContainerView) findViewById(R.id.fragment_container_view);
         progressBarContainer = (LinearLayout) findViewById(R.id.progress_bar_container);
         progressBarMessageTextView = (TextView) findViewById((R.id.progress_bar_message));
+        unsplashFragment = new UnsplashFragment();
+        runInitialQuery();
     }
 
     public LoginViewModel getLoginViewModelInstance(){
         return loginViewModel;
+    }
+
+    public void runInitialQuery() throws JSONException {
+        UnsplashViewModel unsplashViewModel = ViewModelProviders.of(this).get(UnsplashViewModel.class);
+        unsplashViewModel.runQuery("color palettes");
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
@@ -152,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if( loginViewModel.authenticatedUser!= null){
-            Log.d("papelog", "here");
             User user = loginViewModel.authenticatedUser.getValue();
             ImageView profileImage = (ImageView) findViewById(R.id.profile_image);
             Picasso.with(this).setLoggingEnabled(true);
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.home_button:
-                toolbarTitleView.setText("Explore");
+                toolbarTitleView.setText("Home");
                 HomeFragment homeFragment = new HomeFragment();
                 openFragment(homeFragment);
                 return true;
