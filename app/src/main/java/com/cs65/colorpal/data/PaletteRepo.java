@@ -39,7 +39,7 @@ public class PaletteRepo {
     private RequestQueue requestQueue;
     private MutableLiveData<JSONArray> data;
     private static final String LOG_TAG =  "ColourLoversService";
-    public static final String COLOUR_LOVERS_URL = "https://www.colourlovers.com/api/palettes/random?format=json";
+    public static final String COLOUR_LOVERS_URL = "https://www.colourlovers.com/api/palettes?format=json";
 
     public PaletteRepo(Application application){
         requestQueue = Volley.newRequestQueue(application);
@@ -58,27 +58,21 @@ public class PaletteRepo {
 
     public MutableLiveData<JSONArray> fetchData(String apiUrl){
         data = new MutableLiveData<>();
-        ArrayList<Object> temp = new ArrayList<>();
 
-        for(int i = 0; i < 5; i++){
+
+
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                     (Request.Method.GET, apiUrl, null,
                             new Response.Listener<JSONArray>() {
                                 public void onResponse(JSONArray response) {
                                     data.setValue(response);
-                                    try {
-                                        temp.add(response.get(0));
-                                        Log.d("papelog",temp.toString());
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
                             }, new Response.ErrorListener() {
                         public void onErrorResponse(VolleyError error) {
                         }
                     });
             requestQueue.add(jsonArrayRequest);
-        }
+
         return data;
     }
 

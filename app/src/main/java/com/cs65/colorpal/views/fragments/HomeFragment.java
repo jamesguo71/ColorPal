@@ -17,6 +17,7 @@ import com.cs65.colorpal.R;
 import com.cs65.colorpal.databinding.FragmentHomeBinding;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.models.User;
+import com.cs65.colorpal.services.FirebaseService;
 import com.cs65.colorpal.viewmodels.FirebaseViewModel;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.activities.MainActivity;
@@ -44,7 +45,10 @@ public class HomeFragment extends Fragment{
         view = fragmentHomeBinding.getRoot();
 
         firebaseViewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
-        firebaseViewModel.fetchHomeColorPalettesFromDB().observe(getViewLifecycleOwner(), homePalettes -> updateHomePalettes());
+        firebaseViewModel.fetchHomeColorPalettesFromDB().observe(getViewLifecycleOwner(), homePalettes -> {
+            updateHomePalettes();
+            mainActivity.doneLoadingHanddler();
+        });
 
         palettesRecyclerView = view.findViewById(R.id.homePalettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -101,12 +105,6 @@ public class HomeFragment extends Fragment{
     }
 
     //Display palettes when fetching is done
-    @Override
-    public void onCallback(List<ColorPalette> list) {
-        Log.d("HomeFragmentPape",list.get(0).toString());
-        displaySavedPalettes(view,list);
-        mainActivity.doneLoadingHanddler();
-    }
 //    @Override
 //    public void onCallback(List<ColorPalette> list) {
 //        displaySavedPalettes(view,list);
