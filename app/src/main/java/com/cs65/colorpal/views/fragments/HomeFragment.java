@@ -64,28 +64,12 @@ public class HomeFragment extends Fragment{
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         PaletteListAdapter adapter = new PaletteListAdapter(getActivity());
         palettesRecyclerView.setAdapter(adapter);
-//        adapter.setPalettes(getData());
         adapter.setPalettes(colorPaletteList);
 //        paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
 //        paletteViewModel.getColorPalette().observe(getViewLifecycleOwner(), palette -> addSwatches(palette));
 //        paletteViewModel.extractColorPalette(BitmapFactory.decodeResource(getResources(), R.drawable.nature_photo));
     }
 
-    // Todo: Remove after db is ready
-    private List<ColorPalette> getData() {
-        List<ColorPalette> palettes = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            ColorPalette p = new ColorPalette();
-            ArrayList<Integer> colors = new ArrayList<Integer>();
-            Random rnd = new Random();
-            int lower = rnd.nextInt(3);
-            for (int j = 0; j < lower + 7; j++)
-                colors.add(Color.rgb(rnd.nextInt(255), rnd.nextInt(255), rnd.nextInt(255)));
-            p.setSwatches(colors);
-            palettes.add(p);
-        }
-        return palettes;
-    }
 
     public void initializeVariables(){
 //        firebaseService = new FirebaseService();

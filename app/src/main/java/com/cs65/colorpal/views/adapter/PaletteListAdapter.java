@@ -1,5 +1,6 @@
 package com.cs65.colorpal.views.adapter;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cs65.colorpal.PaletteDetailActivity;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.views.activities.InspectActivity;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -51,23 +54,15 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
 
 
     private void setupPalette(PaletteViewHolder holder, ColorPalette palette) {
-        List<Palette.Swatch> swatches = toSwatches(palette.getSwatches());
+        List<Palette.Swatch> swatches = Utils.toSwatches(palette.getSwatches());
         if (!swatches.isEmpty()) {
-            SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches);
+            SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches, holder);
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(context);
             layoutManager.setFlexDirection(FlexDirection.ROW);
             holder.title.setText("Nature Scene");
             holder.swatches.setLayoutManager(layoutManager);
             holder.swatches.setAdapter(swatchesViewAdapter);
         }
-    }
-
-    private List<Palette.Swatch> toSwatches(ArrayList<Integer> swatches) {
-        int DUMMY = 100;
-        List<Palette.Swatch> newSwatches = new ArrayList<>();
-        for (Integer swatch: swatches)
-            newSwatches.add(new Palette.Swatch(swatch, DUMMY));
-        return newSwatches;
     }
 
     public void setPalettes(List<ColorPalette> palettes) {
@@ -90,7 +85,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
 
         public PaletteViewHolder(@NonNull View itemView) {
             super(itemView);
-//            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
             title = itemView.findViewById(R.id.paletteTitle);
             swatches = itemView.findViewById(R.id.paletteSwatches);
         }
@@ -99,7 +94,14 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
         public void onClick(View v) {
             int pos = getLayoutPosition();
             ColorPalette palette =  mPalettes.get(pos);
-            Intent intent = new Intent(context, InspectActivity.class);
+
+            Intent intent = new Intent(context, PaletteDetailActivity.class);
+
+            // Todo: Currently palette images unset, so getImageUrl returns null.
+//            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getImageUrl());
+            // Todo: Remove after real images available. use hardcoded nature pic now.
+            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, Utils.getUriToDrawable(context, R.drawable.nature_photo));
+            intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
             context.startActivity(intent);
         }
     }

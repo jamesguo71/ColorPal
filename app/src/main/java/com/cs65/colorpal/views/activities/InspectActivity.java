@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -72,7 +73,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     private void addSwatches(Palette palette) {
         List<Palette.Swatch> swatches = palette.getSwatches();
         if (!swatches.isEmpty()) {
-            SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches);
+            SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches, v -> openSwatchDetails());
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
             layoutManager.setFlexDirection(FlexDirection.ROW);
             swatchesView.setLayoutManager(layoutManager);
