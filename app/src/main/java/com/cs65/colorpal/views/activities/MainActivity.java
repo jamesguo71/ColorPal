@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,7 @@ import com.cs65.colorpal.views.fragments.UnsplashFragment;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +52,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
     private Uri photoURI;
-    private MaterialToolbar materialToolbar;
+    private TextView toolbarTitleView;
     private LoginViewModel loginViewModel;
-    UnsplashFragment unsplashFragment;
+    private UnsplashFragment unsplashFragment;
+    private MaterialToolbar materialToolbar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
         mAuth = FirebaseAuth.getInstance();
         currentPhotoPath = new MutableLiveData<>();
+        toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
         materialToolbar = (MaterialToolbar) findViewById(R.id.topAppBar);
     }
 
@@ -122,14 +126,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
 
         if( loginViewModel.authenticatedUser!= null){
+            Log.d("papelog", "here");
             User user = loginViewModel.authenticatedUser.getValue();
             ImageView profileImage = (ImageView) findViewById(R.id.profile_image);
-            Glide.with(this).load(user.getImage().toString()).into(profileImage);
+            Picasso.with(this).setLoggingEnabled(true);
+            Picasso.with(this).load(user.getImage().toString()).into(profileImage);
         }
         return true;
     }
@@ -137,17 +143,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.home_button:
-                materialToolbar.setTitle("Explore");
+                toolbarTitleView.setText("Explore");
                 HomeFragment homeFragment = new HomeFragment();
                 openFragment(homeFragment);
                 return true;
             case R.id.my_palettes_button:
-                materialToolbar.setTitle("My Palettes");
+                toolbarTitleView.setText("My Palettes");
                 LibraryFragment libraryFragment = new LibraryFragment();
                 openFragment(libraryFragment);
                 return true;
             case R.id.unsplash_button:
-                materialToolbar.setTitle("Images");
+                toolbarTitleView.setText("Images");
                 openFragment(unsplashFragment);
                 return true;
         }

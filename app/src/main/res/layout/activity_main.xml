@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/light_grey"
+    android:background="@color/black"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -19,10 +19,18 @@
                 style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="Explore"
                 app:menu="@menu/menu_top_navigation"
                 app:navigationIcon="@drawable/logo_icon"
                 >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Explore"
+                    android:textSize="20dp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:id="@+id/toolbar_title" />
                         <androidx.cardview.widget.CardView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
@@ -41,18 +49,18 @@
 
 
         <androidx.fragment.app.FragmentContainerView
-            android:layout_below="@id/topAppBarContainer"
             android:id="@+id/fragment_container_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintVertical_bias="0.0" />
+            android:layout_below="@id/topAppBarContainer"
+             />
     </RelativeLayout>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_gravity="bottom"
         android:background="@color/black"
         app:itemIconTint="@color/white"

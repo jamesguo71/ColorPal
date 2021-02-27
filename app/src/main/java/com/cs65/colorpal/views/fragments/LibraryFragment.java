@@ -33,7 +33,7 @@ public class LibraryFragment extends Fragment {
     private CharSequence[] imageSelectionOptions = {
             "Take a new picture",
             "Select a picture from your gallery",
-            "Get an image from your Instagram"};
+            };
     private View view;
     private PaletteViewModel paletteViewModel;
 
@@ -44,8 +44,6 @@ public class LibraryFragment extends Fragment {
             activity.dispatchTakePictureIntent();
         } else if(userChoice == 1){
             activity.dispatchSelectPictureIntent();
-        } else if (userChoice == 2){
-
         }
         paletteViewModel.getSelectedImage().observe(this, Observer -> {
             Log.d(LOG_TAG, "A new image was selected");

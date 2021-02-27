@@ -1,7 +1,6 @@
 package com.cs65.colorpal.views.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,12 +80,6 @@ public class HomeFragment extends Fragment implements FirebaseCallback {
         paletteViewModel.homePagePalettes.observe(getViewLifecycleOwner(), Observer -> {
 //             Log.d("papelog", String.valueOf(paletteViewModel.homePagePalettes.getValue()));
         });
-
-        MainActivity activity = (MainActivity) getActivity();
-        if( activity.getLoginViewModelInstance().authenticatedUser!= null){
-            User user = activity.getLoginViewModelInstance().authenticatedUser.getValue();
-            fragmentHomeBinding.setMessage(" Welcome, " + user.getName() + "!");
-        }
     }
 
     //Display palettes when fetching is done

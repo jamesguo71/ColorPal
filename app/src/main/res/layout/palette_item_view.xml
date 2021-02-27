@@ -4,20 +4,20 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <androidx.cardview.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/paletteCardView">
 
     <LinearLayout
+        android:id="@+id/paletteCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/paletteTitle"
-            android:textSize="16dp"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:paddingVertical="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -30,7 +30,5 @@
 
 
     </LinearLayout>
-
-</androidx.cardview.widget.CardView>
 
 </LinearLayout>
