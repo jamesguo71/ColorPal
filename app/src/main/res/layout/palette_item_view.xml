@@ -6,25 +6,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
-    <androidx.cardview.widget.CardView
+
+    <LinearLayout
+        android:id="@+id/paletteCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/paletteCardView"
-        card_view:cardCornerRadius="10dp"
-        app:cardElevation="0dp"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/paletteTitle"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:paddingVertical="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/paletteTitle"
-                android:textSize="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:orientation="vertical"/>
+        
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -35,7 +35,5 @@
 
 
         </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

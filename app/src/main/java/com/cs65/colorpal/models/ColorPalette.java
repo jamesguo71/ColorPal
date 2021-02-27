@@ -21,4 +21,13 @@ public class ColorPalette {
 
     public void setSwatches(ArrayList<Integer> swatches){ this.swatches = swatches; }
     public ArrayList<Integer> getSwatches(){ return swatches; }
+
+    @Override
+    public String toString() {
+        return "ColorPalette{" +
+                "imageUrl='" + imageUrl + '\'' +
+                ", bitmap=" + bitmap +
+                ", swatches=" + swatches +
+                '}';
+    }
 }

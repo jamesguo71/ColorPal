@@ -15,8 +15,13 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.services.FirebaseService;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import io.reactivex.Single;
 
@@ -53,17 +58,21 @@ public class PaletteRepo {
 
     public MutableLiveData<JSONArray> fetchData(String apiUrl){
         data = new MutableLiveData<>();
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, apiUrl, null,
-                        new Response.Listener<JSONArray>() {
-                            public void onResponse(JSONArray response) {
-                                data.setValue(response);
-                            }
-                        }, new Response.ErrorListener() {
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-        requestQueue.add(jsonArrayRequest);
+
+
+
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                    (Request.Method.GET, apiUrl, null,
+                            new Response.Listener<JSONArray>() {
+                                public void onResponse(JSONArray response) {
+                                    data.setValue(response);
+                                }
+                            }, new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    });
+            requestQueue.add(jsonArrayRequest);
+
         return data;
     }
 

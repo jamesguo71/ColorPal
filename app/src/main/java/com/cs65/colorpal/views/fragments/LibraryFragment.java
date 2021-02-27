@@ -33,7 +33,7 @@ public class LibraryFragment extends Fragment {
     private CharSequence[] imageSelectionOptions = {
             "Take a new picture",
             "Select a picture from your gallery",
-            "Get an image from your Instagram"};
+            };
     private View view;
     private PaletteViewModel paletteViewModel;
 
@@ -44,8 +44,6 @@ public class LibraryFragment extends Fragment {
             activity.dispatchTakePictureIntent();
         } else if(userChoice == 1){
             activity.dispatchSelectPictureIntent();
-        } else if (userChoice == 2){
-
         }
         // an error will throw when InspectActivity also observes selectedImage
         // https://stackoverflow.com/questions/52698113/android-livedata-viewmodel-cannot-add-the-same-observer-with-different-lifecyc
