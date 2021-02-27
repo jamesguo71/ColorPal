@@ -2,12 +2,14 @@ package com.cs65.colorpal.models;
 
 public class UnsplashImage {
     private String description;
-    private String url;
+    private String image_view_url;
+    private String image_download_url;
     private String nameOfUser;
 
-    public UnsplashImage(String description, String url, String nameOfUser){
+    public UnsplashImage(String nameOfUser, String description, String image_view_url, String image_download_url){
         this.description = description;
-        this.url = url;
+        this.image_view_url =  image_view_url;
+        this.image_download_url = image_download_url;
         this.nameOfUser = nameOfUser;
     }
 
@@ -19,7 +21,11 @@ public class UnsplashImage {
         return nameOfUser;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImage_view_url() {
+        return image_view_url;
+    }
+
+    public String getImage_download_url() {
+        return image_download_url;
     }
 }

@@ -7,13 +7,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.cs65.colorpal.data.UnsplashRepo;
+import com.cs65.colorpal.models.UnsplashImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class UnsplashViewModel extends AndroidViewModel {
     private static UnsplashRepo unsplashRepo;
-    private static LiveData<JSONObject> unsplashImages;
+    private static LiveData<ArrayList<UnsplashImage>> unsplashImages;
 
     public UnsplashViewModel(Application application) throws JSONException {
         super(application);
@@ -25,7 +28,7 @@ public class UnsplashViewModel extends AndroidViewModel {
         unsplashImages = unsplashRepo.fetchImages(query);
     }
 
-    public static LiveData<JSONObject> getUnsplashImages() {
+    public static LiveData<ArrayList<UnsplashImage>> getUnsplashImages() {
         return unsplashImages;
     }
 }

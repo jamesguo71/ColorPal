@@ -50,11 +50,12 @@
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        style="@style/Theme.ColorPal"
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@color/black"
+        app:itemIconTint="@color/white"
         app:menu="@menu/menu_bottom_navigation" />
 
 

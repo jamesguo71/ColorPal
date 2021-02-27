@@ -21,13 +21,12 @@
             android:focusable="auto"
             android:focusableInTouchMode="false"
             android:focusedByDefault="false"
-
             android:forceHasOverlappingRendering="false"
             android:queryHint="Looking for an image?" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:scrollbars="vertical"
-        android:id="@+id/searchRecyclerView"
+        android:id="@+id/unsplash_recycle_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
