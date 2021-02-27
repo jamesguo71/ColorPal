@@ -30,6 +30,7 @@ public class HomeFragment extends Fragment implements FirebaseCallback {
     private FragmentHomeBinding fragmentHomeBinding;
     private RecyclerView palettesRecyclerView;
     private static FirebaseService firebaseService;
+    private static MainActivity mainActivity;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -37,6 +38,7 @@ public class HomeFragment extends Fragment implements FirebaseCallback {
         fragmentHomeBinding.setLifecycleOwner(requireActivity());
         view = fragmentHomeBinding.getRoot();
         initializeVariables();
+        mainActivity.isLoadingHandler("Loading Palettes...");
         getData();
 
         return view;
@@ -55,7 +57,7 @@ public class HomeFragment extends Fragment implements FirebaseCallback {
 //        paletteViewModel.extractColorPalette(BitmapFactory.decodeResource(getResources(), R.drawable.nature_photo));
     }
 
-    // Todo: Remove after db is ready
+    // TODO: Remove after db is ready
     private void getData() {
         firebaseService.fetchAllPalettes(this);
 //        return paletteViewModel.fetchAllPaletteFromDB();
@@ -80,11 +82,13 @@ public class HomeFragment extends Fragment implements FirebaseCallback {
         paletteViewModel.homePagePalettes.observe(getViewLifecycleOwner(), Observer -> {
 //             Log.d("papelog", String.valueOf(paletteViewModel.homePagePalettes.getValue()));
         });
+        mainActivity = (MainActivity) getActivity();
     }
 
     //Display palettes when fetching is done
     @Override
     public void onCallback(List<ColorPalette> list) {
         displaySavedPalettes(view,list);
+        mainActivity.doneLoadingHanddler();
     }
 }

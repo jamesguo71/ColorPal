@@ -12,47 +12,11 @@
         android:layout_height="match_parent"
         tools:context=".views.fragments.HomeFragment">
 
-
-<!--        <com.google.android.material.card.MaterialCardView-->
-<!--            app:strokeWidth="0.0001dp"-->
-<!--            app:strokeColor="@color/black"-->
-<!--            app:cardElevation="1dp"-->
-<!--            app:checkedIconSize="60dp"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_marginHorizontal="15dp"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:layout_marginHorizontal="22dp"-->
-<!--                    android:layout_marginVertical="10dp"-->
-<!--                    android:layout_height="match_parent">-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:paddingVertical="5dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:textSize="23dp"-->
-<!--                        android:textStyle="bold"-->
-<!--                        android:textColor="@color/black"-->
-<!--                        android:text="@{message}"/>-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:paddingVertical="5dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:textSize="16dp"-->
-<!--                        android:lineHeight="25dp"-->
-
-<!--                        android:text="We have been expecting you! It's so nice to get to make beautiful color palettes with you again"/>-->
-<!--                </LinearLayout>-->
-
-<!--        </com.google.android.material.card.MaterialCardView>-->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/homePalettes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
+
     </LinearLayout>
 </layout>

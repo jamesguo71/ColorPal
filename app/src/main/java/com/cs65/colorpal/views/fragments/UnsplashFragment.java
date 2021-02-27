@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.UnsplashImage;
 import com.cs65.colorpal.viewmodels.UnsplashViewModel;
+import com.cs65.colorpal.views.activities.MainActivity;
 import com.cs65.colorpal.views.adapter.UnsplashImagesAdapter;
 
 import org.json.JSONException;
@@ -31,14 +32,26 @@ public class UnsplashFragment extends Fragment {
     private ArrayList<UnsplashImage> unsplashImages;
     private RecyclerView rvUnsplashImages;
     private UnsplashImagesAdapter  adapter;
+    private MainActivity mainActivity;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_unsplash, container, false);
         unsplashImages = new ArrayList<>();
+        mainActivity = (MainActivity) getActivity();
         setupSearchView();
         setupRecyclerView();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            unsplashViewModel.runQuery("senegal");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setupSearchView(){
@@ -47,7 +60,7 @@ public class UnsplashFragment extends Fragment {
         UnsplashViewModel.getUnsplashImages().observe(getViewLifecycleOwner(), unsplashImagesResponse -> {
             rvUnsplashImages.setAdapter(new UnsplashImagesAdapter(unsplashImagesResponse));
             adapter.notifyDataSetChanged();
-
+            mainActivity.doneLoadingHanddler();
         });
 
         searchView = (SearchView) view.findViewById(R.id.unsplash_searchview);
@@ -56,6 +69,7 @@ public class UnsplashFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 try {
                     unsplashViewModel.runQuery(query);
+                    mainActivity.isLoadingHandler("Searching images for " + query + "...");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

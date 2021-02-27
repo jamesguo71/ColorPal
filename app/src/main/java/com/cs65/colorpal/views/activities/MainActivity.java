@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import androidx.appcompat.view.menu.ActionMenuItemView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private LoginViewModel loginViewModel;
     private UnsplashFragment unsplashFragment;
     private MaterialToolbar materialToolbar;
+    private FragmentContainerView fragmentContainerView;
+    private LinearLayout progressBarContainer;
+    private TextView progressBarMessageTextView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +79,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File  image = File.createTempFile(CAMERA_IMAGE_FILENAME, CAMERA_IMAGE_SUFFIX, storageDirectory );
         return image;
+    }
+
+    public void isLoadingHandler(String message ){
+        progressBarMessageTextView.setText(message);
+        fragmentContainerView.setVisibility(FragmentContainerView.GONE);
+        progressBarContainer.setVisibility(LinearLayout.VISIBLE);
+    }
+
+    public void doneLoadingHanddler(){
+        fragmentContainerView.setVisibility(FragmentContainerView.VISIBLE);
+        progressBarContainer.setVisibility(LinearLayout.GONE);
     }
 
     public void dispatchTakePictureIntent() throws IOException {
@@ -102,6 +118,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         currentPhotoPath = new MutableLiveData<>();
         toolbarTitleView = (TextView) findViewById(R.id.toolbar_title);
         materialToolbar = (MaterialToolbar) findViewById(R.id.topAppBar);
+        fragmentContainerView = (FragmentContainerView) findViewById(R.id.fragment_container_view);
+        progressBarContainer = (LinearLayout) findViewById(R.id.progress_bar_container);
+        progressBarMessageTextView = (TextView) findViewById((R.id.progress_bar_message));
     }
 
     public LoginViewModel getLoginViewModelInstance(){
@@ -130,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 //        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         if( loginViewModel.authenticatedUser!= null){
             Log.d("papelog", "here");
             User user = loginViewModel.authenticatedUser.getValue();
@@ -151,10 +172,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 toolbarTitleView.setText("My Palettes");
                 LibraryFragment libraryFragment = new LibraryFragment();
                 openFragment(libraryFragment);
+                doneLoadingHanddler();
                 return true;
             case R.id.unsplash_button:
                 toolbarTitleView.setText("Images");
                 openFragment(unsplashFragment);
+                doneLoadingHanddler();
                 return true;
         }
         return false;
