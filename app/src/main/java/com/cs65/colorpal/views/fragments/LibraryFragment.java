@@ -45,9 +45,11 @@ public class LibraryFragment extends Fragment {
         } else if(userChoice == 1){
             activity.dispatchSelectPictureIntent();
         }
-        paletteViewModel.getSelectedImage().observe(this, Observer -> {
-            Log.d(LOG_TAG, "A new image was selected");
-        });
+        // an error will throw when InspectActivity also observes selectedImage
+        // https://stackoverflow.com/questions/52698113/android-livedata-viewmodel-cannot-add-the-same-observer-with-different-lifecyc
+//        paletteViewModel.getSelectedImage().observe(this, Observer -> {
+//            Log.d(LOG_TAG, "A new image was selected");
+//        });
     }
 
     private void initializeButtons(){
