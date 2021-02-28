@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.viewmodels.EditViewModel;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.SwatchGridAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -26,6 +27,7 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
 
     private static final String TAG = "EditActivity";
     public static final String SWATCH_VALUES = "values";
+    public static final int EDIT_ACTIVITY_CODE = 2;
     private EditViewModel editViewModel;
 
     private SeekBar hSlider;
@@ -60,7 +62,6 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         editViewModel = ViewModelProviders.of(this).get(EditViewModel.class);
-
         Intent intent = getIntent();
         if (intent != null) {
             mSwatches = intent.getIntegerArrayListExtra(SWATCH_VALUES);
@@ -109,10 +110,6 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView.getMenu().getItem(0).setCheckable(false);
         bottomNavigationView.getMenu().getItem(1).setCheckable(false);
         bottomNavigationView.getMenu().getItem(2).setCheckable(false);
-    }
-
-    public void onSaveClicked(){
-
     }
 
     //reset all colors
@@ -184,7 +181,9 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
                 onResetClicked();
                 return true;
             case R.id.edit_save_button:
-                onSaveClicked();
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(SWATCH_VALUES, mSwatches);
+                setResult(RESULT_OK, resultIntent);
                 finish();
                 return true;
         }

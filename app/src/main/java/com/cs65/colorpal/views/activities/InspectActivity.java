@@ -3,6 +3,7 @@ package com.cs65.colorpal.views.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,11 +11,14 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.SwatchListAdapter;
 import com.google.android.flexbox.FlexDirection;
@@ -35,6 +39,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     private ImageView imageView;
 
     public static final String PHOTO_URI = "photoUri";
+    public static final int EDIT_ACTIVITY_CODE = 2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,12 +50,20 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         swatchesView = findViewById(R.id.colors);
         paletteViewModel.getSelectedImage().observe(this, uri -> onImageChanged(uri));
 
-        paletteViewModel.getColorPalette().observe(this, palette -> addSwatches(palette));
+//        paletteViewModel.getColorPaletteData().observe(this, palette -> addSwatches(palette));
+        paletteViewModel.getColorPaletteData().observe(this, palette -> paletteViewModel.initSwatchesArrayList());
+
+        paletteViewModel.getSwatches().observe(this, new Observer<ArrayList<Integer>>() {
+            @Override
+            public void onChanged(ArrayList<Integer> list) {
+                addSwatches(Utils.toSwatches(list));
+            }
+        });
 
         Intent intent = getIntent();
         if(intent!=null) {
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
-            paletteViewModel.updateSelectedImage(photoUri);
+            paletteViewModel.setSelectedImageUri(photoUri);
             paletteViewModel.extractNewFromUri(photoUri);
         }
 
@@ -66,12 +79,22 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         bottomNavigationView.getMenu().getItem(2).setCheckable(false);
     }
 
+    // Update swatches from Edit Activity
+    public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+        if(resultCode != RESULT_OK) return;
+        if(requestCode == EDIT_ACTIVITY_CODE){
+            ArrayList<Integer> editedSwatches = intent.getIntegerArrayListExtra(SWATCH_VALUES);
+            paletteViewModel.setSwatchesList(editedSwatches);
+        }
+    }
+
     private void onImageChanged(Uri uri){
         Picasso.with(this).load(uri).centerCrop().resize(700, 700).into(imageView);
     }
 
-    private void addSwatches(Palette palette) {
-        List<Palette.Swatch> swatches = palette.getSwatches();
+    private void addSwatches(List<Palette.Swatch> swatches) {
+//        List<Palette.Swatch> swatches = palette.getSwatches();
         if (!swatches.isEmpty()) {
             SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches, v -> openSwatchDetails());
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
@@ -83,19 +106,13 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
 
     public void openSwatchDetails() {
         Intent intent = new Intent(this, SwatchesDetailActivity.class);
-        Palette palette = paletteViewModel.getColorPalette().getValue();
-        List<Palette.Swatch> swatches = palette.getSwatches();
-        ArrayList<Integer> swatchValues = new ArrayList<>();
-        for (Palette.Swatch swatch : swatches) {
-            swatchValues.add(swatch.getRgb());
-        }
-        intent.putIntegerArrayListExtra(SWATCH_VALUES, swatchValues);
-        startActivity(intent);
-    }
-
-    public void onEditClicked(){
-        Intent intent = new Intent(this, EditActivity.class);
-        ArrayList<Integer> swatchValues = paletteViewModel.getSwatchesArrayList();
+//        Palette palette = paletteViewModel.getColorPaletteData().getValue();
+//        List<Palette.Swatch> swatches = palette.getSwatches();
+//        ArrayList<Integer> swatchValues = new ArrayList<>();
+//        for (Palette.Swatch swatch : swatches) {
+//            swatchValues.add(swatch.getRgb());
+//        }
+        ArrayList<Integer> swatchValues = paletteViewModel.getSwatches().getValue();
         intent.putIntegerArrayListExtra(SWATCH_VALUES, swatchValues);
         startActivity(intent);
     }
@@ -107,7 +124,10 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 finish();
                 return true;
             case R.id.inspect_edit_button:
-                onEditClicked();
+                Intent intent = new Intent(this, EditActivity.class);
+                ArrayList<Integer> swatchValues = paletteViewModel.getSwatches().getValue();
+                intent.putIntegerArrayListExtra(SWATCH_VALUES, swatchValues);
+                startActivityForResult(intent, EDIT_ACTIVITY_CODE);
                 return true;
             case R.id.inspect_save_button:
                 try {

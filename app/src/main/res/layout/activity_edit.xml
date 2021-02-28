@@ -9,12 +9,19 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         tools:context=".views.activities.EditActivity">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/swatches_grid"
-            android:layout_width="match_parent"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/edit_swatches_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
-
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/swatches_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+        </RelativeLayout>
         <TextView
             android:id="@+id/color_hex"
             android:layout_width="wrap_content"
@@ -40,6 +47,8 @@
                 android:id="@+id/H_slider"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
+                android:thumbTint="@color/black"
+                android:progressTint="@color/light_grey"
                 android:min="0"
                 android:max="360" />
             <TextView
@@ -65,6 +74,8 @@
                 android:id="@+id/S_slider"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
+                android:thumbTint="@color/black"
+                android:progressTint="@color/light_grey"
                 android:min="0"
                 android:max="100"/>
             <TextView
@@ -90,6 +101,8 @@
                 android:id="@+id/Br_slider"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
+                android:thumbTint="@color/black"
+                android:progressTint="@color/light_grey"
                 android:min="0"
                 android:max="100" />
             <TextView
@@ -115,6 +128,8 @@
                 android:id="@+id/R_slider"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
+                android:thumbTint="@color/black"
+                android:progressTint="@color/light_grey"
                 android:min="0"
                 android:max="255" />
             <TextView
@@ -140,6 +155,8 @@
                 android:id="@+id/G_slider"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
+                android:thumbTint="@color/black"
+                android:progressTint="@color/light_grey"
                 android:min="0"
                 android:max="255" />
             <TextView
@@ -165,6 +182,8 @@
                 android:id="@+id/B_slider"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
+                android:thumbTint="@color/black"
+                android:progressTint="@color/light_grey"
                 android:min="0"
                 android:max="255" />
             <TextView

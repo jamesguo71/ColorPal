@@ -3,6 +3,7 @@ package com.cs65.colorpal.viewmodels;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.palette.graphics.Palette;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.utils.Utils;
 
 import org.json.JSONArray;
 
@@ -32,13 +34,14 @@ public class PaletteViewModel extends AndroidViewModel {
     private MutableLiveData<Palette> extractedColorPaletteData = new MutableLiveData<>();
     private MutableLiveData<Uri> selectedImage = new MutableLiveData<>();
     public LiveData<JSONArray> homePagePalettes;
+    private MutableLiveData<ArrayList<Integer>> mSwatchesList = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) {
         super(application);
         paletteRepo = new PaletteRepo(application);
     }
 
-    public void createNew(Uri uri) throws IOException {
+    private void createNew(Uri uri) throws IOException {
         Bitmap bitmap = convertUriToBitmap(uri);
         paletteRepo.createNew(bitmap);
     }
@@ -76,21 +79,30 @@ public class PaletteViewModel extends AndroidViewModel {
         }}).start();
     }
 
-    public void updateSelectedImage(Uri uri){
-        selectedImage.setValue(uri);
+    public void setSwatchesList(ArrayList<Integer> swatches){
+        mSwatchesList.setValue(swatches);
     }
-    public ArrayList<Integer> getSwatchesArrayList(){
+
+    public MutableLiveData<ArrayList<Integer>> getSwatches(){
+        return mSwatchesList;
+    }
+
+    public void initSwatchesArrayList(){
         ArrayList<Integer> swatchValues = new ArrayList<>();
-        List<Palette.Swatch> swatches = getColorPalette().getValue().getSwatches();
+        List<Palette.Swatch> swatches = extractedColorPaletteData.getValue().getSwatches();
         if(swatches!=null) {
             for (Palette.Swatch swatch : swatches) {
                 swatchValues.add(swatch.getRgb());
             }
         }
-        return swatchValues;
+        mSwatchesList.postValue(swatchValues);
     }
 
-    public LiveData<Palette> getColorPalette() {
+    public void setSelectedImageUri(Uri uri){
+        selectedImage.setValue(uri);
+    }
+
+    public LiveData<Palette> getColorPaletteData() {
         return extractedColorPaletteData;
     }
 
@@ -102,15 +114,10 @@ public class PaletteViewModel extends AndroidViewModel {
         homePagePalettes = paletteRepo.fetchData(PaletteRepo.COLOUR_LOVERS_URL);
     }
 
-    public void setSelectedImage(Uri photoURI) throws IOException {
-        selectedImage.setValue(photoURI);
-        createNew(photoURI);
-    }
-
     public void savePaletteToDB() throws IOException {
         ColorPalette newColorPalette = new ColorPalette();
         newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
-        newColorPalette.setSwatches(getSwatchesArrayList());
+        newColorPalette.setSwatches(mSwatchesList.getValue());
         paletteRepo.savePaletteToDB(newColorPalette);
     }
 }
