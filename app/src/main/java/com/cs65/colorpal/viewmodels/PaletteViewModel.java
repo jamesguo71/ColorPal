@@ -41,11 +41,13 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<Uri> selectedImage = new MutableLiveData<>();
     private MutableLiveData<ArrayList<Integer>> mSwatchesList = new MutableLiveData<>();
     public MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
+    public MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
         paletteRepo = new PaletteRepo(application);
         fetchHomeColorPalettes();
+        fetchUserLibraryColorPalettes();
     }
 
     private void createNew(Uri uri) throws IOException {
@@ -82,6 +84,10 @@ public class PaletteViewModel extends AndroidViewModel{
 
     public void fetchHomeColorPalettes() throws InterruptedException {
         mHomeColorPaletteList = paletteRepo.fetchHomeColorPalettes();
+    }
+
+    public void fetchUserLibraryColorPalettes() throws InterruptedException {
+        mUserLibraryColorPaletteList = paletteRepo.fetchUserLibraryColorPalettes();
     }
 
     public LiveData<Palette> getColorPaletteData() {

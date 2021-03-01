@@ -17,15 +17,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class FirebaseService {
 
@@ -43,7 +42,6 @@ public class FirebaseService {
     }
 
     public void createNewPalette(ColorPalette colorPalette){
-        uploadImage(colorPalette.getBitmap());
         savePalette(colorPalette);
     }
 
@@ -52,14 +50,16 @@ public class FirebaseService {
         paletteData.put("username", currentUser.getDisplayName());
         paletteData.put("userId", currentUser.getUid());
         paletteData.put("swatches", palette.getSwatches());
+        paletteData.put("downloadUrl", palette.getDownloadUrl());
         return paletteData;
     }
 
-    public CollectionReference fetchHomePalettesRef(){
+    public CollectionReference fetchPalettesReference(){
         return db.collection(PALETTES_COLLECTION);
     }
 
     public void savePalette(ColorPalette colorPalette){
+
         new Thread(){
             @Override
             public void run() {
@@ -72,6 +72,7 @@ public class FirebaseService {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                uploadImage(colorPalette, documentReference.getId());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -84,16 +85,16 @@ public class FirebaseService {
         }.start();
     }
 
-    public void uploadImage(Bitmap bitmap) {
+    public void uploadImage(ColorPalette colorPalette, String docId) {
         new Thread(){
             @Override
             public void run() {
                 super.run();
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                final StorageReference imageRef = storageRef.child("images/" + "1");
+                final StorageReference imageRef = storageRef.child("images/" + currentUser.getUid() +"-" +ThreadLocalRandom.current().nextInt());
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                colorPalette.getBitmap().compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] data = baos.toByteArray();
 
                 // Asynchronously uploads byte data to this StorageReference
@@ -112,6 +113,12 @@ public class FirebaseService {
                     public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
                             Uri downloadUri = task.getResult();
+                            Map<String, Object> update = new HashMap<>();
+                            update.put("downloadUrl", downloadUri.toString());
+                            db.collection(PALETTES_COLLECTION)
+                                    .document(docId)
+                                    .update(update);
+
                         } else {
                             // Handle failures
                             // ...
@@ -119,7 +126,7 @@ public class FirebaseService {
                     }
                 });
             }
-        };
+        }.start();
     }
 
 }

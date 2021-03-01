@@ -29,7 +29,6 @@ public class HomeFragment extends Fragment{
 
     private FragmentHomeBinding fragmentHomeBinding;
     private RecyclerView palettesRecyclerView;
-    private static FirebaseService firebaseService;
     private static MainActivity mainActivity;
     private PaletteListAdapter adapter;
 
@@ -60,14 +59,10 @@ public class HomeFragment extends Fragment{
         PaletteListAdapter adapter = new PaletteListAdapter(getActivity());
         palettesRecyclerView.setAdapter(adapter);
         adapter.setPalettes(colorPaletteList);
-//        paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
-//        paletteViewModel.getColorPalette().observe(getViewLifecycleOwner(), palette -> addSwatches(palette));
-//        paletteViewModel.extractColorPalette(BitmapFactory.decodeResource(getResources(), R.drawable.nature_photo));
     }
 
 
     public void initializeVariables() throws InterruptedException {
-//        firebaseService = new FirebaseService();
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
         paletteViewModel.fetchHomeColorPalettes();
         paletteViewModel.mHomeColorPaletteList.observe(getViewLifecycleOwner(), Observer -> {

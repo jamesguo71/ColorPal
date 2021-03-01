@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -32,25 +33,32 @@ public class UnsplashRepo {
     }
 
     public MutableLiveData<ArrayList<UnsplashImage>> fetchImages(String query) throws JSONException {
-
         data = new MutableLiveData<>();
-        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest
-                (Request.Method.GET, URL + query ,null,
-                        new Response.Listener<JSONObject>() {
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    data.setValue(convertToUnsplashImages(response));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d(LOG_TAG, String.valueOf(error));
-                            }
-                        });
-        requestQueue.add(jsonArrayRequest);
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                JsonObjectRequest jsonArrayRequest = new JsonObjectRequest
+                        (Request.Method.GET, URL + query ,null,
+                                new Response.Listener<JSONObject>() {
+                                    public void onResponse(JSONObject response) {
+                                        try {
+
+                                            data.postValue(convertToUnsplashImages(response));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d(LOG_TAG, String.valueOf(error));
+                                    }
+                                });
+                jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(20 * 1000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                requestQueue.add(jsonArrayRequest);
+            }
+        }.start();
         return data;
     }
 

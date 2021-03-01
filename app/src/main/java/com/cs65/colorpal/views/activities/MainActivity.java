@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void runInitialQuery() throws JSONException {
         UnsplashViewModel unsplashViewModel = ViewModelProviders.of(this).get(UnsplashViewModel.class);
-        unsplashViewModel.runQuery("color palettes");
+        unsplashViewModel.runQuery("color");
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){

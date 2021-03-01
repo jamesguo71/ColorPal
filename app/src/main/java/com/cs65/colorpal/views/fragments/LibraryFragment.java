@@ -13,82 +13,110 @@ import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.activities.MainActivity;
+import com.cs65.colorpal.views.adapter.PaletteListAdapter;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public class LibraryFragment extends Fragment {
 
     private static final String LOG_TAG = "LibraryFragment";
     private FloatingActionButton addPictureButton;
     private ImageView imageView;
-    private MainActivity activity;
+    private MainActivity mainActivity;
     private CharSequence[] imageSelectionOptions = {
             "Take a new picture",
             "Select a picture from your gallery",
             };
     private View view;
     private PaletteViewModel paletteViewModel;
+    private RecyclerView palettesRecyclerView;
+    private PaletteListAdapter adapter;
 
     private final String DIALOG_TITLE = "Choose or take an image";
-
-    private void handleOptionSelection(int userChoice) throws IOException {
-        if(userChoice == 0){
-            activity.dispatchTakePictureIntent();
-        } else if(userChoice == 1){
-            activity.dispatchSelectPictureIntent();
-        }
-        // an error will throw when InspectActivity also observes selectedImage
-        // https://stackoverflow.com/questions/52698113/android-livedata-viewmodel-cannot-add-the-same-observer-with-different-lifecyc
-//        paletteViewModel.getSelectedImage().observe(this, Observer -> {
-//            Log.d(LOG_TAG, "A new image was selected");
-//        });
-    }
-
-    private void initializeButtons(){
-        addPictureButton = view.findViewById(R.id.add_button);
-        addPictureButton.setOnClickListener(v -> showImageOptionsDialog());
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_library, container, false);
-        initializeVariables();
+        try {
+            initializeVariables();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
-    public void initializeVariables(){
-        activity = ((MainActivity) getActivity());
-        imageView = (ImageView) activity.findViewById(R.id.image);
-        paletteViewModel = new ViewModelProvider(requireActivity()).get(PaletteViewModel.class);
-        initializeButtons();
+    private void displaySavedPalettes(View view, List<ColorPalette> colorPaletteList) {
+        palettesRecyclerView = view.findViewById(R.id.homePalettes);
+        palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        PaletteListAdapter adapter = new PaletteListAdapter(getActivity());
+        palettesRecyclerView.setAdapter(adapter);
+        adapter.setPalettes(colorPaletteList);
+    }
+
+    private void handleOptionSelection(int userChoice) throws IOException {
+        if(userChoice == 0){
+            mainActivity.dispatchTakePictureIntent();
+        } else if(userChoice == 1){
+            mainActivity.dispatchSelectPictureIntent();
+        }
+    }
+
+
+    public void initializeVariables() throws InterruptedException {
+        paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
+        paletteViewModel.fetchUserLibraryColorPalettes();
+        paletteViewModel.mUserLibraryColorPaletteList.observe(getViewLifecycleOwner(), Observer -> {
+            updateLibraryPalettes();
+            mainActivity.doneLoadingHanddler();
+        });
+
+        palettesRecyclerView = view.findViewById(R.id.recycle_view_my_palettes);
+        palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new PaletteListAdapter(getActivity());
+        palettesRecyclerView.setAdapter(adapter);
+
+        mainActivity = ((MainActivity) getActivity());
+        mainActivity.isLoadingHandler("Loading Palettes...");
+
+        imageView = (ImageView) mainActivity.findViewById(R.id.image);
+
+        addPictureButton = view.findViewById(R.id.add_button);
+        addPictureButton.setOnClickListener(v -> showImageOptionsDialog());
+
     }
 
     public void onResume() {
         super.onResume();
-        initializeVariables();
-        if(paletteViewModel.getSelectedImage().getValue() != null){
-            setImage(paletteViewModel.getSelectedImage().getValue());
-        }
-    }
-
-    public void setImage(Uri uri)  {
-        if(uri == null) return;
         try {
-            InputStream imageStream = activity.getContentResolver().openInputStream(uri);
-            Bitmap image = BitmapFactory.decodeStream(imageStream);
-            imageView.setImageBitmap(image);
-        } catch (FileNotFoundException e) {
+            initializeVariables();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+//    public void setImage(Uri uri)  {
+//        if(uri == null) return;
+//        try {
+//            InputStream imageStream = activity.getContentResolver().openInputStream(uri);
+//            Bitmap image = BitmapFactory.decodeStream(imageStream);
+//            imageView.setImageBitmap(image);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void showImageOptionsDialog(){
 
@@ -106,4 +134,9 @@ public class LibraryFragment extends Fragment {
                 });
         optionsDialog.show();
     }
+
+    private void updateLibraryPalettes(){
+        adapter.setPalettes(paletteViewModel.mUserLibraryColorPaletteList.getValue());
+    }
+
 }

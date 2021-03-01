@@ -4,8 +4,8 @@ import android.app.Application;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.palette.graphics.Palette;
 
@@ -17,10 +17,15 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.services.FirebaseService;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
@@ -43,13 +48,16 @@ public class PaletteRepo  {
     private RequestQueue requestQueue;
     private MutableLiveData<JSONArray> data;
     private static final String LOG_TAG =  "ColourLoversService";
-    public static final String COLOUR_LOVERS_URL = "https://www.colourlovers.com/api/palettes?format=json";
-    private MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
+    private static MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
+    private static MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
+    private FirebaseUser currentUser;
 
     public PaletteRepo(Application application){
         requestQueue = Volley.newRequestQueue(application);
         firebaseService = new FirebaseService();
         mHomeColorPaletteList = new MutableLiveData<>();
+        mUserLibraryColorPaletteList = new MutableLiveData<>();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public Single<Palette> extractColorPalette(Bitmap bitmap) {
@@ -68,52 +76,69 @@ public class PaletteRepo  {
             ColorPalette colorPalette = document.toObject(ColorPalette.class);
             palettes.add(colorPalette);
         }
+
         return palettes;
     }
 
-    public MutableLiveData<JSONArray> fetchData(String apiUrl) throws InterruptedException {
-        data = new MutableLiveData<>();
-        Thread t = new Thread(){
+    public void savePaletteToDB(ColorPalette colorPalette){
+        firebaseService.createNewPalette(colorPalette);
+    }
+
+
+    public MutableLiveData<ArrayList<ColorPalette>> fetchHomeColorPalettes() throws InterruptedException {
+
+        new Thread(){
             @Override
             public void run() {
                 super.run();
-                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                        (Request.Method.GET, apiUrl, null,
-                                new Response.Listener<JSONArray>() {
-                                    public void onResponse(JSONArray response) {
-                                        data.setValue(response);
+                firebaseService.fetchPalettesReference()
+                        .whereNotEqualTo("userId", currentUser.getUid())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
+                                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                                        snapshots.add(doc);
                                     }
-                                }, new Response.ErrorListener() {
-                            public void onErrorResponse(VolleyError error) {
+                                    mHomeColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
+                                } else {
+                                    Log.d(LOG_TAG, "Error getting documents: ", task.getException());
+                                }
                             }
                         });
-                requestQueue.add(jsonArrayRequest);
             }
-        };
-        t.start();
-        return data;
-    }
+        }.start();
 
-    public void savePaletteToDB(ColorPalette colorPalette){
-        firebaseService.savePalette(colorPalette);
-    }
-
-    public MutableLiveData<ArrayList<ColorPalette>> fetchHomeColorPalettes() throws InterruptedException {
-        firebaseService.fetchHomePalettesRef()
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            Log.w(LOG_TAG, "Listen failed.", error);
-                            return;
-                        }
-                        ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
-                        for (QueryDocumentSnapshot doc : documentSnapshots) {
-                            snapshots.add(doc);
-                        }
-                        mHomeColorPaletteList.setValue(convertFromSnapshotsToColourPalettes(snapshots));
-                    }
-                });
         return mHomeColorPaletteList;
+    }
+
+    public MutableLiveData<ArrayList<ColorPalette>> fetchUserLibraryColorPalettes() throws InterruptedException {
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                firebaseService.fetchPalettesReference()
+                        .whereEqualTo("userId", currentUser.getUid())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
+                                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                                        snapshots.add(doc);
+                                    }
+                                    mUserLibraryColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
+                                } else {
+                                    Log.d(LOG_TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            }
+        }.start();
+        return mUserLibraryColorPaletteList;
     }
 }

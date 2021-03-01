@@ -41,16 +41,6 @@ public class UnsplashFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        try {
-            unsplashViewModel.runQuery("senegal");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void setupSearchView(){
 
         unsplashViewModel = ViewModelProviders.of(requireActivity()).get(UnsplashViewModel.class);

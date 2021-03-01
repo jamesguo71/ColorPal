@@ -7,8 +7,9 @@ import java.util.ArrayList;
 public class ColorPalette {
     private String imageUrl;
     private String username;
-    private String userID;
+    private String userId;
     private Bitmap bitmap;
+    private String downloadUrl = "";
     private ArrayList<Integer> swatches;
 
     public void setBitmap (Bitmap bitmap) { this.bitmap = bitmap; }
@@ -28,16 +29,24 @@ public class ColorPalette {
         return username;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getuserId() {
+        return userId;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setuserId(String userId) {
+        this.userId = userId;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 
     @Override
@@ -45,7 +54,7 @@ public class ColorPalette {
         return "ColorPalette{" +
                 "imageUrl='" + imageUrl + '\'' +
                 ", username='" + username + '\'' +
-                ", userID='" + userID + '\'' +
+                ", userId='" + userId + '\'' +
                 ", bitmap=" + bitmap +
                 ", swatches=" + swatches +
                 '}';
