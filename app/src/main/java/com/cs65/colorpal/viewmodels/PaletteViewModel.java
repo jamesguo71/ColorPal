@@ -18,6 +18,7 @@ import com.cs65.colorpal.R;
 import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.services.FirebaseService;
+import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -42,9 +43,11 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<ArrayList<Integer>> mSwatchesList = new MutableLiveData<>();
     public MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
     public MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
+    private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
+        mTagsList.setValue(new ArrayList<>());
         paletteRepo = new PaletteRepo(application);
         fetchHomeColorPalettes();
         fetchUserLibraryColorPalettes();
@@ -120,6 +123,14 @@ public class PaletteViewModel extends AndroidViewModel{
 
     public void setSelectedImageUri(Uri uri){
         selectedImage.setValue(uri);
+    }
+
+    public MutableLiveData<ArrayList<PaletteTag>> getTags() { return mTagsList; }
+
+    public void addTag(String text){
+        PaletteTag newTag = new PaletteTag(text);
+        mTagsList.getValue().add(newTag);
+        mTagsList.setValue(mTagsList.getValue());
     }
 
     public void savePaletteToDB() throws IOException {
