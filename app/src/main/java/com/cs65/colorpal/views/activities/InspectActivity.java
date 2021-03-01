@@ -111,7 +111,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     }
 
     private void onImageChanged(Uri uri){
-        Picasso.with(this).load(uri).centerCrop().resize(700, 700).into(imageView);
+        imageView.setImageURI(uri);
     }
 
     private void addSwatches(List<Palette.Swatch> swatches) {
