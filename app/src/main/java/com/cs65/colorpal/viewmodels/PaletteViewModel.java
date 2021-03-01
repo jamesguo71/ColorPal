@@ -16,6 +16,7 @@ import androidx.palette.graphics.Palette;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
 
 import org.json.JSONArray;
@@ -35,9 +36,11 @@ public class PaletteViewModel extends AndroidViewModel {
     private MutableLiveData<Uri> selectedImage = new MutableLiveData<>();
     public LiveData<JSONArray> homePagePalettes;
     private MutableLiveData<ArrayList<Integer>> mSwatchesList = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) {
         super(application);
+        mTagsList.setValue(new ArrayList<>());
         paletteRepo = new PaletteRepo(application);
     }
 
@@ -112,6 +115,14 @@ public class PaletteViewModel extends AndroidViewModel {
 
     public void fetchHomePagePalettes(){
         homePagePalettes = paletteRepo.fetchData(PaletteRepo.COLOUR_LOVERS_URL);
+    }
+
+    public MutableLiveData<ArrayList<PaletteTag>> getTags() { return mTagsList; }
+
+    public void addTag(String text){
+        PaletteTag newTag = new PaletteTag(text);
+        mTagsList.getValue().add(newTag);
+        mTagsList.setValue(mTagsList.getValue());
     }
 
     public void savePaletteToDB() throws IOException {
