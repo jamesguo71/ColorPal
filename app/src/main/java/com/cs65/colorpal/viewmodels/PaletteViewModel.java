@@ -60,12 +60,6 @@ public class PaletteViewModel extends AndroidViewModel {
         );
     }
 
-    // TODO: remove later
-    public void testDummyPic() {
-        Uri uri=Uri.parse("android.resource://com.cs65.colorpal/" + R.drawable.nature_photo);
-        selectedImage.postValue(uri);
-    }
-
     public void extractNewFromUri(Uri photoUri){
         new Thread(new Runnable() {
             @Override

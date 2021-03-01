@@ -55,8 +55,6 @@ public class UnsplashImagesAdapter extends RecyclerView.Adapter<UnsplashImagesAd
         // Picasso by default does not download on main application by default
         Picasso.with(context).setLoggingEnabled(true);
         Picasso.with(context).load(image.getImage_view_url()).into(imageView);
-
-
     }
 
     public int getItemCount() {

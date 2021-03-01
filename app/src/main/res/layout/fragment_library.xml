@@ -18,5 +18,12 @@
         android:src="@drawable/ic_baseline_add_24"
         app:borderWidth="0dp" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/profile_image"
+        android:src="@drawable/nature_photo"
+        app:tint="@color/black" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

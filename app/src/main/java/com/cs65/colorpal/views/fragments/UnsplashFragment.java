@@ -1,62 +1,72 @@
 package com.cs65.colorpal.views.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.databinding.FragmentUnsplashBinding;
 import com.cs65.colorpal.models.UnsplashImage;
 import com.cs65.colorpal.viewmodels.UnsplashViewModel;
-import com.cs65.colorpal.views.adapter.ImageListAdapter;
+import com.cs65.colorpal.views.activities.MainActivity;
+import com.cs65.colorpal.views.adapter.UnsplashImagesAdapter;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class UnsplashFragment extends Fragment {
 
     private View view;
     private  SearchView searchView;
-    private FragmentUnsplashBinding fragmentUnsplashBinding;
     private UnsplashViewModel unsplashViewModel;
-    private List<UnsplashImage> images;
+    private ArrayList<UnsplashImage> unsplashImages;
+    private RecyclerView rvUnsplashImages;
+    private UnsplashImagesAdapter  adapter;
+    private MainActivity mainActivity;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        fragmentUnsplashBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_unsplash, container, false);
-        fragmentUnsplashBinding.setLifecycleOwner(requireActivity());
-        view = fragmentUnsplashBinding.getRoot();
+        view = inflater.inflate(R.layout.fragment_unsplash, container, false);
+        unsplashImages = new ArrayList<>();
+        mainActivity = (MainActivity) getActivity();
         setupSearchView();
-        displayImages();
+        setupRecyclerView();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            unsplashViewModel.runQuery("senegal");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setupSearchView(){
 
         unsplashViewModel = ViewModelProviders.of(requireActivity()).get(UnsplashViewModel.class);
-        unsplashViewModel.getUnsplashImages().observe(getViewLifecycleOwner(), Observer -> {
-            Log.d("papelog fragment", "data fetched");
-            fragmentUnsplashBinding.setNumberOfPics(Observer.toString());
-            images = Observer;
+        UnsplashViewModel.getUnsplashImages().observe(getViewLifecycleOwner(), unsplashImagesResponse -> {
+            rvUnsplashImages.setAdapter(new UnsplashImagesAdapter(unsplashImagesResponse));
+            adapter.notifyDataSetChanged();
+            mainActivity.doneLoadingHanddler();
         });
 
         searchView = (SearchView) view.findViewById(R.id.unsplash_searchview);
         searchView.onActionViewExpanded();
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             public boolean onQueryTextSubmit(String query) {
                 try {
                     unsplashViewModel.runQuery(query);
+                    mainActivity.isLoadingHandler("Searching images for " + query + "...");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -69,23 +79,11 @@ public class UnsplashFragment extends Fragment {
         });
     }
 
-    private void displayImages() {
-        RecyclerView recyclerView = view.findViewById(R.id.unsplashImages);
-        ImageListAdapter adapter = new ImageListAdapter(getActivity());
-        recyclerView.setAdapter(adapter);
-        // Todo: decide what to display when user enters for the first time
-        if (images == null)
-            loadImages();
-        adapter.setImages(images);
+    public void setupRecyclerView(){
+        rvUnsplashImages = (RecyclerView) view.findViewById(R.id.unsplash_recycle_view);
+        adapter = new UnsplashImagesAdapter(unsplashImages);
+        rvUnsplashImages.setAdapter(adapter);
+        rvUnsplashImages.setLayoutManager(new LinearLayoutManager((getActivity())));
     }
 
-    // Todo: remove later. for demo purpose.
-    private void loadImages() {
-        images = new ArrayList<>();
-        images.add(new UnsplashImage("T", "T", "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MXwxfHNlYXJjaHwxfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400", "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MXwxfHNlYXJjaHwxfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400"));
-        images.add(new UnsplashImage("T", "T", "https://images.unsplash.com/photo-1539627831859-a911cf04d3cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwyfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400", "https://images.unsplash.com/photo-1539627831859-a911cf04d3cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwyfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400"));
-        images.add(new UnsplashImage("T", "T","https://images.unsplash.com/photo-1603394151492-5e9b974b090b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwzfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400", "https://images.unsplash.com/photo-1603394151492-5e9b974b090b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwzfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400"));
-        images.add(new UnsplashImage("T", "T","https://images.unsplash.com/photo-1603394151492-5e9b974b090b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwzfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400", "https://images.unsplash.com/photo-1603394151492-5e9b974b090b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwzfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400"));
-        images.add(new UnsplashImage("T", "T","https://images.unsplash.com/photo-1603394151492-5e9b974b090b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwzfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400", "https://images.unsplash.com/photo-1603394151492-5e9b974b090b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MXwyMTAyMTZ8MHwxfHNlYXJjaHwzfHxzbWFydHxlbnwwfHx8&ixlib=rb-1.2.1&q=80&w=400"));
-    }
 }

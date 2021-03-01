@@ -31,6 +31,7 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class FirebaseService implements Runnable{
 
@@ -64,25 +65,32 @@ public class FirebaseService implements Runnable{
     }
 
     public void savePalette(ColorPalette colorPalette){
-        ArrayList<Integer> swatches = colorPalette.getSwatches();
-        Map<String, Integer> swatchMap= new HashMap<>();
-        for(int i = 0; i<swatches.size(); i++){
-            swatchMap.put(String.valueOf(i),swatches.get(i));
-        }
-        db.collection(PALETTES_COLLECTION)
-            .add(swatchMap)
-            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                ArrayList<Integer> swatches = colorPalette.getSwatches();
+                Map<String, Integer> swatchMap= new HashMap<>();
+                for(int i = 0; i<swatches.size(); i++){
+                    swatchMap.put(String.valueOf(i),swatches.get(i));
                 }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w(LOG_TAG, "Error adding document", e);
-                }
-            });
+
+                db.collection(PALETTES_COLLECTION)
+                        .add(swatchMap)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(LOG_TAG, "Error adding document", e);
+                            }
+                        });
+            }
+        }.start();
     }
 
     public CollectionReference fetchHomePalettesRef(){
@@ -94,34 +102,40 @@ public class FirebaseService implements Runnable{
     }
 
     public void uploadImage(Bitmap bitmap) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference imageRef = storageRef.child("images/" + "1");
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        // Asynchronously uploads byte data to this StorageReference
-        UploadTask uploadTask = imageRef.putBytes(data);
-
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        new Thread(){
             @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-                return imageRef.getDownloadUrl();
+            public void run() {
+                super.run();
+                StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                final StorageReference imageRef = storageRef.child("images/" + "1");
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
+
+                // Asynchronously uploads byte data to this StorageReference
+                UploadTask uploadTask = imageRef.putBytes(data);
+
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return imageRef.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                        } else {
+                            // Handle failures
+                            // ...
+                        }
+                    }
+                });
             }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                } else {
-                    // Handle failures
-                    // ...
-                }
-            }
-        });
+        };
     }
 }
