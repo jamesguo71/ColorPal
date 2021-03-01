@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import io.reactivex.Single;
+import io.reactivex.schedulers.Schedulers;
 
 public class PaletteRepo {
 
@@ -47,7 +48,7 @@ public class PaletteRepo {
     }
 
     public Single<Palette> extractColorPalette(Bitmap bitmap) {
-        return Single.fromCallable(() -> Palette.from(bitmap).maximumColorCount(MAX_COLOR_COUNT).generate());
+        return Single.fromCallable(() -> Palette.from(bitmap).maximumColorCount(MAX_COLOR_COUNT).generate()).subscribeOn(Schedulers.computation());
     }
 
     public void createNew(Bitmap bitmap){
