@@ -3,31 +3,21 @@ package com.cs65.colorpal.views.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.models.ColorPalette;
-import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.SwatchListAdapter;
@@ -36,7 +26,6 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,28 +50,18 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
         imageView = findViewById(R.id.img);
         swatchesView = findViewById(R.id.colors);
-        paletteViewModel.getSelectedImage().observe(this, uri -> onImageChanged(uri));
 
-//        paletteViewModel.getColorPaletteData().observe(this, palette -> addSwatches(palette));
+        paletteViewModel.getSelectedImage().observe(this, uri -> onImageSelected(uri));
         paletteViewModel.getColorPaletteData().observe(this, palette -> paletteViewModel.initSwatchesArrayList());
-
         paletteViewModel.getSwatches().observe(this, list -> addSwatches(Utils.toSwatches(list)));
-
         paletteViewModel.getTags().observe(this, paletteTags -> tagsGridAdapter.notifyDataSetChanged());
 
         Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null) {
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
-            Log.d("papelog", String.valueOf(photoUri));
-            imageView.setImageURI(photoUri);
             paletteViewModel.setSelectedImageUri(photoUri);
             paletteViewModel.extractNewFromUri(photoUri);
         }
-
-//        paletteViewModel.testDummyPic();
-//        // TODO: remove later
-//        Bitmap dummyPic = BitmapFactory.decodeResource(getResources(), R.drawable.nature_photo);
-//        paletteViewModel.extractColorPalette(dummyPic);
 
         bottomNavigationView = findViewById(R.id.inspect_footer);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -110,12 +89,11 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         }
     }
 
-    private void onImageChanged(Uri uri){
+    private void onImageSelected(Uri uri){
         imageView.setImageURI(uri);
     }
 
     private void addSwatches(List<Palette.Swatch> swatches) {
-//        List<Palette.Swatch> swatches = palette.getSwatches();
         if (!swatches.isEmpty()) {
             SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches, v -> openSwatchDetails());
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
@@ -127,12 +105,6 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
 
     public void openSwatchDetails() {
         Intent intent = new Intent(this, SwatchesDetailActivity.class);
-//        Palette palette = paletteViewModel.getColorPaletteData().getValue();
-//        List<Palette.Swatch> swatches = palette.getSwatches();
-//        ArrayList<Integer> swatchValues = new ArrayList<>();
-//        for (Palette.Swatch swatch : swatches) {
-//            swatchValues.add(swatch.getRgb());
-//        }
         ArrayList<Integer> swatchValues = paletteViewModel.getSwatches().getValue();
         intent.putIntegerArrayListExtra(SWATCH_VALUES, swatchValues);
         startActivity(intent);
