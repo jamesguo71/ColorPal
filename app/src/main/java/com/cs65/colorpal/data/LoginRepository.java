@@ -16,21 +16,27 @@ public class LoginRepository {
 
     public MutableLiveData<User> firebaseSignInWithGoogle(AuthCredential googleAuthCredential) {
         MutableLiveData<User> authenticatedUserMutableLiveData = new MutableLiveData<>();
-        firebaseAuth.signInWithCredential(googleAuthCredential).addOnCompleteListener(authTask -> {
-            if (authTask.isSuccessful()) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null) {
-                    String uid = firebaseUser.getUid();
-                    String name = firebaseUser.getDisplayName();
-                    String email = firebaseUser.getEmail();
-                    Uri image = firebaseUser.getPhotoUrl();
-                    User user = new User(name, email, uid, image);
-                    authenticatedUserMutableLiveData.setValue(user);
-                }
-            } else {
-                Log.d(TAG, authTask.getException().getMessage());
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                firebaseAuth.signInWithCredential(googleAuthCredential).addOnCompleteListener(authTask -> {
+                    if (authTask.isSuccessful()) {
+                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            String uid = firebaseUser.getUid();
+                            String name = firebaseUser.getDisplayName();
+                            String email = firebaseUser.getEmail();
+                            Uri image = firebaseUser.getPhotoUrl();
+                            User user = new User(name, email, uid, image);
+                            authenticatedUserMutableLiveData.setValue(user);
+                        }
+                    } else {
+                        Log.d(TAG, authTask.getException().getMessage());
+                    }
+                });
             }
-        });
+        }.start();
         return authenticatedUserMutableLiveData;
     }
 

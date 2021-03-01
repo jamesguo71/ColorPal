@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,6 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
-import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.SwatchListAdapter;
@@ -63,15 +61,10 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         Intent intent = getIntent();
         if(intent!=null) {
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
-            Log.d("papelog", String.valueOf(photoUri));
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    imageView.setImageURI(photoUri);
-                    paletteViewModel.setSelectedImageUri(photoUri);
-                    paletteViewModel.extractNewFromUri(photoUri);
-                }
-            });
+
+            imageView.setImageURI(photoUri);
+            paletteViewModel.setSelectedImageUri(photoUri);
+            paletteViewModel.extractNewFromUri(photoUri);
         }
 
 //        paletteViewModel.testDummyPic();
