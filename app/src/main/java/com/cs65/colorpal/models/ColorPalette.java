@@ -5,9 +5,9 @@ import android.graphics.Bitmap;
 import java.util.ArrayList;
 
 public class ColorPalette {
-    private String imageUrl;
-    private String username;
-    private String userId;
+    private String imageUrl = "";
+    private String username = "";
+    private String userId = "";
     private Bitmap bitmap;
     private String downloadUrl = "";
     private ArrayList<Integer> swatches;

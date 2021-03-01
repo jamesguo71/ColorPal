@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +104,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             // Todo: Currently palette images unset, so getImageUrl returns null.
 //            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getImageUrl());
             // Todo: Remove after real images available. use hardcoded nature pic now.
-            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, Utils.getUriToDrawable(context, R.drawable.nature_photo));
+            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getDownloadUrl());
             intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
             context.startActivity(intent);
         }
