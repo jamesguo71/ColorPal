@@ -63,8 +63,15 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         Intent intent = getIntent();
         if(intent!=null) {
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
-            paletteViewModel.setSelectedImageUri(photoUri);
-            paletteViewModel.extractNewFromUri(photoUri);
+            Log.d("papelog", String.valueOf(photoUri));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    imageView.setImageURI(photoUri);
+                    paletteViewModel.setSelectedImageUri(photoUri);
+                    paletteViewModel.extractNewFromUri(photoUri);
+                }
+            });
         }
 
 //        paletteViewModel.testDummyPic();

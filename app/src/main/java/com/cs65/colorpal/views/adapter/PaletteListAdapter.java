@@ -60,6 +60,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(context);
             layoutManager.setFlexDirection(FlexDirection.ROW);
             holder.title.setText("Nature Scene");
+            holder.username.setText(palette.getUsername());
             holder.swatches.setLayoutManager(layoutManager);
             holder.swatches.setAdapter(swatchesViewAdapter);
         }
@@ -80,13 +81,14 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
     }
 
     public class PaletteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView title;
+        public TextView title, username;
         public RecyclerView swatches;
 
         public PaletteViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             title = itemView.findViewById(R.id.paletteTitle);
+            username = itemView.findViewById(R.id.username);
             swatches = itemView.findViewById(R.id.paletteSwatches);
         }
 

@@ -22,9 +22,5 @@
         app:labelVisibilityMode="labeled"
         android:icon="@drawable/ic_baseline_image_search_24"
         android:title="Unsplash"/>
-<!--    <item-->
-<!--        android:id="@+id/settings_button"-->
-<!--        android:enabled="true"-->
-<!--        android:icon="@drawable/ic_baseline_settings_24"-->
-<!--        android:title="@string/settings"/>-->
+
 </menu>

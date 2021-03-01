@@ -91,23 +91,25 @@ public class PaletteRepo  {
             @Override
             public void run() {
                 super.run();
-                firebaseService.fetchPalettesReference()
-                        .whereNotEqualTo("userId", currentUser.getUid())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
-                                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                                        snapshots.add(doc);
+                if(currentUser != null){
+                    firebaseService.fetchPalettesReference()
+                            .whereNotEqualTo("userId", currentUser.getUid())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
+                                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                                            snapshots.add(doc);
+                                        }
+                                        mHomeColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
+                                    } else {
+                                        Log.d(LOG_TAG, "Error getting documents: ", task.getException());
                                     }
-                                    mHomeColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
-                                } else {
-                                    Log.d(LOG_TAG, "Error getting documents: ", task.getException());
                                 }
-                            }
-                        });
+                            });
+                }
             }
         }.start();
 
@@ -120,23 +122,25 @@ public class PaletteRepo  {
             @Override
             public void run() {
                 super.run();
-                firebaseService.fetchPalettesReference()
-                        .whereEqualTo("userId", currentUser.getUid())
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
-                                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                                        snapshots.add(doc);
+                if(currentUser != null){
+                    firebaseService.fetchPalettesReference()
+                            .whereEqualTo("userId", currentUser.getUid())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
+                                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                                            snapshots.add(doc);
+                                        }
+                                        mUserLibraryColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
+                                    } else {
+                                        Log.d(LOG_TAG, "Error getting documents: ", task.getException());
                                     }
-                                    mUserLibraryColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
-                                } else {
-                                    Log.d(LOG_TAG, "Error getting documents: ", task.getException());
                                 }
-                            }
-                        });
+                            });
+                }
             }
         }.start();
         return mUserLibraryColorPaletteList;
