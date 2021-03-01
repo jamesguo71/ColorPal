@@ -1,6 +1,5 @@
 package com.cs65.colorpal.views.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,22 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.databinding.FragmentHomeBinding;
 import com.cs65.colorpal.models.ColorPalette;
-import com.cs65.colorpal.models.User;
 import com.cs65.colorpal.services.FirebaseService;
-import com.cs65.colorpal.viewmodels.FirebaseViewModel;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.activities.MainActivity;
 import com.cs65.colorpal.views.adapter.PaletteListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class HomeFragment extends Fragment{
 
     private View view;
     private PaletteViewModel paletteViewModel;
-    private FirebaseViewModel firebaseViewModel;
+
     private FragmentHomeBinding fragmentHomeBinding;
     private RecyclerView palettesRecyclerView;
     private static FirebaseService firebaseService;
@@ -44,26 +39,19 @@ public class HomeFragment extends Fragment{
         fragmentHomeBinding.setLifecycleOwner(requireActivity());
         view = fragmentHomeBinding.getRoot();
 
-        firebaseViewModel = ViewModelProviders.of(this).get(FirebaseViewModel.class);
-        firebaseViewModel.fetchHomeColorPalettesFromDB().observe(getViewLifecycleOwner(), homePalettes -> {
-            updateHomePalettes();
-            mainActivity.doneLoadingHanddler();
-        });
-
-        palettesRecyclerView = view.findViewById(R.id.homePalettes);
-        palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new PaletteListAdapter(getActivity());
-        palettesRecyclerView.setAdapter(adapter);
-
-        initializeVariables();
+        try {
+            initializeVariables();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         mainActivity.isLoadingHandler("Loading Palettes...");
-//        getData();
+
         return view;
 
     }
 
     private void updateHomePalettes(){
-        adapter.setPalettes(firebaseViewModel.getHomeColorPalettes().getValue());
+        adapter.setPalettes(paletteViewModel.mHomeColorPaletteList.getValue());
     }
 
     private void displaySavedPalettes(View view, List<ColorPalette> colorPaletteList) {
@@ -78,19 +66,21 @@ public class HomeFragment extends Fragment{
     }
 
 
-    public void initializeVariables(){
+    public void initializeVariables() throws InterruptedException {
 //        firebaseService = new FirebaseService();
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
-        paletteViewModel.fetchHomePagePalettes();
-        paletteViewModel.homePagePalettes.observe(getViewLifecycleOwner(), Observer -> {
-//             Log.d("papelog", String.valueOf(paletteViewModel.homePagePalettes.getValue()));
+        paletteViewModel.fetchHomeColorPalettes();
+        paletteViewModel.mHomeColorPaletteList.observe(getViewLifecycleOwner(), Observer -> {
+            updateHomePalettes();
+            mainActivity.doneLoadingHanddler();
         });
+
+
         mainActivity = (MainActivity) getActivity();
+        palettesRecyclerView = view.findViewById(R.id.homePalettes);
+        palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new PaletteListAdapter(getActivity());
+        palettesRecyclerView.setAdapter(adapter);
     }
 
-    //Display palettes when fetching is done
-//    @Override
-//    public void onCallback(List<ColorPalette> list) {
-//        displaySavedPalettes(view,list);
-//    }
 }

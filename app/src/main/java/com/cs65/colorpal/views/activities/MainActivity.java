@@ -158,10 +158,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         if( loginViewModel.authenticatedUser!= null){
             User user = loginViewModel.authenticatedUser.getValue();
-            Log.d("papelog", user.getImage().toString());
             ImageView profileImage = (ImageView) findViewById(R.id.profile_image);
-            Picasso.with(this).setLoggingEnabled(true);
-            Picasso.with(this).load(user.getImage().toString()).into(profileImage);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Picasso.with(getApplicationContext()).load(user.getImage().toString()).into(profileImage);
+                }
+            });
         }
         return true;
     }

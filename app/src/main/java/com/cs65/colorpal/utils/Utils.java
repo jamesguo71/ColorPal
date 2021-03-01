@@ -2,7 +2,9 @@ package com.cs65.colorpal.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.AnyRes;
 import androidx.annotation.NonNull;
@@ -15,9 +17,11 @@ public class Utils {
 
     public static List<Palette.Swatch> toSwatches(ArrayList<Integer> swatches) {
         int DUMMY = 100;
+
         List<Palette.Swatch> newSwatches = new ArrayList<>();
-        for (Integer swatch: swatches)
+        for (Integer swatch: swatches){
             newSwatches.add(new Palette.Swatch(swatch, DUMMY));
+        }
         return newSwatches;
     }
 

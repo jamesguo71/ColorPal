@@ -40,8 +40,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/profile_image"
-                    android:src="@drawable/pape.jpg"
-                    app:tint="@color/black" />
+                    android:src="@drawable/nature_photo"
+                    />
 
             </androidx.cardview.widget.CardView>
         </com.google.android.material.appbar.MaterialToolbar>

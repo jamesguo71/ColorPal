@@ -3,10 +3,8 @@ package com.cs65.colorpal.services;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.cs65.colorpal.models.ColorPalette;
 import com.google.android.gms.tasks.Continuation;
@@ -14,54 +12,51 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
-public class FirebaseService implements Runnable{
+public class FirebaseService {
+
 
     private FirebaseFirestore db;
     private static final String PALETTES_COLLECTION  = "palettes";
     private static final String LOG_TAG = "FirebaseService";
+    private static final String USER_ID = "userId";
     private Bitmap imageBitmap;
+    private FirebaseUser currentUser;
 
     public FirebaseService(){
         db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public void createNewPalette(ColorPalette colorPalette){
         uploadImage(colorPalette.getBitmap());
         savePalette(colorPalette);
-//        db.collection(PALETTES_COLLECTION)
-//                .add(colorPalette)
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        Log.d(LOG_TAG, "ColorPalette added with following ID " + documentReference.getId());
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(LOG_TAG, "Error adding document", e);
-//                    }
-//                })
-//        ;
+    }
+
+    public Map<String, Object> createPaletteData(ColorPalette palette){
+        Map<String, Object> paletteData = new HashMap<>();
+        paletteData.put("username", currentUser.getDisplayName());
+        paletteData.put("userId", currentUser.getUid());
+        paletteData.put("swatches", palette.getSwatches());
+        return paletteData;
+    }
+
+    public CollectionReference fetchHomePalettesRef(){
+        return db.collection(PALETTES_COLLECTION);
     }
 
     public void savePalette(ColorPalette colorPalette){
@@ -69,14 +64,10 @@ public class FirebaseService implements Runnable{
             @Override
             public void run() {
                 super.run();
-                ArrayList<Integer> swatches = colorPalette.getSwatches();
-                Map<String, Integer> swatchMap= new HashMap<>();
-                for(int i = 0; i<swatches.size(); i++){
-                    swatchMap.put(String.valueOf(i),swatches.get(i));
-                }
+                Map<String, Object> paletteData = createPaletteData(colorPalette);
 
                 db.collection(PALETTES_COLLECTION)
-                        .add(swatchMap)
+                        .add(paletteData)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
@@ -91,14 +82,6 @@ public class FirebaseService implements Runnable{
                         });
             }
         }.start();
-    }
-
-    public CollectionReference fetchHomePalettesRef(){
-        return db.collection(PALETTES_COLLECTION);
-    }
-
-    @Override
-    public void run() {
     }
 
     public void uploadImage(Bitmap bitmap) {
@@ -138,4 +121,5 @@ public class FirebaseService implements Runnable{
             }
         };
     }
+
 }

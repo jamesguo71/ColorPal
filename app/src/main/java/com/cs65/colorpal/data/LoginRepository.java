@@ -24,7 +24,6 @@ public class LoginRepository {
                     String name = firebaseUser.getDisplayName();
                     String email = firebaseUser.getEmail();
                     Uri image = firebaseUser.getPhotoUrl();
-                    Log.d("papelog", String.valueOf(image));
                     User user = new User(name, email, uid, image);
                     authenticatedUserMutableLiveData.setValue(user);
                 }

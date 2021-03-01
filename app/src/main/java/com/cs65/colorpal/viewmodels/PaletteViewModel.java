@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -16,7 +17,12 @@ import androidx.palette.graphics.Palette;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.services.FirebaseService;
 import com.cs65.colorpal.utils.Utils;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 
@@ -27,18 +33,19 @@ import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class PaletteViewModel extends AndroidViewModel {
+public class PaletteViewModel extends AndroidViewModel{
     private static final String PALETTE_TAG = "PaletteViewModel";
     private PaletteRepo paletteRepo;
     private CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<Palette> extractedColorPaletteData = new MutableLiveData<>();
     private MutableLiveData<Uri> selectedImage = new MutableLiveData<>();
-    public LiveData<JSONArray> homePagePalettes;
     private MutableLiveData<ArrayList<Integer>> mSwatchesList = new MutableLiveData<>();
+    public MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
 
-    public PaletteViewModel(Application application) {
+    public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
         paletteRepo = new PaletteRepo(application);
+        fetchHomeColorPalettes();
     }
 
     private void createNew(Uri uri) throws IOException {
@@ -73,13 +80,22 @@ public class PaletteViewModel extends AndroidViewModel {
         }}).start();
     }
 
-    public void setSwatchesList(ArrayList<Integer> swatches){
-        mSwatchesList.setValue(swatches);
+    public void fetchHomeColorPalettes() throws InterruptedException {
+        mHomeColorPaletteList = paletteRepo.fetchHomeColorPalettes();
+    }
+
+    public LiveData<Palette> getColorPaletteData() {
+        return extractedColorPaletteData;
+    }
+
+    public LiveData<Uri> getSelectedImage() {
+        return selectedImage;
     }
 
     public MutableLiveData<ArrayList<Integer>> getSwatches(){
         return mSwatchesList;
     }
+
 
     public void initSwatchesArrayList(){
         ArrayList<Integer> swatchValues = new ArrayList<>();
@@ -92,20 +108,12 @@ public class PaletteViewModel extends AndroidViewModel {
         mSwatchesList.postValue(swatchValues);
     }
 
+    public void setSwatchesList(ArrayList<Integer> swatches){
+        mSwatchesList.setValue(swatches);
+    }
+
     public void setSelectedImageUri(Uri uri){
         selectedImage.setValue(uri);
-    }
-
-    public LiveData<Palette> getColorPaletteData() {
-        return extractedColorPaletteData;
-    }
-
-    public LiveData<Uri> getSelectedImage() {
-        return selectedImage;
-    }
-
-    public void fetchHomePagePalettes(){
-        homePagePalettes = paletteRepo.fetchData(PaletteRepo.COLOUR_LOVERS_URL);
     }
 
     public void savePaletteToDB() throws IOException {
@@ -114,4 +122,6 @@ public class PaletteViewModel extends AndroidViewModel {
         newColorPalette.setSwatches(mSwatchesList.getValue());
         paletteRepo.savePaletteToDB(newColorPalette);
     }
+
+
 }
