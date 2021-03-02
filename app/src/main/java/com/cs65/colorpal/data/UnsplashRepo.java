@@ -3,6 +3,7 @@ package com.cs65.colorpal.data;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -32,8 +33,7 @@ public class UnsplashRepo {
         data = new MutableLiveData<>();
     }
 
-    public MutableLiveData<ArrayList<UnsplashImage>> fetchImages(String query) throws JSONException {
-        data = new MutableLiveData<>();
+    public void fetchImages(String query, MutableLiveData<ArrayList<UnsplashImage>> data) throws JSONException {
         new Thread(){
             @Override
             public void run() {
@@ -59,7 +59,6 @@ public class UnsplashRepo {
                 requestQueue.add(jsonArrayRequest);
             }
         }.start();
-        return data;
     }
 
     public ArrayList<UnsplashImage> convertToUnsplashImages(JSONObject response) throws JSONException {
