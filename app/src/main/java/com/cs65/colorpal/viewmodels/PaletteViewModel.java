@@ -8,29 +8,21 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.palette.graphics.Palette;
 
-import com.cs65.colorpal.R;
 import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.models.ColorPalette;
-import com.cs65.colorpal.services.FirebaseService;
 import com.cs65.colorpal.models.PaletteTag;
-import com.cs65.colorpal.utils.Utils;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import org.json.JSONArray;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -44,6 +36,8 @@ public class PaletteViewModel extends AndroidViewModel{
     public MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
     public MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
     private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
+    private MutableLiveData<Integer> selectedColor = new MutableLiveData<>();
+    private MutableLiveData<Boolean> addColorEvent = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
@@ -140,5 +134,32 @@ public class PaletteViewModel extends AndroidViewModel{
         paletteRepo.savePaletteToDB(newColorPalette);
     }
 
+    public void selectColor(int pixel) {
+        int red = Color.red(pixel);
+        int green = Color.green(pixel);
+        int blue = Color.blue(pixel);
+        int rgb = Color.rgb(red, green, blue);
+        selectedColor.postValue(rgb);
+    }
 
+    public LiveData<Integer> getSelectedColor() {
+        return selectedColor;
+    }
+
+    public void addSelectedColor() {
+        ArrayList<Integer> swatches = mSwatchesList.getValue();
+        Set<Integer> swatchesSet = new HashSet<>(swatches);
+        Integer selectedColorRgb = selectedColor.getValue();
+        if (swatchesSet.add(selectedColorRgb)) {
+            addColorEvent.postValue(true);
+            swatches.add(selectedColor.getValue());
+            mSwatchesList.postValue(swatches);
+        } else {
+            addColorEvent.postValue(false);
+        }
+    }
+
+    public LiveData<Boolean> getAddColorEvent() {
+        return addColorEvent;
+    }
 }

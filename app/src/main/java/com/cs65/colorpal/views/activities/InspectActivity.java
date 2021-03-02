@@ -1,18 +1,24 @@
 package com.cs65.colorpal.views.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +44,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     private RecyclerView swatchesView;
     private BottomNavigationView bottomNavigationView;
     private ImageView imageView;
+    private Button addSelectedColorBtn;
     private RecyclerView tagsView;
     private TagsGridAdapter tagsGridAdapter;
     public static final String PHOTO_URI = "photoUri";
@@ -49,12 +56,17 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         setContentView(R.layout.inspect);
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
         imageView = findViewById(R.id.img);
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache(true);
         swatchesView = findViewById(R.id.colors);
+        CardView selectedColor = findViewById(R.id.selected_color);
+        addSelectedColorBtn = findViewById(R.id.add_palatte_btn);
 
         paletteViewModel.getSelectedImage().observe(this, uri -> onImageSelected(uri));
         paletteViewModel.getColorPaletteData().observe(this, palette -> paletteViewModel.initSwatchesArrayList());
         paletteViewModel.getSwatches().observe(this, list -> addSwatches(Utils.toSwatches(list)));
         paletteViewModel.getTags().observe(this, paletteTags -> tagsGridAdapter.notifyDataSetChanged());
+        paletteViewModel.getSelectedColor().observe(this, rgb -> selectedColor.setCardBackgroundColor(rgb));
 
         Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null) {
@@ -77,6 +89,8 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         layoutManager.setJustifyContent(JustifyContent.FLEX_START);
         tagsView.setLayoutManager(layoutManager);
         tagsView.setAdapter(tagsGridAdapter);
+
+        setUpColorSelection();
     }
 
     // Update swatches from Edit Activity
@@ -160,5 +174,29 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 return true;
         }
         return false;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setUpColorSelection() {
+        imageView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+                Bitmap bitmap = imageView.getDrawingCache(true);
+                float x = event.getX();
+                float y = event.getY();
+                int pixel = bitmap.getPixel((int)x, (int)y);
+                paletteViewModel.selectColor(pixel);
+            }
+            return true;
+        });
+        addSelectedColorBtn.setOnClickListener((v -> {
+            paletteViewModel.addSelectedColor();
+        }));
+        paletteViewModel.getAddColorEvent().observe(this, success -> {
+            if (success) {
+                Toast.makeText(this, getString(R.string.successful_added_color), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.failed_to_add_color), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

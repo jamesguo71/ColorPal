@@ -13,6 +13,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-    <style name="SearchViewStyle" parent="Theme.MaterialComponents">
+
+    <style name="SearchViewStyle" parent="Theme.MaterialComponents" />
+
+    <!-- Button color -->
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@color/orange</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>
