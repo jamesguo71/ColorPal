@@ -47,11 +47,6 @@ public class PaletteViewModel extends AndroidViewModel{
         fetchUserLibraryColorPalettes();
     }
 
-    private void createNew(Uri uri) throws IOException {
-        Bitmap bitmap = convertUriToBitmap(uri);
-        paletteRepo.createNew(bitmap);
-    }
-
     private Bitmap convertUriToBitmap(Uri uri) throws IOException {
         ParcelFileDescriptor parcelFileDescriptor = getApplication().getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
@@ -131,6 +126,7 @@ public class PaletteViewModel extends AndroidViewModel{
         ColorPalette newColorPalette = new ColorPalette();
         newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
         newColorPalette.setSwatches(mSwatchesList.getValue());
+        newColorPalette.setTags(mTagsList.getValue());
         paletteRepo.savePaletteToDB(newColorPalette);
     }
 

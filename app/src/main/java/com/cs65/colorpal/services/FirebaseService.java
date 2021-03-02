@@ -9,13 +9,10 @@ import androidx.annotation.NonNull;
 import com.cs65.colorpal.models.ColorPalette;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -51,6 +48,7 @@ public class FirebaseService {
         paletteData.put("userId", currentUser.getUid());
         paletteData.put("swatches", palette.getSwatches());
         paletteData.put("downloadUrl", palette.getDownloadUrl());
+        paletteData.put("tags", palette.getTags());
         return paletteData;
     }
 
@@ -58,8 +56,7 @@ public class FirebaseService {
         return db.collection(PALETTES_COLLECTION);
     }
 
-    public void savePalette(ColorPalette colorPalette){
-
+    private void savePalette(ColorPalette colorPalette){
         new Thread(){
             @Override
             public void run() {
@@ -68,19 +65,11 @@ public class FirebaseService {
 
                 db.collection(PALETTES_COLLECTION)
                         .add(paletteData)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                uploadImage(colorPalette, documentReference.getId());
-                            }
+                        .addOnSuccessListener(documentReference -> {
+                            Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            uploadImage(colorPalette, documentReference.getId());
                         })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(LOG_TAG, "Error adding document", e);
-                            }
-                        });
+                        .addOnFailureListener(e -> Log.w(LOG_TAG, "Error adding document", e));
             }
         }.start();
     }
@@ -128,5 +117,4 @@ public class FirebaseService {
             }
         }.start();
     }
-
 }

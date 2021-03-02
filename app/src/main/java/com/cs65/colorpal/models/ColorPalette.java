@@ -3,6 +3,7 @@ package com.cs65.colorpal.models;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ColorPalette {
     private String imageUrl = "";
@@ -11,6 +12,7 @@ public class ColorPalette {
     private Bitmap bitmap;
     private String downloadUrl = "";
     private ArrayList<Integer> swatches;
+    private List<PaletteTag> tags;
 
     public void setBitmap (Bitmap bitmap) { this.bitmap = bitmap; }
     public Bitmap getBitmap(){
@@ -49,6 +51,14 @@ public class ColorPalette {
         this.downloadUrl = downloadUrl;
     }
 
+    public List<PaletteTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<PaletteTag> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "ColorPalette{" +
@@ -57,6 +67,7 @@ public class ColorPalette {
                 ", userId='" + userId + '\'' +
                 ", bitmap=" + bitmap +
                 ", swatches=" + swatches +
+                ", tags=" + tags +
                 '}';
     }
 }

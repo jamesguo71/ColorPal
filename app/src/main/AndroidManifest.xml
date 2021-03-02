@@ -17,7 +17,7 @@
         android:roundIcon="@drawable/logo_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.ColorPal">
-        <activity android:name=".PaletteDetailActivity"></activity>
+        <activity android:name=".views.activities.PaletteDetailActivity"></activity>
         <activity android:name=".views.activities.MainActivity">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->

@@ -1,16 +1,15 @@
-package com.cs65.colorpal;
+package com.cs65.colorpal.views.activities;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-
+import com.cs65.colorpal.R;
 import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.views.adapter.SwatchListAdapter;
 import com.google.android.flexbox.FlexDirection;
@@ -24,6 +23,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
     public static final String SWATCHES_KEY = "SWATCHES";
     private ImageView imageView;
     private RecyclerView paletteColors;
+    private RecyclerView tagsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +35,14 @@ public class PaletteDetailActivity extends AppCompatActivity {
         imageView = findViewById(R.id.palette_detail_image);
         Picasso.with(this).load(paletteUri).into(imageView);
         paletteColors = findViewById(R.id.palette_colors);
+        tagsView = findViewById(R.id.palette_detail_tags_view);
+
         List<Palette.Swatch> swatches = Utils.toSwatches(intent.getIntegerArrayListExtra(SWATCHES_KEY));
         SwatchListAdapter adapter = new SwatchListAdapter(swatches, null);
         paletteColors.setAdapter(adapter);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
         layoutManager.setFlexDirection(FlexDirection.ROW);
         paletteColors.setLayoutManager(layoutManager);
+
     }
 }

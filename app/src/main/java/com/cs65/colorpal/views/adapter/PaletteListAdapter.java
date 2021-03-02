@@ -1,11 +1,7 @@
 package com.cs65.colorpal.views.adapter;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cs65.colorpal.PaletteDetailActivity;
+import com.cs65.colorpal.views.activities.PaletteDetailActivity;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.utils.Utils;
-import com.cs65.colorpal.views.activities.InspectActivity;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.PaletteViewHolder> {
@@ -72,7 +66,6 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
         mPalettes = palettes;
         notifyDataSetChanged();
     }
-
 
     @Override
     public int getItemCount() {

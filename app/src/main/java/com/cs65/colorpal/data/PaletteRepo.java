@@ -5,15 +5,10 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.palette.graphics.Palette;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.services.FirebaseService;
@@ -21,11 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
@@ -65,12 +56,6 @@ public class PaletteRepo  {
         return Single.fromCallable(() -> Palette.from(bitmap).maximumColorCount(MAX_COLOR_COUNT).generate()).subscribeOn(Schedulers.computation());
     }
 
-    public void createNew(Bitmap bitmap){
-        ColorPalette newColorPalette = new ColorPalette();
-        newColorPalette.setBitmap(bitmap);
-        firebaseService.createNewPalette(newColorPalette);
-    }
-
     public ArrayList<ColorPalette> convertFromSnapshotsToColourPalettes(ArrayList<QueryDocumentSnapshot> documentSnapshots){
         ArrayList<ColorPalette> palettes = new ArrayList<>();
         for (QueryDocumentSnapshot document : documentSnapshots) {
@@ -84,7 +69,6 @@ public class PaletteRepo  {
     public void savePaletteToDB(ColorPalette colorPalette){
         firebaseService.createNewPalette(colorPalette);
     }
-
 
     public MutableLiveData<ArrayList<ColorPalette>> fetchHomeColorPalettes() throws InterruptedException {
 

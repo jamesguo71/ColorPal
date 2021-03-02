@@ -1,7 +1,5 @@
 package com.cs65.colorpal.models;
 
-import androidx.palette.graphics.Palette;
-
 public class PaletteTag {
     private String text;
 
@@ -9,11 +7,20 @@ public class PaletteTag {
         this.text = text;
     }
 
+    public PaletteTag(){}
+
     public void setText(String text) {
         this.text = text;
     }
 
     public String getText() {
         return text;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "text='" + text +
+                '}';
     }
 }
