@@ -28,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class PaletteRepo  {
 
-    private static final int MAX_COLOR_COUNT = 32;
+    private static final int MAX_COLOR_COUNT = 16;
     private static FirebaseService firebaseService;
 
     /**

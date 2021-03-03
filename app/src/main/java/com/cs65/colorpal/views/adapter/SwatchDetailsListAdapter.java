@@ -34,7 +34,7 @@ public class SwatchDetailsListAdapter extends RecyclerView.Adapter<SwatchDetails
         View swatchSquareView = holder.swatchSquareView;
         swatchSquareView.setBackgroundColor(swatchValue);
         TextView swatchValueView = holder.swatchValueView;
-        swatchValueView.setText(Integer.toHexString(swatchValue));
+        swatchValueView.setText("#" + Integer.toHexString(swatchValue));
     }
 
     @Override

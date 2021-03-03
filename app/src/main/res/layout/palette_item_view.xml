@@ -1,42 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingVertical="8dp"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+<com.google.android.material.card.MaterialCardView
+    android:layout_marginHorizontal="30dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/username"
-        android:textSize="14dp"
-        android:gravity="right"
-        android:textColor="@color/white"
-        android:layout_marginVertical="4dp"
-        android:layout_marginHorizontal="20dp"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="By Pape Traore"
-        />
+        android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/paletteSwatches"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_below="@+id/username"
-                android:layout_marginHorizontal="20dp"
-                />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/paletteSwatches"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        />
 
-            <TextView
-                android:id="@+id/paletteTitle"
-                android:textSize="18dp"
-                android:layout_below="@id/paletteSwatches"
-                android:textColor="@color/white"
-                android:layout_marginVertical="6dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_width="match_parent"
-                android:text="Nature Pape"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                    <RelativeLayout
+                        android:layout_marginVertical="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/paletteTitle"
+                            android:textColor="@color/black"
+                            android:layout_marginVertical="8dp"
+                            android:textSize="15dp"
+                            android:layout_marginHorizontal="10dp"
+                            android:layout_toRightOf="@+id/profile_card"
+                            android:layout_width="wrap_content"
+                            android:text="Nature Pape"
+                            android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+                        <TextView
+                            android:id="@+id/username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:layout_marginVertical="8dp"
+                            android:text="Pape"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/profile_card"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="250dp"
+                          >
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/profile_image"
+                                android:src="@drawable/nature_photo"
+                                />
+
+                        </androidx.cardview.widget.CardView>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>

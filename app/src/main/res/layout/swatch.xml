@@ -2,5 +2,5 @@
 <View
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swatch_item"
-    android:layout_width="1dp"
+    android:layout_width="8dp"
     android:layout_height="match_parent"/>

@@ -6,7 +6,7 @@
     <string name="settings">Settings</string>
     <string name="sign_out">Sign Out</string>
     <string name="search_hint">Search colors by tags</string>
-    <string name="more_color">Move finger on image to pick more colors</string>
+    <string name="more_color">Tap image to add a color.</string>
     <string name="add_to_palette">Add to Palette</string>
     <string name="successful_added_color">Sucessfully added selcted color!</string>
     <string name="failed_to_add_color">The selected color is already in the palette!</string>
