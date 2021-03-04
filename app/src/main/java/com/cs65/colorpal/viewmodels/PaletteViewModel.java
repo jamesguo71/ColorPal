@@ -38,12 +38,13 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
     private MutableLiveData<Integer> selectedColor = new MutableLiveData<>();
     private MutableLiveData<Boolean> addColorEvent = new MutableLiveData<>();
-    private MutableLiveData<Integer> layoutPosition = new MutableLiveData<>();
+    private MutableLiveData<String> title = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
         mTagsList.setValue(new ArrayList<>());
         paletteRepo = new PaletteRepo(application);
+        title.setValue("New Palette");
         fetchHomeColorPalettes();
         fetchUserLibraryColorPalettes();
     }
@@ -115,6 +116,10 @@ public class PaletteViewModel extends AndroidViewModel{
         selectedImage.setValue(uri);
     }
 
+    public void setTitle(String newTitle) { title.postValue(newTitle);}
+
+    public MutableLiveData<String> getTitle() { return title; }
+
     public MutableLiveData<ArrayList<PaletteTag>> getTags() { return mTagsList; }
 
     public void addTag(String text){
@@ -128,6 +133,7 @@ public class PaletteViewModel extends AndroidViewModel{
         newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
         newColorPalette.setSwatches(mSwatchesList.getValue());
         newColorPalette.setTags(mTagsList.getValue());
+        newColorPalette.setTitle(getTitle().getValue());
         paletteRepo.savePaletteToDB(newColorPalette);
     }
 

@@ -56,7 +56,10 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches, holder);
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(context);
             layoutManager.setFlexDirection(FlexDirection.ROW);
-            holder.title.setText("Nature Scene");
+            if(palette.getTitle()!=null && palette.getTitle().length()!=0)
+                holder.title.setText(palette.getTitle());
+            else
+                holder.title.setText("New Palette");
             holder.username.setText("By " + palette.getUsername());
             holder.swatches.setLayoutManager(layoutManager);
             holder.swatches.setAdapter(swatchesViewAdapter);

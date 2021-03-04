@@ -2,17 +2,24 @@ package com.cs65.colorpal.views.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +54,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     private Button addSelectedColorBtn;
     private RecyclerView tagsView;
     private TagsGridAdapter tagsGridAdapter;
+    private EditText titleEditText;
     public static final String PHOTO_URI = "photoUri";
     public static final int EDIT_ACTIVITY_CODE = 2;
 
@@ -61,6 +69,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         swatchesView = findViewById(R.id.colors);
         CardView selectedColor = findViewById(R.id.selected_color);
         addSelectedColorBtn = findViewById(R.id.add_palatte_btn);
+        titleEditText = findViewById(R.id.inspect_title);
 
         paletteViewModel.getSelectedImage().observe(this, uri -> onImageSelected(uri));
         paletteViewModel.getColorPaletteData().observe(this, palette -> paletteViewModel.initSwatchesArrayList());
@@ -91,6 +100,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         tagsView.setAdapter(tagsGridAdapter);
 
         setUpColorSelection();
+        setUpEditText();
     }
 
     // Update swatches from Edit Activity
@@ -197,6 +207,19 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
             } else {
                 Toast.makeText(this, getString(R.string.failed_to_add_color), Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void setUpEditText(){
+        titleEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                paletteViewModel.setTitle(titleEditText.getText().toString());
+                titleEditText.clearFocus();
+                return true;
+            }
+            return false;
         });
     }
 }

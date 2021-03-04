@@ -49,6 +49,7 @@ public class FirebaseService {
         paletteData.put("swatches", palette.getSwatches());
         paletteData.put("downloadUrl", palette.getDownloadUrl());
         paletteData.put("tags", palette.getTags());
+        paletteData.put("title", palette.getTitle());
         return paletteData;
     }
 
