@@ -38,6 +38,7 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
     private MutableLiveData<Integer> selectedColor = new MutableLiveData<>();
     private MutableLiveData<Boolean> addColorEvent = new MutableLiveData<>();
+    private MutableLiveData<Integer> layoutPosition = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
@@ -158,4 +159,6 @@ public class PaletteViewModel extends AndroidViewModel{
     public LiveData<Boolean> getAddColorEvent() {
         return addColorEvent;
     }
+
+    public void deletePaletteFromDb(String url) throws InterruptedException { paletteRepo.deleteColorPalette(url); }
 }

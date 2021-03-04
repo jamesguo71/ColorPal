@@ -2,8 +2,6 @@ package com.cs65.colorpal.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.cs65.colorpal.views.activities.PaletteDetailActivity;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.utils.Utils;
+import com.cs65.colorpal.views.activities.PaletteDetailActivity;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
@@ -76,6 +74,14 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             return 0;
         else
             return mPalettes.size();
+    }
+
+    public void remove(int position){
+        mPalettes.remove(position);
+    }
+
+    public ColorPalette get(int position){
+        return mPalettes.get(position);
     }
 
     public class PaletteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

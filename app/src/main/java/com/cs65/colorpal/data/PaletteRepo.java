@@ -13,15 +13,21 @@ import com.android.volley.toolbox.Volley;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.services.FirebaseService;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -129,5 +135,75 @@ public class PaletteRepo  {
             }
         }.start();
         return mUserLibraryColorPaletteList;
+    }
+
+    public void deleteColorPalette(String downloadUrl) throws InterruptedException {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                if(currentUser != null){
+                    firebaseService.fetchPalettesReference()
+                            .whereEqualTo("userId", currentUser.getUid())
+                            .whereEqualTo("downloadUrl", downloadUrl)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                                            deletePalette(doc.getId());
+                                        }
+
+                                    } else {
+                                        Log.d(LOG_TAG, "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+                }
+            }
+        }.start();
+    }
+
+    public void deletePalette(String docId){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                DocumentReference docRef = firebaseService.fetchPalettesReference().document(docId);
+                //delete all fields
+                Map<String,Object> updates = new HashMap<>();
+                updates.put("username", FieldValue.delete());
+                updates.put("userId", FieldValue.delete());
+                updates.put("swatches", FieldValue.delete());
+                updates.put("downloadUrl", FieldValue.delete());
+                updates.put("tags", FieldValue.delete());
+                docRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        deletePaletteDoc(docId);
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void deletePaletteDoc(String docId){
+        //delete document
+        firebaseService.fetchPalettesReference()
+                .document(docId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(LOG_TAG, "DocumentSnapshot "+docId+" successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(LOG_TAG, "Error deleting document", e);
+                    }
+                });
     }
 }

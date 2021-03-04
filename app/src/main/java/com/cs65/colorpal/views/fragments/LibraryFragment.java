@@ -1,5 +1,6 @@
 package com.cs65.colorpal.views.fragments;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,11 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class LibraryFragment extends Fragment {
+public class LibraryFragment extends Fragment{
 
     private static final String LOG_TAG = "LibraryFragment";
     private FloatingActionButton addPictureButton;
@@ -112,6 +116,9 @@ public class LibraryFragment extends Fragment {
         adapter = new PaletteListAdapter(getActivity());
         palettesRecyclerView.setAdapter(adapter);
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(palettesRecyclerView);
+
         mainActivity = ((MainActivity) getActivity());
         mainActivity.isLoadingHandler("Loading Palettes...");
 
@@ -164,4 +171,39 @@ public class LibraryFragment extends Fragment {
         adapter.setPalettes(paletteViewModel.mUserLibraryColorPaletteList.getValue());
     }
 
+    ItemTouchHelper.SimpleCallback deleteItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            int position = viewHolder.getAdapterPosition();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Delete this palette permanently?");
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    try {
+                        paletteViewModel.deletePaletteFromDb(adapter.get(position).getDownloadUrl());
+                        adapter.remove(position);
+                        adapter.notifyItemRemoved(position);
+                        emptyPalettesHandler();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    };
 }
