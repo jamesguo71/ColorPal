@@ -2,9 +2,12 @@ package com.cs65.colorpal.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -78,6 +81,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
     public class PaletteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView title, username;
         public RecyclerView swatches;
+        public ImageView profile;
 
         public PaletteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +89,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             title = itemView.findViewById(R.id.paletteTitle);
             username = itemView.findViewById(R.id.username);
             swatches = itemView.findViewById(R.id.paletteSwatches);
+            profile = itemView.findViewById(R.id.profile_image);
         }
 
         @Override

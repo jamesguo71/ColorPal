@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -44,6 +45,7 @@ public class LibraryFragment extends Fragment {
     private PaletteViewModel paletteViewModel;
     private RecyclerView palettesRecyclerView;
     private PaletteListAdapter adapter;
+    private ConstraintLayout emptyTextView;
 
     private final String DIALOG_TITLE = "Choose or take an image";
 
@@ -55,6 +57,7 @@ public class LibraryFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        emptyPalettesHandler();
         return view;
     }
 
@@ -66,6 +69,19 @@ public class LibraryFragment extends Fragment {
         adapter.setPalettes(colorPaletteList);
     }
 
+    private void emptyPalettesHandler(){
+        if(paletteViewModel.mHomeColorPaletteList.getValue() != null) {
+            if(paletteViewModel.mUserLibraryColorPaletteList.getValue().size() == 0){
+                emptyTextView.setVisibility(View.VISIBLE);
+                palettesRecyclerView.setVisibility(View.GONE);
+            }
+            else{
+                palettesRecyclerView.setVisibility(View.VISIBLE);
+                emptyTextView.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private void handleOptionSelection(int userChoice) throws IOException {
         if(userChoice == 0){
             mainActivity.dispatchTakePictureIntent();
@@ -74,14 +90,22 @@ public class LibraryFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        emptyPalettesHandler();
+    }
 
     public void initializeVariables() throws InterruptedException {
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
         paletteViewModel.fetchUserLibraryColorPalettes();
         paletteViewModel.mUserLibraryColorPaletteList.observe(getViewLifecycleOwner(), Observer -> {
+            emptyPalettesHandler();
             updateLibraryPalettes();
             mainActivity.doneLoadingHanddler();
         });
+
+        emptyTextView = (ConstraintLayout) view.findViewById(R.id.empty_text_view);
 
         palettesRecyclerView = view.findViewById(R.id.recycle_view_my_palettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -105,6 +129,7 @@ public class LibraryFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        emptyPalettesHandler();
     }
 
 //    public void setImage(Uri uri)  {
