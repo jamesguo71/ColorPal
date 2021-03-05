@@ -137,32 +137,8 @@ public class PaletteRepo  {
         return mUserLibraryColorPaletteList;
     }
 
-    public void deleteColorPalette(String downloadUrl) throws InterruptedException {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                if(currentUser != null){
-                    firebaseService.fetchPalettesReference()
-                            .whereEqualTo("userId", currentUser.getUid())
-                            .whereEqualTo("downloadUrl", downloadUrl)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                                            deletePalette(doc.getId());
-                                        }
-
-                                    } else {
-                                        Log.d(LOG_TAG, "Error getting documents: ", task.getException());
-                                    }
-                                }
-                            });
-                }
-            }
-        }.start();
+    public String createNewId(){
+        return firebaseService.fetchPalettesReference().document().getId();
     }
 
     public void deletePalette(String docId){
@@ -178,6 +154,7 @@ public class PaletteRepo  {
                 updates.put("swatches", FieldValue.delete());
                 updates.put("downloadUrl", FieldValue.delete());
                 updates.put("tags", FieldValue.delete());
+                updates.put("docId", FieldValue.delete());
                 docRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

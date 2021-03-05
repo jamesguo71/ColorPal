@@ -12,6 +12,7 @@ public class ColorPalette {
     private Bitmap bitmap;
     private String downloadUrl = "";
     private String title = "";
+    private String docId = "";
     private ArrayList<Integer> swatches;
     private ArrayList<PaletteTag> tags;
 
@@ -64,6 +65,10 @@ public class ColorPalette {
 
     public void setTitle(String title) { this.title=title; }
 
+    public String getDocId() { return docId; }
+
+    public void setDocId(String docId) { this.docId = docId; }
+
     @Override
     public String toString() {
         return "ColorPalette{" +
@@ -74,6 +79,7 @@ public class ColorPalette {
                 ", swatches=" + swatches +
                 ", tags=" + tags +
                 ", title=" + title +
+                ", docId=" + docId +
                 '}';
     }
 }

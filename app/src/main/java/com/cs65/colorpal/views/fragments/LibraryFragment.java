@@ -186,7 +186,7 @@ public class LibraryFragment extends Fragment{
             builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     try {
-                        paletteViewModel.deletePaletteFromDb(adapter.get(position).getDownloadUrl());
+                        paletteViewModel.deletePaletteFromDb(adapter.get(position).getDocId());
                         adapter.remove(position);
                         adapter.notifyItemRemoved(position);
                         emptyPalettesHandler();

@@ -172,6 +172,7 @@ public class PaletteViewModel extends AndroidViewModel{
         newColorPalette.setSwatches(mSwatchesList.getValue());
         newColorPalette.setTags(mTagsList.getValue());
         newColorPalette.setTitle(getTitle().getValue());
+        newColorPalette.setDocId(createNewDocId());        //generate a new id
         paletteRepo.savePaletteToDB(newColorPalette);
     }
 
@@ -204,5 +205,7 @@ public class PaletteViewModel extends AndroidViewModel{
         return addColorEvent;
     }
 
-    public void deletePaletteFromDb(String url) throws InterruptedException { paletteRepo.deleteColorPalette(url); }
+    public void deletePaletteFromDb(String docId) throws InterruptedException { paletteRepo.deletePalette(docId); }
+
+    public String createNewDocId() { return paletteRepo.createNewId(); }
 }
