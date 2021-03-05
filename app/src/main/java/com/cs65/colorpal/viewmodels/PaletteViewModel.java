@@ -19,6 +19,8 @@ import com.cs65.colorpal.models.PaletteTag;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,7 +65,7 @@ public class PaletteViewModel extends AndroidViewModel{
         );
     }
 
-    public void extractNewFromUri(Uri photoUri){
+    public void extractNewFromPhoneUri(Uri photoUri){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -74,6 +76,20 @@ public class PaletteViewModel extends AndroidViewModel{
                     e.printStackTrace();
                 }
         }}).start();
+    }
+
+    public void extractNewFromExternalUri(Uri photoUri){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(photoUri.toString());
+                    Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    extractColorPalette(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }}).start();
     }
 
     public void fetchHomeColorPalettes() throws InterruptedException {
@@ -130,7 +146,29 @@ public class PaletteViewModel extends AndroidViewModel{
 
     public void savePaletteToDB() throws IOException {
         ColorPalette newColorPalette = new ColorPalette();
-        newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
+        if(selectedImage.getValue().toString().contains("images.unsplash.com")){
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    URL url = null;
+                    try {
+                        url = new URL(selectedImage.getValue().toString());
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    newColorPalette.setBitmap(bitmap);
+                }
+            }.start();
+        } else {
+            newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
+        }
         newColorPalette.setSwatches(mSwatchesList.getValue());
         newColorPalette.setTags(mTagsList.getValue());
         newColorPalette.setTitle(getTitle().getValue());

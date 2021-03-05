@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.UnsplashImage;
 import com.cs65.colorpal.views.activities.InspectActivity;
+import com.cs65.colorpal.views.fragments.UnsplashFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class UnsplashImagesAdapter extends RecyclerView.Adapter<UnsplashImagesAd
             int pos = getLayoutPosition();
             Intent intent = new Intent(context, InspectActivity.class);
             intent.putExtra(InspectActivity.PHOTO_URI, imagesList.get(pos).getImage_view_url());
+            intent.putExtra("from", UnsplashFragment.UNSPLASH_FRAGMENT);
             context.startActivity(intent);
         }
     }

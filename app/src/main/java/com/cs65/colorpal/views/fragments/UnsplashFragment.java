@@ -31,6 +31,7 @@ public class UnsplashFragment extends Fragment {
     private RecyclerView rvUnsplashImages;
     private UnsplashImagesAdapter  adapter;
     private MainActivity mainActivity;
+    public final static String UNSPLASH_FRAGMENT = "unsplash_fragment";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);

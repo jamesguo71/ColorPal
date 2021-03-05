@@ -36,6 +36,7 @@ import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.SwatchListAdapter;
 import com.cs65.colorpal.views.adapter.TagsGridAdapter;
+import com.cs65.colorpal.views.fragments.UnsplashFragment;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
@@ -82,10 +83,14 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null) {
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
+            String from = intent.getStringExtra("from");
             paletteViewModel.setSelectedImageUri(photoUri);
-            paletteViewModel.extractNewFromUri(photoUri);
-//            imageView.setImageURI(photoUri);
-            Glide.with(this).load(photoUri).into(imageView);
+
+            if( from == null){
+                paletteViewModel.extractNewFromPhoneUri(photoUri);
+            } else if (from.equals(UnsplashFragment.UNSPLASH_FRAGMENT)){
+                paletteViewModel.extractNewFromExternalUri(photoUri);
+            }
         }
 
         bottomNavigationView = findViewById(R.id.inspect_footer);
@@ -118,7 +123,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     }
 
     private void onImageSelected(Uri uri){
-        imageView.setImageURI(uri);
+        Glide.with(this).load(uri).into(imageView);
     }
 
     private void addSwatches(List<Palette.Swatch> swatches) {
