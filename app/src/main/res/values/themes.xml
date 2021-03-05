@@ -14,7 +14,9 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="SearchViewStyle" parent="Theme.MaterialComponents" />
+    <style name="SearchViewStyle" parent="Theme.MaterialComponents" >
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
 
     <!-- Button color -->
     <style name="AppTheme.Button" parent="Widget.AppCompat.Button.Colored">

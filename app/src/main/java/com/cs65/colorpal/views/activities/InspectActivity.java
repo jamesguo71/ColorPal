@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
@@ -39,6 +40,7 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,6 +84,8 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
             paletteViewModel.setSelectedImageUri(photoUri);
             paletteViewModel.extractNewFromUri(photoUri);
+//            imageView.setImageURI(photoUri);
+            Glide.with(this).load(photoUri).into(imageView);
         }
 
         bottomNavigationView = findViewById(R.id.inspect_footer);

@@ -4,8 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-
     <data>
         <variable
             name="numberOfPics"
@@ -18,13 +16,11 @@
         tools:context=".views.fragments.HomeFragment">
 
         <SearchView
-            android:queryBackground="@android:color/transparent"
+            android:tooltipText="Search for an image."
             android:id="@+id/unsplash_searchview"
-            style="@style/SearchViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:background="@drawable/background"
             android:focusable="auto"
             android:focusableInTouchMode="false"
             android:focusedByDefault="false"

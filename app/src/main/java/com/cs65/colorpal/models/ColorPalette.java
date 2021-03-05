@@ -13,7 +13,7 @@ public class ColorPalette {
     private String downloadUrl = "";
     private String title = "";
     private ArrayList<Integer> swatches;
-    private List<PaletteTag> tags;
+    private ArrayList<PaletteTag> tags;
 
     public void setBitmap (Bitmap bitmap) { this.bitmap = bitmap; }
     public Bitmap getBitmap(){
@@ -56,7 +56,7 @@ public class ColorPalette {
         return tags;
     }
 
-    public void setTags(List<PaletteTag> tags) {
+    public void setTags(ArrayList<PaletteTag> tags) {
         this.tags = tags;
     }
 
