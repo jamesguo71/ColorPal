@@ -30,6 +30,11 @@ public class SwatchGridAdapter extends RecyclerView.Adapter<SwatchGridAdapter.Sw
         this.clickable = clickable;
     }
 
+    public void setSwatches(List<Integer> swatches){
+        this.swatches = swatches;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public SwatchGridViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,6 +53,7 @@ public class SwatchGridAdapter extends RecyclerView.Adapter<SwatchGridAdapter.Sw
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     editViewModel.setSelectedColor(position);
                 }
             });
@@ -67,12 +73,16 @@ public class SwatchGridAdapter extends RecyclerView.Adapter<SwatchGridAdapter.Sw
             swatchView = itemView.findViewById(R.id.swatch_item);
             ViewGroup.LayoutParams layoutParams = swatchView.getLayoutParams();
             int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-            layoutParams.width = width / min(8,swatches.size());
-            layoutParams.height = width / min(8,swatches.size());
+            layoutParams.width = width / 8 ;
+            layoutParams.height = width / 8;
         }
 
         public View getSwatchView() {
             return swatchView;
         }
+    }
+
+    public void remove(int position){
+        swatches.remove(position);
     }
 }

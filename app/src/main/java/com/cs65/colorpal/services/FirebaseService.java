@@ -50,6 +50,7 @@ public class FirebaseService {
         paletteData.put("downloadUrl", palette.getDownloadUrl());
         paletteData.put("tags", palette.getTags());
         paletteData.put("title", palette.getTitle());
+        paletteData.put("docId", palette.getDocId());
         return paletteData;
     }
 
@@ -63,12 +64,13 @@ public class FirebaseService {
             public void run() {
                 super.run();
                 Map<String, Object> paletteData = createPaletteData(colorPalette);
-
+                String docId =  colorPalette.getDocId();
                 db.collection(PALETTES_COLLECTION)
-                        .add(paletteData)
+                        .document(docId)
+                        .set(paletteData)
                         .addOnSuccessListener(documentReference -> {
-                            Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            uploadImage(colorPalette, documentReference.getId());
+                            Log.d(LOG_TAG, "DocumentSnapshot added with ID: " + docId);
+                            uploadImage(colorPalette, docId);
                         })
                         .addOnFailureListener(e -> Log.w(LOG_TAG, "Error adding document", e));
             }

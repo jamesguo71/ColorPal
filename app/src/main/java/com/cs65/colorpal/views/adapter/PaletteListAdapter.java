@@ -2,6 +2,7 @@ package com.cs65.colorpal.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.views.activities.PaletteDetailActivity;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.PaletteViewHolder> {
@@ -108,11 +111,10 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
 
             Intent intent = new Intent(context, PaletteDetailActivity.class);
 
-            // Todo: Currently palette images unset, so getImageUrl returns null.
-//            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getImageUrl());
-            // Todo: Remove after real images available. use hardcoded nature pic now.
+            // We can also pass "id" (DocId of ColorPalette?) to DetailActivity and retrieve the info via repo
             intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getDownloadUrl());
             intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
+            intent.putExtra(PaletteDetailActivity.TAGS_KEY, (ArrayList<PaletteTag>) palette.getTags());
             context.startActivity(intent);
         }
     }

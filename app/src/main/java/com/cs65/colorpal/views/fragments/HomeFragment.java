@@ -39,7 +39,6 @@ public class HomeFragment extends Fragment{
             e.printStackTrace();
         }
         mainActivity.isLoadingHandler("Loading Palettes...");
-
         emptyPalettesHandler();
 
         return view;

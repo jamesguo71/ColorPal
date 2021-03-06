@@ -60,6 +60,8 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     private EditText titleEditText;
     public static final String PHOTO_URI = "photoUri";
     public static final int EDIT_ACTIVITY_CODE = 2;
+    public static final String SWATCH_VALUES = "values";
+    public static final String ORIGINAL_SWATCH_VALUES = "original_values";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -178,6 +180,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 Intent intent = new Intent(this, EditActivity.class);
                 ArrayList<Integer> swatchValues = paletteViewModel.getSwatches().getValue();
                 intent.putIntegerArrayListExtra(SWATCH_VALUES, swatchValues);
+                intent.putIntegerArrayListExtra(ORIGINAL_SWATCH_VALUES, paletteViewModel.getOriginalSwatches());
                 startActivityForResult(intent, EDIT_ACTIVITY_CODE);
                 return true;
             case R.id.inspect_save_button:
