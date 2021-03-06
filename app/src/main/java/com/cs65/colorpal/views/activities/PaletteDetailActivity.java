@@ -19,6 +19,7 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaletteDetailActivity extends AppCompatActivity {
@@ -41,8 +42,13 @@ public class PaletteDetailActivity extends AppCompatActivity {
         paletteColors = findViewById(R.id.palette_colors);
         tagsView = findViewById(R.id.palette_detail_tags_view);
 
-        List<Palette.Swatch> swatches = Utils.toSwatches(intent.getIntegerArrayListExtra(SWATCHES_KEY));
-        SwatchListAdapter adapter = new SwatchListAdapter(swatches, null);
+        ArrayList<Integer> swatchValues = intent.getIntegerArrayListExtra(SWATCHES_KEY);
+        List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);
+        SwatchListAdapter adapter = new SwatchListAdapter(swatches, v -> {
+            Intent i = new Intent(this, SwatchesDetailActivity.class);
+            i.putIntegerArrayListExtra(SwatchesDetailActivity.SWATCH_VALUES, swatchValues);
+            startActivity(i);
+        });
         paletteColors.setAdapter(adapter);
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
         layoutManager.setFlexDirection(FlexDirection.ROW);
