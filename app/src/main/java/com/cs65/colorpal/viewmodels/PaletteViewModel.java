@@ -16,6 +16,7 @@ import androidx.palette.graphics.Palette;
 import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.models.PaletteTag;
+import com.cs65.colorpal.utils.Utils;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -72,6 +73,7 @@ public class PaletteViewModel extends AndroidViewModel{
                 try {
                     Bitmap bitmap = convertUriToBitmap(photoUri);
                     extractColorPalette(bitmap);
+                    Utils.generateImageLabel(bitmap, mTagsList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -86,6 +88,7 @@ public class PaletteViewModel extends AndroidViewModel{
                     URL url = new URL(photoUri.toString());
                     Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     extractColorPalette(bitmap);
+                    Utils.generateImageLabel(bitmap, mTagsList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
