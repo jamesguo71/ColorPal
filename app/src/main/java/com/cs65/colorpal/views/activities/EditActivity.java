@@ -1,14 +1,21 @@
 package com.cs65.colorpal.views.activities;
 
+import android.animation.Animator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.animation.AnimationUtils;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +34,7 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
 
     private static final String TAG = "EditActivity";
     public static final String SWATCH_VALUES = "values";
+    public static final String ORIGINAL_SWATCH_VALUES = "original_values";
     public static final int EDIT_ACTIVITY_CODE = 2;
     private EditViewModel editViewModel;
 
@@ -47,14 +55,9 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
     private TextView hexTextView;
     private String hexCode;
     private float[] hsb = new float[3];
-
-    //RecyclerView and swatches
-    private ArrayList<Integer> mSwatches;
-    private ArrayList<Integer> mSwatches0;
     private SwatchGridAdapter swatchGridAdapter;
     private RecyclerView swatchesView;
 
-    //footer
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -62,63 +65,86 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
         editViewModel = ViewModelProviders.of(this).get(EditViewModel.class);
+        initializeSliders();
+
+        //set observer for selected color
+        editViewModel.getSelectedColor().observe(this, integer -> onSelectedColorChanged());
+        editViewModel.setSelectedColor(0);
+        editViewModel.getSwatches().observe(this, swatches -> updateSwatchesViews(swatches));
+
         Intent intent = getIntent();
         if (intent != null) {
-            mSwatches = intent.getIntegerArrayListExtra(SWATCH_VALUES);
-            mSwatches0 = (ArrayList<Integer>) mSwatches.clone();
+            editViewModel.setSwatches(intent.getIntegerArrayListExtra(SWATCH_VALUES));
+            editViewModel.setSwatches0(intent.getIntegerArrayListExtra(ORIGINAL_SWATCH_VALUES));
         }
-
-        hSlider = (SeekBar) findViewById(R.id.H_slider);
-        sSlider = (SeekBar) findViewById(R.id.S_slider);
-        brSlider = (SeekBar) findViewById(R.id.Br_slider);
-        rSlider = (SeekBar) findViewById(R.id.R_slider);
-        gSlider = (SeekBar) findViewById(R.id.G_slider);
-        bSlider = (SeekBar) findViewById(R.id.B_slider);
-
-        //initialize textviews
-        hTextView = (TextView) findViewById(R.id.H_number);
-        sTextView = (TextView) findViewById(R.id.S_number);
-        brTextView = (TextView) findViewById(R.id.Br_number);
-        rTextView = (TextView) findViewById(R.id.R_number);
-        gTextView = (TextView) findViewById(R.id.G_number);
-        bTextView = (TextView) findViewById(R.id.B_number);
-
-        //set onChangeListener for sliders
-        hSlider.setOnSeekBarChangeListener(hSliderChangeListener);
-        sSlider.setOnSeekBarChangeListener(sSliderChangeListener);
-        brSlider.setOnSeekBarChangeListener(brSliderChangeListener);
-        rSlider.setOnSeekBarChangeListener(rSliderChangeListener);
-        gSlider.setOnSeekBarChangeListener(gSliderChangeListener);
-        bSlider.setOnSeekBarChangeListener(bSliderChangeListener);
 
         //hex code
         hexTextView = (TextView) findViewById(R.id.color_hex);
 
         //set swatch adapter
         swatchesView = findViewById(R.id.swatches_grid);
-        swatchGridAdapter = new SwatchGridAdapter(mSwatches,editViewModel,true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, min(mSwatches.size(),8));
+        swatchGridAdapter = new SwatchGridAdapter(editViewModel.getSwatches().getValue(),editViewModel,true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, min(editViewModel.getSwatches().getValue().size(),8));
         swatchesView.setLayoutManager(gridLayoutManager);
         swatchesView.setAdapter(swatchGridAdapter);
 
-        //set observer for selected color
-        editViewModel.getSelectedColor().observe(this, integer -> onSelectedColorChanged());
-        editViewModel.setSelectedColor(0);
 
         bottomNavigationView = findViewById(R.id.edit_footer);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
         bottomNavigationView.getMenu().getItem(0).setCheckable(false);
         bottomNavigationView.getMenu().getItem(1).setCheckable(false);
         bottomNavigationView.getMenu().getItem(2).setCheckable(false);
+        bottomNavigationView.getMenu().getItem(3).setCheckable(false);
+
+//        swatchesView.setItemAnimator();
+//        swatchesView.animate(new Animator());
+//        Animation animation = AnimationUtils.loadAnimation()
+    }
+
+    private void updateSwatchesViews(ArrayList<Integer> swatches){
+        swatchGridAdapter.setSwatches(swatches);
     }
 
     //reset all colors
-    public void onResetClicked(){
-        for(int i = 0; i < mSwatches.size(); i++){
-            mSwatches.set(i,mSwatches0.get(i));
+    private void onResetClicked(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Reset all colors?");
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            editViewModel.resetSwatches();
+            swatchGridAdapter.notifyDataSetChanged();
+            onSelectedColorChanged();
+            dialog.dismiss();
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void onRemoveColorClicked(){
+        if(editViewModel.getSwatches().getValue().size()<2){
+            minSwatchDialogHandler();
+            return;
         }
-        swatchGridAdapter.notifyDataSetChanged();
-        onSelectedColorChanged();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Remove this color?");
+        builder.setPositiveButton("YES", (dialog, which) -> {
+            swatchGridAdapter.remove(editViewModel.getSelectedColor().getValue());
+            swatchGridAdapter.notifyItemRemoved(editViewModel.getSelectedColor().getValue());
+            editViewModel.setSelectedColor(editViewModel.getSelectedColor().getValue()-1);
+            onSelectedColorChanged();
+            dialog.dismiss();
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void minSwatchDialogHandler(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You need to have at least one color!");
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     //set color when RGB is changed
@@ -150,23 +176,23 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         onColorChange(r,g,b);
     }
 
-    //Update hex code and color view
+    //Update hex code and color view when slider is used
     private void onColorChange(int r, int g, int b){
         //set hex code
         hexCode = String.format("#%02x%02x%02x", r, g, b);
         hexTextView.setText(hexCode);
 
         //set selected color in grid view
-        mSwatches.set(editViewModel.getSelectedColor().getValue(),Color.rgb(r,g,b));
+        editViewModel.onColorChange(Color.rgb(r,g,b));
         swatchGridAdapter.notifyDataSetChanged();
     }
 
-    //Update sliders on selected color changed
+    //Update sliders on selecting a new color
     private void onSelectedColorChanged(){
-        int idx = editViewModel.getSelectedColor().getValue();
-        rSlider.setProgress(Color.red(mSwatches.get(idx)));
-        gSlider.setProgress(Color.green(mSwatches.get(idx)));
-        bSlider.setProgress(Color.blue(mSwatches.get(idx)));
+        int color = editViewModel.getSelectedColorValue();
+        rSlider.setProgress(Color.red(color));
+        gSlider.setProgress(Color.green(color));
+        bSlider.setProgress(Color.blue(color));
         onRGBChanged();
     }
 
@@ -177,17 +203,45 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.edit_cancel_button:
                 finish();
                 return true;
+            case R.id.edit_remove_button:
+                onRemoveColorClicked();
+                return true;
             case R.id.edit_reset_button:
                 onResetClicked();
                 return true;
             case R.id.edit_save_button:
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra(SWATCH_VALUES, mSwatches);
+                resultIntent.putExtra(SWATCH_VALUES, editViewModel.getSwatches().getValue());
                 setResult(RESULT_OK, resultIntent);
                 finish();
                 return true;
         }
         return false;
+    }
+
+    private void initializeSliders(){
+        hSlider = (SeekBar) findViewById(R.id.H_slider);
+        sSlider = (SeekBar) findViewById(R.id.S_slider);
+        brSlider = (SeekBar) findViewById(R.id.Br_slider);
+        rSlider = (SeekBar) findViewById(R.id.R_slider);
+        gSlider = (SeekBar) findViewById(R.id.G_slider);
+        bSlider = (SeekBar) findViewById(R.id.B_slider);
+
+        //initialize textviews
+        hTextView = (TextView) findViewById(R.id.H_number);
+        sTextView = (TextView) findViewById(R.id.S_number);
+        brTextView = (TextView) findViewById(R.id.Br_number);
+        rTextView = (TextView) findViewById(R.id.R_number);
+        gTextView = (TextView) findViewById(R.id.G_number);
+        bTextView = (TextView) findViewById(R.id.B_number);
+
+        //set onChangeListener for sliders
+        hSlider.setOnSeekBarChangeListener(hSliderChangeListener);
+        sSlider.setOnSeekBarChangeListener(sSliderChangeListener);
+        brSlider.setOnSeekBarChangeListener(brSliderChangeListener);
+        rSlider.setOnSeekBarChangeListener(rSliderChangeListener);
+        gSlider.setOnSeekBarChangeListener(gSliderChangeListener);
+        bSlider.setOnSeekBarChangeListener(bSliderChangeListener);
     }
 
     SeekBar.OnSeekBarChangeListener hSliderChangeListener = new SeekBar.OnSeekBarChangeListener() {

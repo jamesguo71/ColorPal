@@ -10,6 +10,12 @@
         android:icon="@drawable/ic_close_black_48dp"
         android:title="Cancel"/>
     <item
+        android:id="@+id/edit_remove_button"
+        android:enabled="true"
+        android:checkable="false"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:title="Remove"/>
+    <item
         android:id="@+id/edit_reset_button"
         android:enabled="true"
         android:checkable="false"

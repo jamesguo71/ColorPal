@@ -36,6 +36,7 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<Palette> extractedColorPaletteData = new MutableLiveData<>();
     private MutableLiveData<Uri> selectedImage = new MutableLiveData<>();
     private MutableLiveData<ArrayList<Integer>> mSwatchesList = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Integer>> mOriginalSwatchesList = new MutableLiveData<>();
     public MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
     public MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
     private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
@@ -125,6 +126,7 @@ public class PaletteViewModel extends AndroidViewModel{
             }
         }
         mSwatchesList.postValue(swatchValues);
+        mOriginalSwatchesList.setValue((ArrayList<Integer>) swatchValues.clone());
     }
 
     public void setSwatchesList(ArrayList<Integer> swatches){
@@ -211,4 +213,6 @@ public class PaletteViewModel extends AndroidViewModel{
     public void deletePaletteFromDb(String docId) throws InterruptedException { paletteRepo.deletePalette(docId); }
 
     public String createNewDocId() { return paletteRepo.createNewId(); }
+
+    public ArrayList<Integer> getOriginalSwatches(){ return mOriginalSwatchesList.getValue(); }
 }
