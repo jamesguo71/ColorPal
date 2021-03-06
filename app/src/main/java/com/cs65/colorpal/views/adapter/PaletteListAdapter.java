@@ -29,10 +29,12 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
     private final LayoutInflater mInflater;
     private final Context context;
     private List<ColorPalette> mPalettes;
+    private Boolean showName = true;
 
-    public PaletteListAdapter(Context context) {
+    public PaletteListAdapter(Context context, Boolean showName) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
+        this.showName = showName == null ? this.showName : showName;
     }
 
     @NonNull
@@ -63,7 +65,10 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
                 holder.title.setText(palette.getTitle());
             else
                 holder.title.setText("New Palette");
-            holder.username.setText("By " + palette.getUsername());
+            if(showName) holder.username.setText("By " + palette.getUsername());
+            else {
+                holder.username.setVisibility(View.GONE);
+            }
             holder.swatches.setLayoutManager(layoutManager);
             holder.swatches.setAdapter(swatchesViewAdapter);
         }

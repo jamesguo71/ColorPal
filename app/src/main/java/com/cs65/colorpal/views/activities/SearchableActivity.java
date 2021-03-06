@@ -11,7 +11,9 @@ import android.os.Bundle;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.views.adapter.PaletteListAdapter;
 
-public class SearchableActivity extends AppCompatActivity{
+public class
+
+SearchableActivity extends AppCompatActivity{
     private RecyclerView.Adapter adapter;
 
     @Override
@@ -19,7 +21,7 @@ public class SearchableActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchable);
         RecyclerView recyclerView = findViewById(R.id.searchRecyclerView);
-        adapter = new PaletteListAdapter(this);
+        adapter = new PaletteListAdapter(this, true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Intent intent = getIntent();

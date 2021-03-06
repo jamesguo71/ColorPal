@@ -6,10 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -68,7 +70,7 @@ public class LibraryFragment extends Fragment{
     private void displaySavedPalettes(View view, List<ColorPalette> colorPaletteList) {
         palettesRecyclerView = view.findViewById(R.id.homePalettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        PaletteListAdapter adapter = new PaletteListAdapter(getActivity());
+        PaletteListAdapter adapter = new PaletteListAdapter(getActivity(), false);
         palettesRecyclerView.setAdapter(adapter);
         adapter.setPalettes(colorPaletteList);
     }
@@ -113,7 +115,7 @@ public class LibraryFragment extends Fragment{
 
         palettesRecyclerView = view.findViewById(R.id.recycle_view_my_palettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new PaletteListAdapter(getActivity());
+        adapter = new PaletteListAdapter(getActivity(), false);
         palettesRecyclerView.setAdapter(adapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteItemTouchCallback);

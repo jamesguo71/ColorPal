@@ -36,7 +36,6 @@ public class SwatchListAdapter  extends RecyclerView.Adapter<SwatchListAdapter.S
     @Override
     public void onBindViewHolder(@NonNull SwatchListViewHolder holder, int position) {
         Palette.Swatch swatch = swatches.get(position);
-
         View swatchView = holder.getSwatchView();
         swatchView.setBackgroundColor(swatch.getRgb());
     }

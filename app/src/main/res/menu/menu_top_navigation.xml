@@ -7,11 +7,12 @@
 <!--        android:icon="@drawable/ic_baseline_search_24"-->
 <!--        app:showAsAction="ifRoom"-->
 <!--        app:actionViewClass="android.widget.SearchView" />-->
-
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/more"
         android:title="Sign Out"
         android:contentDescription="ewrfewrfewfewf"
         app:showAsAction="never" />
+
 
 </menu>
