@@ -13,4 +13,6 @@
     <color name="polar">#F6FAFD</color>
     <color name="light_grey">#F9F9F9</color>
     <color name="orange">#F5B041</color>
+    <color name="dark_grey">#151515</color>
+    <color name="mid_grey">#272727</color>
 </resources>

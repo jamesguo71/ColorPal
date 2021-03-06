@@ -20,6 +20,7 @@
             style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/dark_grey"
             app:menu="@menu/menu_top_navigation"
             app:navigationIcon="@drawable/logo_icon"
             >
@@ -92,8 +93,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="bottom"
-        android:background="@color/black"
-        app:itemIconTint="@color/white"
+        android:background="@color/dark_grey"
+        app:itemTextColor="@color/menu_selected_item"
+        app:itemIconTint="@color/menu_selected_item"
+        app:labelVisibilityMode="unlabeled"
+        app:itemHorizontalTranslationEnabled="false"
         app:menu="@menu/menu_bottom_navigation" />
 
 
