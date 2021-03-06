@@ -10,6 +10,37 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         tools:context=".views.activities.EditActivity">
+
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/appBar_layout">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@drawable/logo_icon"
+                app:titleTextColor="@color/white"
+                android:background="@color/dark_grey"
+                android:gravity="center"
+                style="@style/Theme.ColorPal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit the colors"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:singleLine="true"
+                    />
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/edit_swatches_container"
             android:layout_width="wrap_content"

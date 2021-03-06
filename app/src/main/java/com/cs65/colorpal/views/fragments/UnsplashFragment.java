@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class UnsplashFragment extends Fragment {
 
     private View view;
-    private  SearchView searchView;
+    private SearchView searchView;
     private UnsplashViewModel unsplashViewModel;
     private ArrayList<UnsplashImage> unsplashImages;
     private RecyclerView rvUnsplashImages;
@@ -38,22 +38,27 @@ public class UnsplashFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_unsplash, container, false);
         unsplashImages = new ArrayList<>();
         mainActivity = (MainActivity) getActivity();
-        setupSearchView();
+        try {
+            setupSearchView(savedInstanceState);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         setupRecyclerView();
         return view;
     }
 
-    public void setupSearchView(){
+    public void setupSearchView(Bundle savedInstanceState) throws JSONException {
 
         unsplashViewModel = ViewModelProviders.of(requireActivity()).get(UnsplashViewModel.class);
+        if(savedInstanceState == null) unsplashViewModel.runQuery("color palettes");
         UnsplashViewModel.getUnsplashImages().observe(getViewLifecycleOwner(), unsplashImagesResponse -> {
             rvUnsplashImages.setAdapter(new UnsplashImagesAdapter(unsplashImagesResponse));
             adapter.notifyDataSetChanged();
             mainActivity.doneLoadingHanddler();
         });
 
-        searchView = (SearchView) view.findViewById(R.id.unsplash_searchview);
-//        searchView.onActionViewExpanded();
+        searchView = view.findViewById(R.id.unsplash_searchview);
+        searchView.onActionViewExpanded();
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

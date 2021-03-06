@@ -3,7 +3,9 @@ package com.cs65.colorpal.views.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
@@ -26,9 +28,11 @@ public class PaletteDetailActivity extends AppCompatActivity {
     public static final String IMAGE_URL_KEY = "IMAGE_URL";
     public static final String SWATCHES_KEY = "SWATCHES";
     public static final String TAGS_KEY = "TAGS";
+    public static final String TITLE_KEY = "TITLE";
     private ImageView imageView;
     private RecyclerView paletteColors;
     private RecyclerView tagsView;
+    private TextView paletteDetailTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,9 @@ public class PaletteDetailActivity extends AppCompatActivity {
         Picasso.with(this).load(paletteUri).into(imageView);
         paletteColors = findViewById(R.id.palette_colors);
         tagsView = findViewById(R.id.palette_detail_tags_view);
+        paletteDetailTitle = findViewById(R.id.palette_detail_title);
+
+        paletteDetailTitle.setText(intent.getStringExtra(TITLE_KEY));
 
         ArrayList<Integer> swatchValues = intent.getIntegerArrayListExtra(SWATCHES_KEY);
         List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);

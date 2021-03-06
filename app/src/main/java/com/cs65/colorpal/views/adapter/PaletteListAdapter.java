@@ -115,6 +115,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getDownloadUrl());
             intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
             intent.putExtra(PaletteDetailActivity.TAGS_KEY, (ArrayList<PaletteTag>) palette.getTags());
+            intent.putExtra(PaletteDetailActivity.TITLE_KEY, palette.getTitle());
             context.startActivity(intent);
         }
     }

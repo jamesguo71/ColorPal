@@ -120,16 +120,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         progressBarContainer = (LinearLayout) findViewById(R.id.progress_bar_container);
         progressBarMessageTextView = (TextView) findViewById((R.id.progress_bar_message));
         unsplashFragment = new UnsplashFragment();
-        runInitialQuery();
     }
 
     public LoginViewModel getLoginViewModelInstance(){
         return loginViewModel;
-    }
-
-    public void runInitialQuery() throws JSONException {
-        UnsplashViewModel unsplashViewModel = ViewModelProviders.of(this).get(UnsplashViewModel.class);
-        unsplashViewModel.runQuery("color");
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){

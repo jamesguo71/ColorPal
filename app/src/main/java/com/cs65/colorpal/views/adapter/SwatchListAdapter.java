@@ -55,7 +55,6 @@ public class SwatchListAdapter  extends RecyclerView.Adapter<SwatchListAdapter.S
             ViewGroup.LayoutParams layoutParams = swatchView.getLayoutParams();
             int width = Resources.getSystem().getDisplayMetrics().widthPixels;
             layoutParams.width = width / swatches.size();
-
             swatchView.setOnClickListener(listener);
         }
 

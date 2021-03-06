@@ -139,21 +139,10 @@ public class LibraryFragment extends Fragment{
         emptyPalettesHandler();
     }
 
-//    public void setImage(Uri uri)  {
-//        if(uri == null) return;
-//        try {
-//            InputStream imageStream = activity.getContentResolver().openInputStream(uri);
-//            Bitmap image = BitmapFactory.decodeStream(imageStream);
-//            imageView.setImageBitmap(image);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     private void showImageOptionsDialog(){
 
         MaterialAlertDialogBuilder optionsDialog = new MaterialAlertDialogBuilder(getActivity())
-                .setIcon(R.drawable.ic_baseline_photo_camera_24)
+                .setIcon(R.drawable.logo_icon)
                 .setTitle(DIALOG_TITLE)
                 .setItems(imageSelectionOptions, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

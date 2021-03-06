@@ -149,6 +149,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         EditText edittext = new EditText(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add a new tag");
+        builder.setIcon(R.drawable.logo_icon);
         edittext.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(edittext);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
