@@ -23,10 +23,17 @@ public class TagsGridAdapter extends RecyclerView.Adapter<TagsGridAdapter.TagsGr
 
     List<PaletteTag> tags;
     Context mContext;
+    private boolean allowEdit = true;
 
     public TagsGridAdapter(List<PaletteTag> tags, Context mContext) {
         this.tags = tags;
         this.mContext = mContext;
+    }
+
+    public TagsGridAdapter(List<PaletteTag> tags, Context mContext, boolean allowEdit) {
+        this.tags = tags;
+        this.mContext = mContext;
+        this.allowEdit = allowEdit;
     }
 
     @NonNull
@@ -41,7 +48,9 @@ public class TagsGridAdapter extends RecyclerView.Adapter<TagsGridAdapter.TagsGr
     public void onBindViewHolder(@NonNull TagsGridViewHolder holder, int position) {
         PaletteTag tag = tags.get(position);
         holder.textView.setText(tag.getText());
-
+        // IF in Detail Activity, no listeners setup.
+        if (!allowEdit)
+            return;
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +100,9 @@ public class TagsGridAdapter extends RecyclerView.Adapter<TagsGridAdapter.TagsGr
             tagView = itemView.findViewById(R.id.tag_view);
             textView = itemView.findViewById(R.id.tag_text);
             removeView = itemView.findViewById(R.id.tag_remove);
+            if (!allowEdit) {
+                removeView.setVisibility(View.GONE);
+            }
         }
 
         public View getTagView() {
