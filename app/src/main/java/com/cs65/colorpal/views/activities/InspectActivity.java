@@ -2,24 +2,19 @@ package com.cs65.colorpal.views.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,13 +36,12 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cs65.colorpal.views.activities.SwatchesDetailActivity.SWATCH_VALUES;
+import static com.cs65.colorpal.views.activities.PaletteDetailActivity.FROM;
 
 public class InspectActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     private PaletteViewModel paletteViewModel;
@@ -85,7 +79,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null) {
             Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
-            String from = intent.getStringExtra("from");
+            String from = intent.getStringExtra(FROM);
             paletteViewModel.setSelectedImageUri(photoUri);
 
             if( from == null){

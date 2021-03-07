@@ -2,14 +2,12 @@ package com.cs65.colorpal.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
@@ -19,6 +17,8 @@ import com.cs65.colorpal.views.fragments.UnsplashFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static com.cs65.colorpal.views.activities.PaletteDetailActivity.FROM;
 
 public class UnsplashImagesAdapter extends RecyclerView.Adapter<UnsplashImagesAdapter.ViewHolder> {
 
@@ -43,7 +43,7 @@ public class UnsplashImagesAdapter extends RecyclerView.Adapter<UnsplashImagesAd
             int pos = getLayoutPosition();
             Intent intent = new Intent(context, InspectActivity.class);
             intent.putExtra(InspectActivity.PHOTO_URI, imagesList.get(pos).getImage_view_url());
-            intent.putExtra("from", UnsplashFragment.UNSPLASH_FRAGMENT);
+            intent.putExtra(FROM, UnsplashFragment.UNSPLASH_FRAGMENT);
             context.startActivity(intent);
         }
     }

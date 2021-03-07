@@ -5,13 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,7 +22,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.User;
 import com.cs65.colorpal.viewmodels.LoginViewModel;
-import com.cs65.colorpal.viewmodels.UnsplashViewModel;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.cs65.colorpal.views.fragments.LibraryFragment;
 import com.cs65.colorpal.views.fragments.UnsplashFragment;
@@ -38,8 +35,10 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+import static com.cs65.colorpal.views.activities.PaletteDetailActivity.TAG_KEY;
 
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    public static int PALETTE_DETAIL_REQUEST = 45;
     private BottomNavigationView bottomNavigationView;
     private static final String LOG_TAG = "MainActvity";
     public static final int CAMERA_REQUEST_CODE = 1;
@@ -128,16 +127,29 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
-        Intent inspectIntent = new Intent(this, InspectActivity.class);
-        if(resultCode != RESULT_OK) return;
-        if(requestCode == CAMERA_REQUEST_CODE){
-            inspectIntent.putExtra(PHOTO_URI, photoURI.toString());
-            startActivity(inspectIntent);
-        } else if ( requestCode == GALLERY_REQUEST_CODE){
-            if(intent != null){
-                Uri galleryUri = intent.getData();
-                inspectIntent.putExtra(PHOTO_URI, galleryUri.toString());
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Intent inspectIntent = new Intent(this, InspectActivity.class);
+                inspectIntent.putExtra(PHOTO_URI, photoURI.toString());
                 startActivity(inspectIntent);
+            }
+        } else if (requestCode == GALLERY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                if(intent != null){
+                    Intent inspectIntent = new Intent(this, InspectActivity.class);
+                    Uri galleryUri = intent.getData();
+                    inspectIntent.putExtra(PHOTO_URI, galleryUri.toString());
+                    startActivity(inspectIntent);
+                }
+            }
+        } else if (requestCode == PALETTE_DETAIL_REQUEST) {
+            if (intent != null) {
+                String tag = intent.getStringExtra(TAG_KEY);
+                Bundle bundle = new Bundle();
+                bundle.putString(TAG_KEY, tag);
+                unsplashFragment.setArguments(bundle);
+                toolbarTitleView.setText("Images");
+                openFragment(unsplashFragment);
             }
         }
     }

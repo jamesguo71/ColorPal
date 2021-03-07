@@ -2,8 +2,6 @@ package com.cs65.colorpal.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +16,7 @@ import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
+import com.cs65.colorpal.views.activities.MainActivity;
 import com.cs65.colorpal.views.activities.PaletteDetailActivity;
 import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.google.android.flexbox.FlexDirection;
@@ -25,6 +24,8 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.cs65.colorpal.views.activities.MainActivity.PALETTE_DETAIL_REQUEST;
 
 public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.PaletteViewHolder> {
 
@@ -130,8 +131,10 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             if(fragmentName.equals(HomeFragment.HOME_FRAGMENT_TAG))
                 intent.putExtra(PaletteDetailActivity.SHOW_EDIT_BUTTON_TAG, false);
 
-
-            context.startActivity(intent);
+            if (context instanceof MainActivity) {
+                MainActivity mainActivity = (MainActivity) context;
+                mainActivity.startActivityForResult(intent, PALETTE_DETAIL_REQUEST);
+            }
         }
     }
 }

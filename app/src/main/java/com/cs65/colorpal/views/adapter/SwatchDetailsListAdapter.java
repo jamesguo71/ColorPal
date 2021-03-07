@@ -16,6 +16,8 @@ import com.cs65.colorpal.views.fragments.UnsplashFragment;
 
 import java.util.List;
 
+import static com.cs65.colorpal.views.activities.PaletteDetailActivity.FROM;
+
 public class SwatchDetailsListAdapter extends RecyclerView.Adapter<SwatchDetailsListAdapter.SwatchDetailsListViewHolder> {
     private List<Integer> swatchValues;
 
@@ -65,7 +67,7 @@ public class SwatchDetailsListAdapter extends RecyclerView.Adapter<SwatchDetails
             Intent intent = new Intent(context, ColorInfoActivity.class);
             String swatchValue = Integer.toHexString(swatchValues.get(position)).substring(2);
             intent.putExtra(ColorInfoActivity.COLOR_TAG, swatchValue);
-            intent.putExtra("from", UnsplashFragment.UNSPLASH_FRAGMENT);
+            intent.putExtra(FROM, UnsplashFragment.UNSPLASH_FRAGMENT);
             context.startActivity(intent);
         }
     }

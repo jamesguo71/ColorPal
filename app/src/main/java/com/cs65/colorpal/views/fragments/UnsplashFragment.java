@@ -1,10 +1,10 @@
 package com.cs65.colorpal.views.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
@@ -22,8 +22,10 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class UnsplashFragment extends Fragment {
+import static com.cs65.colorpal.views.activities.PaletteDetailActivity.TAG_KEY;
 
+public class UnsplashFragment extends Fragment {
+    public static String UNSPLASHFRAGMENT_TAG = "UnsplashFragment";
     private View view;
     private SearchView searchView;
     private UnsplashViewModel unsplashViewModel;
@@ -50,7 +52,14 @@ public class UnsplashFragment extends Fragment {
     public void setupSearchView(Bundle savedInstanceState) throws JSONException {
 
         unsplashViewModel = ViewModelProviders.of(requireActivity()).get(UnsplashViewModel.class);
-        if(savedInstanceState == null) unsplashViewModel.runQuery("color palettes");
+        Bundle args = getArguments();
+        if (args != null) {
+            String requestedQuery = getArguments().getString(TAG_KEY);
+            searchTag(requestedQuery);
+        } else {
+            if (savedInstanceState == null) unsplashViewModel.runQuery("color palettes");
+        }
+
         UnsplashViewModel.getUnsplashImages().observe(getViewLifecycleOwner(), unsplashImagesResponse -> {
             rvUnsplashImages.setAdapter(new UnsplashImagesAdapter(unsplashImagesResponse));
             adapter.notifyDataSetChanged();
@@ -85,4 +94,12 @@ public class UnsplashFragment extends Fragment {
         rvUnsplashImages.setLayoutManager(new LinearLayoutManager((getActivity())));
     }
 
+    public void searchTag(String tag) {
+        try {
+            unsplashViewModel.runQuery(tag);
+            mainActivity.isLoadingHandler("Searching images for " + tag + "...");
+        } catch (Exception e) {
+            Log.e(UNSPLASHFRAGMENT_TAG, e.toString());
+        }
+    }
 }

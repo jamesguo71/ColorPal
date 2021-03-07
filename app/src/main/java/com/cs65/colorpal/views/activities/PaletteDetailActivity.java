@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,17 +26,20 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cs65.colorpal.views.activities.MainActivity.PHOTO_URI;
+import static com.cs65.colorpal.views.activities.MainActivity.PALETTE_DETAIL_REQUEST;
 
 public class PaletteDetailActivity extends AppCompatActivity {
     public static final String PALETTE_DETAIL_ACTIVITY = "PALETTE_DETAIL_ACTIVITY";
     public static final String IMAGE_URL_KEY = "IMAGE_URL";
     public static final String SWATCHES_KEY = "SWATCHES";
     public static final String TAGS_KEY = "TAGS";
+    public static final String TAG_KEY = "TAG";
     public static final String TITLE_KEY = "TITLE";
     public static final String SHOW_EDIT_BUTTON_TAG = "SHOW_EDIT_BUTTON_TAG";
     public static final String USERNAME_KEY = "USERNAME";
     public static final String ID_KEY = "ID";
+    public static final String FROM = "from";
+    public static final int PALETTE_DETAIL_SEARCH_TAG_RESULT_CODE = 1;
     private ImageView imageView;
     private RecyclerView paletteColors;
     private RecyclerView tagsView;
@@ -94,19 +96,26 @@ public class PaletteDetailActivity extends AppCompatActivity {
         if(showButton.equals(false)) {
             materialButton.setVisibility(View.GONE);
         }
-        materialButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),InspectActivity.class);
-                intent.putExtra("from",PALETTE_DETAIL_ACTIVITY);
-                intent.putExtra(InspectActivity.PHOTO_URI, getIntent().getStringExtra(IMAGE_URL_KEY));
-                intent.putExtra(TITLE_KEY, getIntent().getStringExtra(TITLE_KEY));
-                intent.putIntegerArrayListExtra(SWATCHES_KEY, getIntent().getIntegerArrayListExtra(SWATCHES_KEY));
-                intent.putParcelableArrayListExtra(TAGS_KEY, getIntent().getParcelableArrayListExtra(TAGS_KEY));
-                Log.d("docid", "detail :"+getIntent().getStringExtra(ID_KEY));
-                intent.putExtra(ID_KEY, getIntent().getStringExtra(ID_KEY));
-                startActivity(intent);
-            }
+        materialButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(),InspectActivity.class);
+            intent.putExtra(FROM,PALETTE_DETAIL_ACTIVITY);
+            intent.putExtra(InspectActivity.PHOTO_URI, getIntent().getStringExtra(IMAGE_URL_KEY));
+            intent.putExtra(TITLE_KEY, getIntent().getStringExtra(TITLE_KEY));
+            intent.putIntegerArrayListExtra(SWATCHES_KEY, getIntent().getIntegerArrayListExtra(SWATCHES_KEY));
+            intent.putParcelableArrayListExtra(TAGS_KEY, getIntent().getParcelableArrayListExtra(TAGS_KEY));
+            Log.d("docid", "detail :"+getIntent().getStringExtra(ID_KEY));
+            intent.putExtra(ID_KEY, getIntent().getStringExtra(ID_KEY));
+            startActivity(intent);
         });
+    }
+
+    public void searchImagesByTag(String tag) {
+        if (tag == null || tag.length() == 0) {
+            return;
+        }
+        Intent data = new Intent();
+        data.putExtra(TAG_KEY, tag);
+        setResult(PALETTE_DETAIL_REQUEST, data);
+        finish();
     }
 }
