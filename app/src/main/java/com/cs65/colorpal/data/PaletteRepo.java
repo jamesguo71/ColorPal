@@ -11,6 +11,7 @@ import androidx.palette.graphics.Palette;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.services.FirebaseService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,7 +47,7 @@ public class PaletteRepo  {
 
     private RequestQueue requestQueue;
     private MutableLiveData<JSONArray> data;
-    private static final String LOG_TAG =  "ColourLoversService";
+    private static final String LOG_TAG =  "PaletteRepo";
     private static MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
     private static MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
     private FirebaseUser currentUser;
@@ -167,20 +169,55 @@ public class PaletteRepo  {
 
     private void deletePaletteDoc(String docId){
         //delete document
-        firebaseService.fetchPalettesReference()
-                .document(docId)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(LOG_TAG, "DocumentSnapshot "+docId+" successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(LOG_TAG, "Error deleting document", e);
-                    }
-                });
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                firebaseService.fetchPalettesReference()
+                        .document(docId)
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(LOG_TAG, "DocumentSnapshot "+docId+" successfully deleted!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(LOG_TAG, "Error deleting document", e);
+                            }
+                        });
+            }
+        }.start();
+    }
+
+    public MutableLiveData<ArrayList<ColorPalette>> searchByTag(String tag) {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                firebaseService.fetchPalettesReference()
+                        .whereArrayContains("tags",new PaletteTag(tag))
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
+                                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                                        snapshots.add(doc);
+                                    }
+                                    Log.d("papelog", String.valueOf(task.getResult().size()));
+                                    mHomeColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
+                                } else {
+                                    Log.d(LOG_TAG, "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            }
+        }.start();
+
+        return mHomeColorPaletteList;
     }
 }

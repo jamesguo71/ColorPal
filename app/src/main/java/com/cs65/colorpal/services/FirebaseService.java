@@ -5,8 +5,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.palette.graphics.Palette;
 
 import com.cs65.colorpal.models.ColorPalette;
+import com.cs65.colorpal.models.PaletteTag;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -43,6 +46,7 @@ public class FirebaseService {
     }
 
     public Map<String, Object> createPaletteData(ColorPalette palette){
+
         Map<String, Object> paletteData = new HashMap<>();
         paletteData.put("username", currentUser.getDisplayName());
         paletteData.put("userId", currentUser.getUid());

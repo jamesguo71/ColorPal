@@ -104,6 +104,10 @@ public class PaletteViewModel extends AndroidViewModel{
         mUserLibraryColorPaletteList = paletteRepo.fetchUserLibraryColorPalettes();
     }
 
+    public void searchByTag(String tag){
+        mHomeColorPaletteList = paletteRepo.searchByTag(tag);
+    }
+
     public LiveData<Palette> getColorPaletteData() {
         return extractedColorPaletteData;
     }
