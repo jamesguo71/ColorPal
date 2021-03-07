@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Bundle bundle = new Bundle();
                 bundle.putString(TAG_KEY, tag);
                 unsplashFragment.setArguments(bundle);
-                toolbarTitleView.setText("Images");
                 openFragment(unsplashFragment);
+                bottomNavigationView.setSelectedItemId(R.id.unsplash_button);
             }
         }
     }
