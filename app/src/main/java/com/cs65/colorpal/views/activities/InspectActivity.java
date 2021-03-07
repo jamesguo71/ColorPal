@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -36,6 +37,8 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -148,15 +151,18 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     }
 
     private void showAddTagDialog() {
-        EditText edittext = new EditText(this);
+        final View customLayout = getLayoutInflater().inflate(R.layout.input_dialog, null);
+        final TextInputLayout textInputLayout = customLayout.findViewById(R.id.text_input_layout);
+        textInputLayout.setHint("Name of Tag");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(customLayout);
         builder.setTitle("Add a new tag");
         builder.setIcon(R.drawable.logo_icon);
-        edittext.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(edittext);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+        builder.setPositiveButton("ADD", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                String text = edittext.getText().toString();
+                TextInputEditText textInputEditText = customLayout.findViewById(R.id.tag_input_field);
+                String text = textInputEditText.getText().toString();
                 if(text.length()!=0) {
                     paletteViewModel.addTag(text);
                     tagsGridAdapter.notifyDataSetChanged();
@@ -164,7 +170,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }

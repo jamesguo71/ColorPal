@@ -10,12 +10,12 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
+            android:id="@+id/text_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:startIconDrawable="@drawable/ic_baseline_text_fields_24"
             app:startIconTint="@color/pink"
-            android:hint="Name of Tag">
+            android:hint="">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tag_input_field"

@@ -70,7 +70,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
                 holder.title.setText(palette.getTitle());
             else
                 holder.title.setText("New Palette");
-            if(showName) holder.username.setText("By " + palette.getUsername());
+            if(showName) holder.username.setText("@" + palette.getUsername().replaceAll("\\s",""));
             else {
                 holder.username.setVisibility(View.GONE);
             }

@@ -23,6 +23,7 @@ import com.cs65.colorpal.views.activities.MainActivity;
 import com.cs65.colorpal.views.adapter.PaletteListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
@@ -108,6 +109,8 @@ public class HomeFragment extends Fragment{
 
     private void showSearchTagDialog() {
         final View customLayout = getLayoutInflater().inflate(R.layout.input_dialog, null);
+        final TextInputLayout textInputLayout = customLayout.findViewById(R.id.text_input_layout);
+        textInputLayout.setHint("Name of Tag");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(customLayout);
         builder.setTitle("Enter the name of a tag.");

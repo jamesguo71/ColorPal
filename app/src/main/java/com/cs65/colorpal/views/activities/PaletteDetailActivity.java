@@ -21,6 +21,7 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
     private MaterialButton materialButton;
     private TagsGridAdapter tagsGridAdapter;
     private SwatchListAdapter adapter;
+    private CircularProgressIndicator circularProgressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,8 @@ public class PaletteDetailActivity extends AppCompatActivity {
         Picasso.with(this).load(paletteUri).into(imageView);
         paletteColors = findViewById(R.id.palette_colors);
         tagsView = findViewById(R.id.palette_detail_tags_view);
+
+        circularProgressIndicator = findViewById(R.id.palette_detail_image_progress_bar);
 
         paletteDetailTitle = findViewById(R.id.palette_detail_title);
         cardPaletteName = findViewById(R.id.card_name);
@@ -114,6 +118,11 @@ public class PaletteDetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void progressBarHandler(){
+
+    }
+
 
     public void searchImagesByTag(String tag) {
         if (tag == null || tag.length() == 0) {

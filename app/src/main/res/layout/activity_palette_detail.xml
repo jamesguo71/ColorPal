@@ -63,10 +63,22 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="294dp"
+                    android:layout_height="300dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/nature_photo"
                     android:id="@+id/palette_detail_image"/>
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:visibility="gone"
+                    android:id="@+id/palette_detail_image_progress_bar"
+                    android:layout_gravity="center"
+                    app:indicatorColor="@color/pink"
+                    android:indeterminateBehavior="cycle"
+                    android:paddingVertical="50dp"
+                    app:trackThickness="8dp"
+                    app:indicatorSize="150dp"
+                    android:indeterminate="true"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
