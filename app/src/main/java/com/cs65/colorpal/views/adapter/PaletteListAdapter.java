@@ -18,6 +18,7 @@ import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.views.activities.PaletteDetailActivity;
+import com.cs65.colorpal.views.fragments.HomeFragment;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 
@@ -30,11 +31,13 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
     private final Context context;
     private List<ColorPalette> mPalettes;
     private Boolean showName = true;
+    private String fragmentName;
 
-    public PaletteListAdapter(Context context, Boolean showName) {
+    public PaletteListAdapter(Context context, Boolean showName, String fragmentName) {
         mInflater = LayoutInflater.from(context);
         this.context = context;
         this.showName = showName == null ? this.showName : showName;
+        this.fragmentName = fragmentName;
     }
 
     @NonNull
@@ -121,6 +124,10 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
             intent.putExtra(PaletteDetailActivity.TAGS_KEY, (ArrayList<PaletteTag>) palette.getTags());
             intent.putExtra(PaletteDetailActivity.TITLE_KEY, palette.getTitle());
+            if(fragmentName.equals(HomeFragment.HOME_FRAGMENT_TAG))
+                intent.putExtra(PaletteDetailActivity.SHOW_EDIT_BUTTON_TAG, false);
+
+
             context.startActivity(intent);
         }
     }

@@ -3,6 +3,8 @@ package com.cs65.colorpal.views.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import com.cs65.colorpal.views.adapter.TagsGridAdapter;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
     public static final String SWATCHES_KEY = "SWATCHES";
     public static final String TAGS_KEY = "TAGS";
     public static final String TITLE_KEY = "TITLE";
+    public static final String SHOW_EDIT_BUTTON_TAG = "SHOW_EDIT_BUTTON_TAG";
     private ImageView imageView;
     private RecyclerView paletteColors;
     private RecyclerView tagsView;
@@ -45,8 +49,8 @@ public class PaletteDetailActivity extends AppCompatActivity {
         Picasso.with(this).load(paletteUri).into(imageView);
         paletteColors = findViewById(R.id.palette_colors);
         tagsView = findViewById(R.id.palette_detail_tags_view);
-        paletteDetailTitle = findViewById(R.id.palette_detail_title);
 
+        paletteDetailTitle = findViewById(R.id.palette_detail_title);
         paletteDetailTitle.setText(intent.getStringExtra(TITLE_KEY));
 
         ArrayList<Integer> swatchValues = intent.getIntegerArrayListExtra(SWATCHES_KEY);
@@ -69,5 +73,16 @@ public class PaletteDetailActivity extends AppCompatActivity {
         flexLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
         tagsView.setLayoutManager(flexLayoutManager);
         tagsView.setAdapter(tagsGridAdapter);
+
+        setUpEditButton();
+    }
+
+    public void setUpEditButton(){
+        Boolean showButton = getIntent().getBooleanExtra(SHOW_EDIT_BUTTON_TAG, true);
+        Log.d("papelog", String.valueOf(showButton));
+        if(showButton.equals(false)) {
+            MaterialButton materialButton = findViewById(R.id.edit_palette_button);
+            materialButton.setVisibility(View.INVISIBLE);
+        }
     }
 }

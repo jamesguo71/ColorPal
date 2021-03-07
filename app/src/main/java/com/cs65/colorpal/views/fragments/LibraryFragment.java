@@ -70,7 +70,7 @@ public class LibraryFragment extends Fragment{
     private void displaySavedPalettes(View view, List<ColorPalette> colorPaletteList) {
         palettesRecyclerView = view.findViewById(R.id.homePalettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        PaletteListAdapter adapter = new PaletteListAdapter(getActivity(), false);
+        PaletteListAdapter adapter = new PaletteListAdapter(getActivity(), false, "");
         palettesRecyclerView.setAdapter(adapter);
         adapter.setPalettes(colorPaletteList);
     }
@@ -115,7 +115,7 @@ public class LibraryFragment extends Fragment{
 
         palettesRecyclerView = view.findViewById(R.id.recycle_view_my_palettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new PaletteListAdapter(getActivity(), false);
+        adapter = new PaletteListAdapter(getActivity(), false,"");
         palettesRecyclerView.setAdapter(adapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteItemTouchCallback);

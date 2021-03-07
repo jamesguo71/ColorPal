@@ -21,7 +21,7 @@ SearchableActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchable);
         RecyclerView recyclerView = findViewById(R.id.searchRecyclerView);
-        adapter = new PaletteListAdapter(this, true);
+        adapter = new PaletteListAdapter(this, true, "");
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Intent intent = getIntent();

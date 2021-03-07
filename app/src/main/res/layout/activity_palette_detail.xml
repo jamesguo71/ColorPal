@@ -42,7 +42,7 @@
         android:layout_below="@+id/appBar_layout"
         android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="600dp">
+        android:layout_height="400dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -59,28 +59,22 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_button"
-            android:layout_width="wrap_content"
-            android:layout_gravity="top|right"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/pink"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:fillColor="@color/white"
-            android:src="@drawable/ic_baseline_edit_24"
-            app:borderWidth="0dp" />
-
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/frame"
         android:id="@+id/palette_colors"
         android:layout_width="match_parent"
-        android:layout_height="130px"
-        android:layout_alignParentBottom="true"
+        android:layout_height="160px"
         android:nestedScrollingEnabled="false" />
 
+    <com.google.android.material.button.MaterialButton
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/pink"
+        android:text="Edit"
+        android:id="@+id/edit_palette_button"
+        android:layout_below="@+id/palette_colors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

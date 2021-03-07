@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment{
     private PaletteListAdapter adapter;
     private ConstraintLayout emptyTextView;
     private FloatingActionButton searchButton;
+    public static final String HOME_FRAGMENT_TAG = "HOME_FRAGMENT";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -60,7 +61,7 @@ public class HomeFragment extends Fragment{
     private void displaySavedPalettes(View view, List<ColorPalette> colorPaletteList) {
         palettesRecyclerView = view.findViewById(R.id.homePalettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        PaletteListAdapter adapter = new PaletteListAdapter(getActivity(), true);
+        PaletteListAdapter adapter = new PaletteListAdapter(getActivity(), true, HOME_FRAGMENT_TAG);
         palettesRecyclerView.setAdapter(adapter);
         adapter.setPalettes(colorPaletteList);
     }
@@ -91,7 +92,7 @@ public class HomeFragment extends Fragment{
         mainActivity = (MainActivity) getActivity();
         palettesRecyclerView = view.findViewById(R.id.homePalettes);
         palettesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new PaletteListAdapter(getActivity(),true);
+        adapter = new PaletteListAdapter(getActivity(),true, HOME_FRAGMENT_TAG);
         palettesRecyclerView.setAdapter(adapter);
 
         searchButton = view.findViewById(R.id.search_by_tag_button);
