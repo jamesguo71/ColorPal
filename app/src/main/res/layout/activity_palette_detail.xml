@@ -38,43 +38,148 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:layout_below="@+id/appBar_layout"
-        android:id="@+id/frame"
+    <ScrollView
+        android:layout_below="@id/appBar_layout"
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="-15dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/nature_photo"
-            android:id="@+id/palette_detail_image"/>
+        <com.google.android.material.card.MaterialCardView
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_gravity="bottom"
-            android:id="@+id/palette_detail_tags_view"
+            android:id="@+id/card"
+            app:cardCornerRadius="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            />
-    </FrameLayout>
+            android:backgroundTint="@color/mid_grey"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/frame"
-        android:id="@+id/palette_colors"
-        android:layout_width="match_parent"
-        android:layout_height="160px"
-        android:nestedScrollingEnabled="false" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_margin="20dp"
-        android:backgroundTint="@color/pink"
-        android:text="Edit"
-        android:id="@+id/edit_palette_button"
-        android:layout_below="@+id/palette_colors"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
+                <!-- Media -->
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="294dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/nature_photo"
+                    android:id="@+id/palette_detail_image"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="60dp"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Name"
+                        android:textColor="@color/white"
+                        android:textSize="19dp"
+                        android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:id="@+id/card_name"
+                    android:textColor="@color/white"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="15dp"
+                    android:background="@android:color/darker_gray"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Colors"
+                        android:layout_marginVertical="10dp"
+                        android:textSize="19dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_below="@+id/frame"
+                        android:id="@+id/palette_colors"
+                        android:layout_width="match_parent"
+                        android:layout_height="160px"
+                        android:nestedScrollingEnabled="false" />
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="15dp"
+                        android:background="@android:color/darker_gray"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Creator's Name"
+                        android:layout_marginTop="10dp"
+                        android:textSize="19dp"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:id="@+id/card_creators_name"
+                        android:textColor="@color/white"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="15dp"
+                        android:background="@android:color/darker_gray"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tags"
+                        android:layout_marginVertical="10dp"
+                        android:textSize="19dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_gravity="bottom"
+                        android:id="@+id/palette_detail_tags_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_margin="20dp"
+                        android:backgroundTint="@color/pink"
+                        android:text="Edit"
+                        android:id="@+id/edit_palette_button"
+                        android:layout_below="@+id/palette_colors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+    </ScrollView>
 
 </RelativeLayout>

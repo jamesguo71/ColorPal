@@ -33,10 +33,11 @@ public class PaletteDetailActivity extends AppCompatActivity {
     public static final String TAGS_KEY = "TAGS";
     public static final String TITLE_KEY = "TITLE";
     public static final String SHOW_EDIT_BUTTON_TAG = "SHOW_EDIT_BUTTON_TAG";
+    public static final String USERNAME_KEY = "USERNAME";
     private ImageView imageView;
     private RecyclerView paletteColors;
     private RecyclerView tagsView;
-    private TextView paletteDetailTitle;
+    private TextView paletteDetailTitle, cardPaletteName, cardPaletteCreatorName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,12 @@ public class PaletteDetailActivity extends AppCompatActivity {
         tagsView = findViewById(R.id.palette_detail_tags_view);
 
         paletteDetailTitle = findViewById(R.id.palette_detail_title);
+        cardPaletteName = findViewById(R.id.card_name);
+        cardPaletteCreatorName = findViewById(R.id.card_creators_name);
+
         paletteDetailTitle.setText(intent.getStringExtra(TITLE_KEY));
+        cardPaletteName.setText(intent.getStringExtra(TITLE_KEY));
+        cardPaletteCreatorName.setText(intent.getStringExtra(USERNAME_KEY));
 
         ArrayList<Integer> swatchValues = intent.getIntegerArrayListExtra(SWATCHES_KEY);
         List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);
@@ -81,7 +87,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
         Boolean showButton = getIntent().getBooleanExtra(SHOW_EDIT_BUTTON_TAG, true);
         if(showButton.equals(false)) {
             MaterialButton materialButton = findViewById(R.id.edit_palette_button);
-            materialButton.setVisibility(View.INVISIBLE);
+            materialButton.setVisibility(View.GONE);
         }
     }
 }

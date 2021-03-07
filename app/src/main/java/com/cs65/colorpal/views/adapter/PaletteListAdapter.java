@@ -124,6 +124,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
             intent.putExtra(PaletteDetailActivity.TAGS_KEY, (ArrayList<PaletteTag>) palette.getTags());
             intent.putExtra(PaletteDetailActivity.TITLE_KEY, palette.getTitle());
+            intent.putExtra(PaletteDetailActivity.USERNAME_KEY, palette.getUsername());
             if(fragmentName.equals(HomeFragment.HOME_FRAGMENT_TAG))
                 intent.putExtra(PaletteDetailActivity.SHOW_EDIT_BUTTON_TAG, false);
 
