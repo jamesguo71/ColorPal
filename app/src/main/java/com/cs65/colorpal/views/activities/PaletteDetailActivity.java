@@ -79,7 +79,6 @@ public class PaletteDetailActivity extends AppCompatActivity {
 
     public void setUpEditButton(){
         Boolean showButton = getIntent().getBooleanExtra(SHOW_EDIT_BUTTON_TAG, true);
-        Log.d("papelog", String.valueOf(showButton));
         if(showButton.equals(false)) {
             MaterialButton materialButton = findViewById(R.id.edit_palette_button);
             materialButton.setVisibility(View.INVISIBLE);

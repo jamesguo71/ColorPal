@@ -121,7 +121,6 @@ public class HomeFragment extends Fragment{
         builder.setPositiveButton("SEARCH", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 TextInputEditText textInputEditText = customLayout.findViewById(R.id.tag_input_field);
-                Log.d("papelog", textInputEditText.getText().toString());
                 dialog.dismiss();
             }
         });
