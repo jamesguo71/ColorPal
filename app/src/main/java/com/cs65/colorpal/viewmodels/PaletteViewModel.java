@@ -232,4 +232,8 @@ public class PaletteViewModel extends AndroidViewModel{
     public String createNewDocId() { return paletteRepo.createNewId(); }
 
     public ArrayList<Integer> getOriginalSwatches(){ return mOriginalSwatchesList.getValue(); }
+
+    public void updateEditableByDocId(String docId){
+        paletteRepo.updateEditableByDocId(docId,title,mSwatchesList,mTagsList);
+    }
 }

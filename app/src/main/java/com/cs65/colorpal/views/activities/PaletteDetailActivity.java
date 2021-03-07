@@ -39,12 +39,14 @@ public class PaletteDetailActivity extends AppCompatActivity {
     public static final String USERNAME_KEY = "USERNAME";
     public static final String ID_KEY = "ID";
     public static final String FROM = "from";
-    public static final int PALETTE_DETAIL_SEARCH_TAG_RESULT_CODE = 1;
+    public static final int INSPECT_ACTIVITY_CODE = 1;
     private ImageView imageView;
     private RecyclerView paletteColors;
     private RecyclerView tagsView;
     private TextView paletteDetailTitle, cardPaletteName, cardPaletteCreatorName;
     private MaterialButton materialButton;
+    private TagsGridAdapter tagsGridAdapter;
+    private SwatchListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
 
         ArrayList<Integer> swatchValues = intent.getIntegerArrayListExtra(SWATCHES_KEY);
         List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);
-        SwatchListAdapter adapter = new SwatchListAdapter(swatches, v -> {
+        adapter = new SwatchListAdapter(swatches, v -> {
             Intent i = new Intent(this, SwatchesDetailActivity.class);
             i.putIntegerArrayListExtra(SwatchesDetailActivity.SWATCH_VALUES, swatchValues);
             startActivity(i);
@@ -80,7 +82,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
 
         List<PaletteTag> tags = intent.getParcelableArrayListExtra(TAGS_KEY);
         tagsView = findViewById(R.id.palette_detail_tags_view);
-        TagsGridAdapter tagsGridAdapter = new TagsGridAdapter(tags, this, false);
+        tagsGridAdapter = new TagsGridAdapter(tags, this, false);
         FlexboxLayoutManager flexLayoutManager = new FlexboxLayoutManager(this);
         flexLayoutManager.setFlexDirection(FlexDirection.ROW);
         flexLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
@@ -96,16 +98,20 @@ public class PaletteDetailActivity extends AppCompatActivity {
         if(showButton.equals(false)) {
             materialButton.setVisibility(View.GONE);
         }
-        materialButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(),InspectActivity.class);
-            intent.putExtra(FROM,PALETTE_DETAIL_ACTIVITY);
-            intent.putExtra(InspectActivity.PHOTO_URI, getIntent().getStringExtra(IMAGE_URL_KEY));
-            intent.putExtra(TITLE_KEY, getIntent().getStringExtra(TITLE_KEY));
-            intent.putIntegerArrayListExtra(SWATCHES_KEY, getIntent().getIntegerArrayListExtra(SWATCHES_KEY));
-            intent.putParcelableArrayListExtra(TAGS_KEY, getIntent().getParcelableArrayListExtra(TAGS_KEY));
-            Log.d("docid", "detail :"+getIntent().getStringExtra(ID_KEY));
-            intent.putExtra(ID_KEY, getIntent().getStringExtra(ID_KEY));
-            startActivity(intent);
+
+        materialButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),InspectActivity.class);
+                intent.putExtra("from",PALETTE_DETAIL_ACTIVITY);
+                intent.putExtra(InspectActivity.PHOTO_URI, getIntent().getStringExtra(IMAGE_URL_KEY));
+                intent.putExtra(TITLE_KEY, getIntent().getStringExtra(TITLE_KEY));
+                intent.putIntegerArrayListExtra(SWATCHES_KEY, getIntent().getIntegerArrayListExtra(SWATCHES_KEY));
+                intent.putParcelableArrayListExtra(TAGS_KEY, getIntent().getParcelableArrayListExtra(TAGS_KEY));
+                intent.putExtra(ID_KEY, getIntent().getStringExtra(ID_KEY));
+                startActivityForResult(intent, INSPECT_ACTIVITY_CODE);
+//                startActivity(intent);
+            }
         });
     }
 
@@ -117,5 +123,19 @@ public class PaletteDetailActivity extends AppCompatActivity {
         data.putExtra(TAG_KEY, tag);
         setResult(PALETTE_DETAIL_REQUEST, data);
         finish();
+    }
+
+    // Update from Inspect Activity
+    public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+        if(resultCode != RESULT_OK) return;
+        if(requestCode == INSPECT_ACTIVITY_CODE){
+            ArrayList<Integer> editedSwatches = intent.getIntegerArrayListExtra(SWATCHES_KEY);
+            List<Palette.Swatch> swatches = Utils.toSwatches(editedSwatches);
+            adapter.setSwatches(swatches);
+            tagsGridAdapter.setTags(intent.getParcelableArrayListExtra(TAGS_KEY));
+            paletteDetailTitle.setText(intent.getStringExtra(TITLE_KEY));
+            cardPaletteName.setText(intent.getStringExtra(TITLE_KEY));
+        }
     }
 }
