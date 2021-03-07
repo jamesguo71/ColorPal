@@ -36,6 +36,11 @@ public class TagsGridAdapter extends RecyclerView.Adapter<TagsGridAdapter.TagsGr
         this.allowEdit = allowEdit;
     }
 
+    public void setTags(List<PaletteTag> tags){
+        this.tags = tags;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public TagsGridViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -94,14 +99,17 @@ public class TagsGridAdapter extends RecyclerView.Adapter<TagsGridAdapter.TagsGr
         public final View tagView;
         public final TextView textView;
         public final ImageView removeView;
+        public final TextView spaceView;
 
         public TagsGridViewHolder(@NonNull View itemView) {
             super(itemView);
             tagView = itemView.findViewById(R.id.tag_view);
             textView = itemView.findViewById(R.id.tag_text);
             removeView = itemView.findViewById(R.id.tag_remove);
+            spaceView = itemView.findViewById(R.id.tag_space);
             if (!allowEdit) {
                 removeView.setVisibility(View.GONE);
+                spaceView.setVisibility(View.GONE);
             }
         }
 

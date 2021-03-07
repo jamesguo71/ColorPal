@@ -220,4 +220,30 @@ public class PaletteRepo  {
 
         return mHomeColorPaletteList;
     }
+
+    public void updatePalette(ColorPalette colorPalette, String docId){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                DocumentReference docRef = firebaseService.fetchPalettesReference().document(docId);
+                Map<String,Object> updates = new HashMap<>();
+                updates.put("swatches", colorPalette.getSwatches());
+                updates.put("tags", colorPalette.getTags());
+                updates.put("title", colorPalette.getTitle());
+                docRef.update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(LOG_TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(LOG_TAG, "Error updating document", e);
+                    }
+                });
+            }
+        }.start();
+    }
 }

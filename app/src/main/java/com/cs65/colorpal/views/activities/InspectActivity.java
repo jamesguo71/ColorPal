@@ -79,7 +79,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         paletteViewModel.getSelectedImage().observe(this, uri -> onImageSelected(uri));
         paletteViewModel.getColorPaletteData().observe(this, palette -> paletteViewModel.initSwatchesArrayList());
         paletteViewModel.getSwatches().observe(this, list -> addSwatches(Utils.toSwatches(list)));
-        paletteViewModel.getTags().observe(this, paletteTags -> tagsGridAdapter.notifyDataSetChanged());
+        paletteViewModel.getTags().observe(this, paletteTags -> tagsGridAdapter.setTags(paletteTags));
         paletteViewModel.getSelectedColor().observe(this, rgb -> selectedColor.setCardBackgroundColor(rgb));
 
         Intent intent = getIntent();
@@ -92,6 +92,14 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 paletteViewModel.extractNewFromPhoneUri(photoUri);
             } else if (from.equals(UnsplashFragment.UNSPLASH_FRAGMENT)){
                 paletteViewModel.extractNewFromExternalUri(photoUri);
+            } else if (from.equals(PaletteDetailActivity.PALETTE_DETAIL_ACTIVITY)){
+                paletteViewModel.setTitle(intent.getStringExtra(PaletteDetailActivity.TITLE_KEY));
+                paletteViewModel.setSelectedImageUri(Uri.parse(intent.getStringExtra(PHOTO_URI)));
+                paletteViewModel.setSwatchesList(intent.getIntegerArrayListExtra(PaletteDetailActivity.SWATCHES_KEY));
+                paletteViewModel.setOriginalSwatchesList(intent.getIntegerArrayListExtra(PaletteDetailActivity.SWATCHES_KEY));
+                paletteViewModel.setTagsList(intent.getParcelableArrayListExtra(PaletteDetailActivity.TAGS_KEY));
+                paletteViewModel.setDocId(intent.getStringExtra(PaletteDetailActivity.ID_KEY));
+                titleEditText.setText(intent.getStringExtra(PaletteDetailActivity.TITLE_KEY));
             }
         }
 

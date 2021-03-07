@@ -43,6 +43,7 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<Integer> selectedColor = new MutableLiveData<>();
     private MutableLiveData<Boolean> addColorEvent = new MutableLiveData<>();
     private MutableLiveData<String> title = new MutableLiveData<>();
+    private MutableLiveData<String> mDocId = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
@@ -137,6 +138,10 @@ public class PaletteViewModel extends AndroidViewModel{
         mSwatchesList.setValue(swatches);
     }
 
+    public void setOriginalSwatchesList(ArrayList<Integer> swatches){ mOriginalSwatchesList.setValue(swatches); }
+
+    public void setDocId(String docId) { mDocId.setValue(docId); }
+
     public void setSelectedImageUri(Uri uri){
         selectedImage.setValue(uri);
     }
@@ -146,6 +151,8 @@ public class PaletteViewModel extends AndroidViewModel{
     public MutableLiveData<String> getTitle() { return title; }
 
     public MutableLiveData<ArrayList<PaletteTag>> getTags() { return mTagsList; }
+
+    public void setTagsList(ArrayList<PaletteTag> tags) { mTagsList.postValue(tags); }
 
     public void addTag(String text){
         PaletteTag newTag = new PaletteTag(text);
@@ -176,13 +183,19 @@ public class PaletteViewModel extends AndroidViewModel{
                 }
             }.start();
         } else {
-            newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
+            if(mDocId.getValue()==null)
+                newColorPalette.setBitmap(convertUriToBitmap(selectedImage.getValue()));
         }
         newColorPalette.setSwatches(mSwatchesList.getValue());
         newColorPalette.setTags(mTagsList.getValue());
         newColorPalette.setTitle(getTitle().getValue());
-        newColorPalette.setDocId(createNewDocId());        //generate a new id
-        paletteRepo.savePaletteToDB(newColorPalette);
+        if(mDocId.getValue()==null) {
+            newColorPalette.setDocId(createNewDocId());         //generate a new id
+            paletteRepo.savePaletteToDB(newColorPalette);
+        }else{
+            paletteRepo.updatePalette(newColorPalette,mDocId.getValue());
+        }
+
     }
 
     public void selectColor(int pixel) {

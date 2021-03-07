@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.home_button:
-                toolbarTitleView.setText("Home");
+                toolbarTitleView.setText("Explore");
                 HomeFragment homeFragment = new HomeFragment();
                 openFragment(homeFragment);
                 return true;
