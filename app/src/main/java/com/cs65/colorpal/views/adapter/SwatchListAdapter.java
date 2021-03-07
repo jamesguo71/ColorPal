@@ -61,4 +61,9 @@ public class SwatchListAdapter  extends RecyclerView.Adapter<SwatchListAdapter.S
             return swatchView;
         }
     }
+
+    public void setSwatches(List<Palette.Swatch> swatches){
+        this.swatches = swatches;
+        notifyDataSetChanged();
+    }
 }

@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -245,5 +246,30 @@ public class PaletteRepo  {
                 });
             }
         }.start();
+    }
+
+    public void updateEditableByDocId(String docId, MutableLiveData<String> title,
+                                      MutableLiveData<ArrayList<Integer>> swatchesList,
+                                      MutableLiveData<ArrayList<PaletteTag>> tagsList){
+        DocumentReference docRef = firebaseService.fetchPalettesReference().document(docId);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        ColorPalette colorPalette = document.toObject(ColorPalette.class);
+                        title.postValue(colorPalette.getTitle());
+                        swatchesList.postValue(colorPalette.getSwatches());
+                        tagsList.postValue((ArrayList<PaletteTag>) colorPalette.getTags());
+                        Log.d(LOG_TAG, "Find documentSnapshot data.");
+                    } else {
+                        Log.d(LOG_TAG, "No such document");
+                    }
+                } else {
+                    Log.d(LOG_TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }
