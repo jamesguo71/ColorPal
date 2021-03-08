@@ -51,6 +51,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:layout_below="@id/appBar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -58,7 +59,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_below="@id/appBar_layout"
             android:layout_above="@+id/inspect_footer">
             <LinearLayout
                 android:id="@+id/palette_screen_container"
