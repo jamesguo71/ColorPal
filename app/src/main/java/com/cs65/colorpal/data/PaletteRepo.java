@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -199,7 +200,11 @@ public class PaletteRepo  {
             public void run() {
                 super.run();
                 firebaseService.fetchPalettesReference()
-                        .whereArrayContains("tags",new PaletteTag(tag))
+                        .whereArrayContainsAny("tags",
+                                Arrays.asList(
+                                        new PaletteTag(tag),
+                                        tag.length() > 0 ? new PaletteTag(tag.substring(0, 1).toUpperCase() + tag.substring(1)):tag)
+                        )
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
