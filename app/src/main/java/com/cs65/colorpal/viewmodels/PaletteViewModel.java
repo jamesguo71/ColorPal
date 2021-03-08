@@ -146,7 +146,7 @@ public class PaletteViewModel extends AndroidViewModel{
         selectedImage.setValue(uri);
     }
 
-    public void setTitle(String newTitle) { title.postValue(newTitle);}
+    public void setTitle(String newTitle) { title.setValue(newTitle);}
 
     public MutableLiveData<String> getTitle() { return title; }
 

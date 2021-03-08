@@ -187,6 +187,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 startActivityForResult(intent, EDIT_ACTIVITY_CODE);
                 return true;
             case R.id.inspect_save_button:
+                paletteViewModel.setTitle(titleEditText.getText().toString());
                 try {
                     paletteViewModel.savePaletteToDB();
                 } catch (IOException e) {
