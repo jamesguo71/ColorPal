@@ -38,6 +38,7 @@ import java.io.IOException;
 import static com.cs65.colorpal.views.activities.PaletteDetailActivity.TAG_KEY;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+    public static final String WHICH_FRAGMENT_TAG = "whichFragment";
     public static int PALETTE_DETAIL_REQUEST = 45;
     private BottomNavigationView bottomNavigationView;
     private static final String LOG_TAG = "MainActvity";
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public static final String CAMERA_IMAGE_FILENAME = "mycolorpal";
     public static final String CAMERA_IMAGE_SUFFIX = ".jpg";
     public static final String PHOTO_URI = "photoUri";
+    public static final String HOME_FRAGMENT_TAG = "HomeFragment";
     private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
     private Uri photoURI;
@@ -60,7 +62,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState == null){
+        if (getIntent().getStringExtra(WHICH_FRAGMENT_TAG) != null){
+            openFragment(new LibraryFragment());
+        }
+        else if(savedInstanceState == null){
             openFragment(new HomeFragment());
         }
         setBottomNavigationView();

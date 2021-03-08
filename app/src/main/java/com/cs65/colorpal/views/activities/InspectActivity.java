@@ -195,6 +195,9 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
             case R.id.inspect_save_button:
                 try {
                     paletteViewModel.savePaletteToDB();
+                    Intent mainActvityIntent = new Intent(this, MainActivity.class);
+                    mainActvityIntent.putExtra(MainActivity.WHICH_FRAGMENT_TAG,MainActivity.HOME_FRAGMENT_TAG);
+                    startActivity(mainActvityIntent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
