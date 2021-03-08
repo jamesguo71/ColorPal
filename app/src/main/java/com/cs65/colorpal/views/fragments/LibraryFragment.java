@@ -77,7 +77,8 @@ public class LibraryFragment extends Fragment{
 
     private void emptyPalettesHandler(){
         if(paletteViewModel.mHomeColorPaletteList.getValue() != null) {
-            if(paletteViewModel.mUserLibraryColorPaletteList.getValue().size() == 0){
+            if(paletteViewModel.mUserLibraryColorPaletteList.getValue() == null
+                    || paletteViewModel.mUserLibraryColorPaletteList.getValue().size() == 0){
                 emptyTextView.setVisibility(View.VISIBLE);
                 palettesRecyclerView.setVisibility(View.GONE);
             }

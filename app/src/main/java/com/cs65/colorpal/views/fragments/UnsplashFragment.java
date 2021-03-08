@@ -102,4 +102,10 @@ public class UnsplashFragment extends Fragment {
             Log.e(UNSPLASHFRAGMENT_TAG, e.toString());
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        searchView.clearFocus();
+    }
 }
