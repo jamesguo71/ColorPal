@@ -119,7 +119,9 @@ public class HomeFragment extends Fragment{
         builder.setPositiveButton("SEARCH", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 TextInputEditText textInputEditText = customLayout.findViewById(R.id.tag_input_field);
-                paletteViewModel.searchByTag(textInputEditText.getText().toString());
+                String tag = textInputEditText.getText().toString();
+                if (tag.length() > 0)
+                    paletteViewModel.searchByTag(tag);
                 dialog.dismiss();
             }
         });

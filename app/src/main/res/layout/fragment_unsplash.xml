@@ -46,7 +46,9 @@
             app:layoutManager="LinearLayoutManager"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/botNavHeight"
+            >
 
         </androidx.recyclerview.widget.RecyclerView>
 

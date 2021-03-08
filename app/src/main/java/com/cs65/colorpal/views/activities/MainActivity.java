@@ -148,18 +148,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Bundle bundle = new Bundle();
                 bundle.putString(TAG_KEY, tag);
                 unsplashFragment.setArguments(bundle);
-                toolbarTitleView.setText("Images");
                 openFragment(unsplashFragment);
+                bottomNavigationView.setSelectedItemId(R.id.unsplash_button);
             }
         }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_top_navigation, menu);
-//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-//        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchableActivity.class)));
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if( loginViewModel.authenticatedUser!= null){

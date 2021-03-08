@@ -19,10 +19,17 @@ import java.util.List;
 public class SwatchListAdapter  extends RecyclerView.Adapter<SwatchListAdapter.SwatchListViewHolder> {
     List<Palette.Swatch> swatches;
     View.OnClickListener listener;
+    private RecyclerView recyclerView;
 
     public SwatchListAdapter(List<Palette.Swatch> swatches, View.OnClickListener listener ) {
         this.swatches = swatches;
         this.listener = listener;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
     }
 
     @NonNull
@@ -52,7 +59,8 @@ public class SwatchListAdapter  extends RecyclerView.Adapter<SwatchListAdapter.S
             super(itemView);
             swatchView = itemView.findViewById(R.id.swatch_item);
             ViewGroup.LayoutParams layoutParams = swatchView.getLayoutParams();
-            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+//            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+            int width = recyclerView.getWidth();
             layoutParams.width = width / swatches.size();
             swatchView.setOnClickListener(listener);
         }
