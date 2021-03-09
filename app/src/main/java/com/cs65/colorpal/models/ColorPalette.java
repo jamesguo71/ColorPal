@@ -13,6 +13,7 @@ public class ColorPalette {
     private String downloadUrl = "";
     private String title = "";
     private String docId = "";
+    private int privacy;
     private ArrayList<Integer> swatches;
     private ArrayList<PaletteTag> tags;
 
@@ -68,6 +69,10 @@ public class ColorPalette {
     public String getDocId() { return docId; }
 
     public void setDocId(String docId) { this.docId = docId; }
+
+    public int getPrivacy() { return privacy; }
+
+    public void setPrivacy(int privacy) { this.privacy=privacy; }
 
     @Override
     public String toString() {

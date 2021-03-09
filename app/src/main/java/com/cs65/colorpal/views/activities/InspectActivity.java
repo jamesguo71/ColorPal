@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
@@ -36,6 +37,7 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +58,10 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     public static final int EDIT_ACTIVITY_CODE = 2;
     public static final String SWATCH_VALUES = "values";
     public static final String ORIGINAL_SWATCH_VALUES = "original_values";
+    private CharSequence[] privacyOptions = {
+            "Public - visible to everyone",
+            "Private - only you can see this",
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +82,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         paletteViewModel.getTags().observe(this, paletteTags -> tagsGridAdapter.setTags(paletteTags));
         paletteViewModel.getSelectedColor().observe(this, rgb -> selectedColor.setCardBackgroundColor(rgb));
         paletteViewModel.getTitle().observe(this, title -> titleEditText.setText(title));
+        paletteViewModel.getPrivacy().observe(this, privacy -> onPrivacyChanged(privacy));
 
         Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null) {
@@ -93,6 +100,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 paletteViewModel.setDocId(docId);
                 paletteViewModel.setSelectedImageUri(Uri.parse(intent.getStringExtra(PHOTO_URI)));
                 paletteViewModel.setOriginalSwatchesList(intent.getIntegerArrayListExtra(PaletteDetailActivity.SWATCHES_KEY));
+                paletteViewModel.setPrivacy(intent.getIntExtra(PaletteDetailActivity.PRIVACY_KEY,0));
                 paletteViewModel.updateEditableByDocId(docId);
             }
         }
@@ -103,6 +111,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         bottomNavigationView.getMenu().getItem(1).setCheckable(false);
         bottomNavigationView.getMenu().getItem(2).setCheckable(false);
         bottomNavigationView.getMenu().getItem(3).setCheckable(false);
+        bottomNavigationView.getMenu().getItem(4).setCheckable(false);
 
         tagsView = findViewById(R.id.tags_view);
         tagsGridAdapter = new TagsGridAdapter(paletteViewModel.getTags().getValue(), this);
@@ -197,12 +206,15 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 resultIntent.putIntegerArrayListExtra(PaletteDetailActivity.SWATCHES_KEY, paletteViewModel.getSwatches().getValue());
                 resultIntent.putParcelableArrayListExtra(PaletteDetailActivity.TAGS_KEY, paletteViewModel.getTags().getValue());
                 resultIntent.putExtra(PaletteDetailActivity.TITLE_KEY, paletteViewModel.getTitle().getValue());
+                resultIntent.putExtra(PaletteDetailActivity.PRIVACY_KEY,paletteViewModel.getPrivacy().getValue());
                 setResult(RESULT_OK, resultIntent);
                 finish();
                 return true;
             case R.id.inspect_add_button:
                 showAddTagDialog();
                 return true;
+            case R.id.inspect_public_button:
+                showPrivacyDialog();
         }
         return false;
     }
@@ -244,5 +256,28 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
             }
             return false;
         });
+    }
+
+    private void showPrivacyDialog(){
+        MaterialAlertDialogBuilder privacyDialog = new MaterialAlertDialogBuilder(this)
+                .setTitle("Who can see this?")
+                .setSingleChoiceItems(privacyOptions, paletteViewModel.getPrivacy().getValue(),new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.d("privacy", String.valueOf(which));
+                        paletteViewModel.setPrivacy(which);
+                        dialog.dismiss();
+                    }
+                });
+        privacyDialog.show();
+    }
+
+    private void onPrivacyChanged(int privacy){
+        if(privacy==0){
+            bottomNavigationView.getMenu().getItem(1).setIcon(R.drawable.ic_baseline_public_24);
+            bottomNavigationView.getMenu().getItem(1).setTitle("Public");
+        }else{
+            bottomNavigationView.getMenu().getItem(1).setIcon(R.drawable.ic_baseline_person_24);
+            bottomNavigationView.getMenu().getItem(1).setTitle("Private");
+        }
     }
 }

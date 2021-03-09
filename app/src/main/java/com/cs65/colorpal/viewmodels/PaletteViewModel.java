@@ -47,12 +47,14 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<Integer> addColorEvent = new MutableLiveData<>();
     private MutableLiveData<String> title = new MutableLiveData<>();
     private MutableLiveData<String> mDocId = new MutableLiveData<>();
+    private MutableLiveData<Integer> mPrivacy = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
         mTagsList.setValue(new ArrayList<>());
         paletteRepo = new PaletteRepo(application);
         title.setValue("New Palette");
+        mPrivacy.setValue(0);
         fetchHomeColorPalettes();
         fetchUserLibraryColorPalettes();
     }
@@ -153,6 +155,10 @@ public class PaletteViewModel extends AndroidViewModel{
 
     public MutableLiveData<String> getTitle() { return title; }
 
+    public void setPrivacy(int privacy) { mPrivacy.setValue(privacy); }
+
+    public MutableLiveData<Integer> getPrivacy() { return mPrivacy; }
+
     public MutableLiveData<ArrayList<PaletteTag>> getTags() { return mTagsList; }
 
     public void setTagsList(ArrayList<PaletteTag> tags) { mTagsList.postValue(tags); }
@@ -192,6 +198,7 @@ public class PaletteViewModel extends AndroidViewModel{
         newColorPalette.setSwatches(mSwatchesList.getValue());
         newColorPalette.setTags(mTagsList.getValue());
         newColorPalette.setTitle(getTitle().getValue());
+        newColorPalette.setPrivacy(getPrivacy().getValue());
         if(mDocId.getValue()==null) {
             newColorPalette.setDocId(createNewDocId());         //generate a new id
             paletteRepo.savePaletteToDB(newColorPalette);
@@ -239,6 +246,6 @@ public class PaletteViewModel extends AndroidViewModel{
     public ArrayList<Integer> getOriginalSwatches(){ return mOriginalSwatchesList.getValue(); }
 
     public void updateEditableByDocId(String docId){
-        paletteRepo.updateEditableByDocId(docId,title,mSwatchesList,mTagsList);
+        paletteRepo.updateEditableByDocId(docId,title,mSwatchesList,mTagsList,mPrivacy);
     }
 }
