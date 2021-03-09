@@ -222,10 +222,12 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         addSelectedColorBtn.setOnClickListener((v -> {
             paletteViewModel.addSelectedColor();
         }));
-        paletteViewModel.getAddColorEvent().observe(this, success -> {
-            if (success) {
+        paletteViewModel.getAddColorEvent().observe(this, result -> {
+            if (result.equals(PaletteViewModel.NO_SELECTED_COLOR)) {
+                Toast.makeText(this, R.string.no_selected_color, Toast.LENGTH_SHORT).show();
+            } else if (result.equals(PaletteViewModel.ADD_COLOR_SUCCEED)) {
                 Toast.makeText(this, getString(R.string.successful_added_color), Toast.LENGTH_SHORT).show();
-            } else {
+            } else if (result.equals(PaletteViewModel.COLOR_ALREADY_EXIST) ) {
                 Toast.makeText(this, getString(R.string.failed_to_add_color), Toast.LENGTH_SHORT).show();
             }
         });

@@ -31,6 +31,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class PaletteViewModel extends AndroidViewModel{
     private static final String PALETTE_TAG = "PaletteViewModel";
+    public static final Integer NO_SELECTED_COLOR = 0;
+    public static final Integer ADD_COLOR_SUCCEED = 1;
+    public static final Integer COLOR_ALREADY_EXIST = 2;
     private PaletteRepo paletteRepo;
     private CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<Palette> extractedColorPaletteData = new MutableLiveData<>();
@@ -41,7 +44,7 @@ public class PaletteViewModel extends AndroidViewModel{
     public MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
     private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
     private MutableLiveData<Integer> selectedColor = new MutableLiveData<>();
-    private MutableLiveData<Boolean> addColorEvent = new MutableLiveData<>();
+    private MutableLiveData<Integer> addColorEvent = new MutableLiveData<>();
     private MutableLiveData<String> title = new MutableLiveData<>();
     private MutableLiveData<String> mDocId = new MutableLiveData<>();
 
@@ -214,16 +217,18 @@ public class PaletteViewModel extends AndroidViewModel{
         ArrayList<Integer> swatches = mSwatchesList.getValue();
         Set<Integer> swatchesSet = new HashSet<>(swatches);
         Integer selectedColorRgb = selectedColor.getValue();
-        if (swatchesSet.add(selectedColorRgb)) {
-            addColorEvent.postValue(true);
+        if (selectedColorRgb == null) {
+            addColorEvent.postValue(NO_SELECTED_COLOR);
+        } else if (swatchesSet.add(selectedColorRgb)) {
+            addColorEvent.postValue(ADD_COLOR_SUCCEED);
             swatches.add(selectedColor.getValue());
             mSwatchesList.postValue(swatches);
         } else {
-            addColorEvent.postValue(false);
+            addColorEvent.postValue(COLOR_ALREADY_EXIST);
         }
     }
 
-    public LiveData<Boolean> getAddColorEvent() {
+    public LiveData<Integer> getAddColorEvent() {
         return addColorEvent;
     }
 
