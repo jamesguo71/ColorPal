@@ -74,6 +74,10 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             else {
                 holder.username.setVisibility(View.GONE);
             }
+
+            if(palette.getPrivacy() == 1){
+                holder.privacyIcon.setImageResource(R.drawable.ic_baseline_person_24);
+            }
             holder.swatches.setLayoutManager(layoutManager);
             holder.swatches.setAdapter(swatchesViewAdapter);
         }
@@ -103,7 +107,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
     public class PaletteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView title, username;
         public RecyclerView swatches;
-        public ImageView profile;
+        public ImageView profile, privacyIcon;
 
         public PaletteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +116,7 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             username = itemView.findViewById(R.id.username);
             swatches = itemView.findViewById(R.id.paletteSwatches);
             profile = itemView.findViewById(R.id.profile_image);
+            privacyIcon = itemView.findViewById(R.id.privacy_icon);
         }
 
         @Override

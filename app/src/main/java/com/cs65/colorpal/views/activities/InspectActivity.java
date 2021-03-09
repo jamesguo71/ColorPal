@@ -203,11 +203,10 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 return true;
             case R.id.inspect_save_button:
                 paletteViewModel.setTitle(titleEditText.getText().toString());
+                Intent mainActvityIntent = new Intent(this, MainActivity.class);
+                mainActvityIntent.putExtra(MainActivity.WHICH_FRAGMENT_TAG,MainActivity.HOME_FRAGMENT_TAG);
                 try {
                     paletteViewModel.savePaletteToDB();
-                    Intent mainActvityIntent = new Intent(this, MainActivity.class);
-                    mainActvityIntent.putExtra(MainActivity.WHICH_FRAGMENT_TAG,MainActivity.HOME_FRAGMENT_TAG);
-                    startActivity(mainActvityIntent);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -217,7 +216,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 resultIntent.putExtra(PaletteDetailActivity.TITLE_KEY, paletteViewModel.getTitle().getValue());
                 resultIntent.putExtra(PaletteDetailActivity.PRIVACY_KEY,paletteViewModel.getPrivacy().getValue());
                 setResult(RESULT_OK, resultIntent);
-                finish();
+                startActivity(mainActvityIntent);
                 return true;
             case R.id.inspect_add_button:
                 showAddTagDialog();

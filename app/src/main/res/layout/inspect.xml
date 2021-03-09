@@ -47,22 +47,6 @@
                     android:drawableTint="@color/mid_grey"
                     />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/privacy_switch"
-                    android:src="@drawable/ic_baseline_privacy_tip_24"/>
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:layout_marginHorizontal="6dp"
-                    android:id="@+id/privacy_switch"
-                    android:layout_alignParentRight="true"
-                    app:thumbTint="@color/pink"
-                    app:trackTint="#60ffc0cb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:checked="true" />
-
             </RelativeLayout>
 
         </com.google.android.material.appbar.MaterialToolbar>
