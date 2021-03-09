@@ -62,8 +62,8 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     public static final String SWATCH_VALUES = "values";
     public static final String ORIGINAL_SWATCH_VALUES = "original_values";
     private CharSequence[] privacyOptions = {
-            "Public - visible to everyone",
-            "Private - only you can see this",
+            "Public",
+            "Private",
     };
 
     @Override
@@ -268,10 +268,10 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
 
     private void showPrivacyDialog(){
         MaterialAlertDialogBuilder privacyDialog = new MaterialAlertDialogBuilder(this)
+                .setIcon(R.drawable.logo_icon)
                 .setTitle("Who can see this?")
                 .setSingleChoiceItems(privacyOptions, paletteViewModel.getPrivacy().getValue(),new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-//                        Log.d("privacy", String.valueOf(which));
                         paletteViewModel.setPrivacy(which);
                         dialog.dismiss();
                     }
