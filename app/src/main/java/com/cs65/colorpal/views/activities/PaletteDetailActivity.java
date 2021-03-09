@@ -1,6 +1,7 @@
 package com.cs65.colorpal.views.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +39,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
     public static final String SHOW_EDIT_BUTTON_TAG = "SHOW_EDIT_BUTTON_TAG";
     public static final String USERNAME_KEY = "USERNAME";
     public static final String ID_KEY = "ID";
+    public static final String PRIVACY_KEY = "PRIVACY";
     public static final String FROM = "from";
     public static final int INSPECT_ACTIVITY_CODE = 1;
     private ImageView imageView;
@@ -48,6 +50,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
     private TagsGridAdapter tagsGridAdapter;
     private SwatchListAdapter adapter;
     private CircularProgressIndicator circularProgressIndicator;
+    private  ImageView privacyImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,8 @@ public class PaletteDetailActivity extends AppCompatActivity {
         tagsView.setLayoutManager(flexLayoutManager);
         tagsView.setAdapter(tagsGridAdapter);
 
+        privacyImageView = (ImageView) findViewById(R.id.palette_detail_privacy);
+        setPrivacy(intent.getIntExtra(PRIVACY_KEY,0));
         setUpEditButton();
     }
 
@@ -112,6 +117,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
                 intent.putIntegerArrayListExtra(SWATCHES_KEY, getIntent().getIntegerArrayListExtra(SWATCHES_KEY));
                 intent.putParcelableArrayListExtra(TAGS_KEY, getIntent().getParcelableArrayListExtra(TAGS_KEY));
                 intent.putExtra(ID_KEY, getIntent().getStringExtra(ID_KEY));
+                intent.putExtra(PRIVACY_KEY, getIntent().getIntExtra(PRIVACY_KEY,0));
                 startActivityForResult(intent, INSPECT_ACTIVITY_CODE);
 //                startActivity(intent);
             }
@@ -144,6 +150,15 @@ public class PaletteDetailActivity extends AppCompatActivity {
             tagsGridAdapter.setTags(intent.getParcelableArrayListExtra(TAGS_KEY));
             paletteDetailTitle.setText(intent.getStringExtra(TITLE_KEY));
             cardPaletteName.setText(intent.getStringExtra(TITLE_KEY));
+            setPrivacy(intent.getIntExtra(PRIVACY_KEY,0));
+        }
+    }
+
+    private void setPrivacy(int privacy){
+        if(privacy==0){
+            privacyImageView.setImageResource(R.drawable.ic_baseline_public_24);
+        }else{
+            privacyImageView.setImageResource(R.drawable.ic_baseline_person_24);
         }
     }
 }

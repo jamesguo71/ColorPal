@@ -31,6 +31,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class PaletteViewModel extends AndroidViewModel{
     private static final String PALETTE_TAG = "PaletteViewModel";
+    public static final Integer NO_SELECTED_COLOR = 0;
+    public static final Integer ADD_COLOR_SUCCEED = 1;
+    public static final Integer COLOR_ALREADY_EXIST = 2;
     private PaletteRepo paletteRepo;
     private CompositeDisposable disposables = new CompositeDisposable();
     private MutableLiveData<Palette> extractedColorPaletteData = new MutableLiveData<>();
@@ -41,15 +44,17 @@ public class PaletteViewModel extends AndroidViewModel{
     public MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
     private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
     private MutableLiveData<Integer> selectedColor = new MutableLiveData<>();
-    private MutableLiveData<Boolean> addColorEvent = new MutableLiveData<>();
+    private MutableLiveData<Integer> addColorEvent = new MutableLiveData<>();
     private MutableLiveData<String> title = new MutableLiveData<>();
     private MutableLiveData<String> mDocId = new MutableLiveData<>();
+    private MutableLiveData<Integer> mPrivacy = new MutableLiveData<>();
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
         mTagsList.setValue(new ArrayList<>());
         paletteRepo = new PaletteRepo(application);
         title.setValue("New Palette");
+        mPrivacy.setValue(0);
         fetchHomeColorPalettes();
         fetchUserLibraryColorPalettes();
     }
@@ -146,9 +151,13 @@ public class PaletteViewModel extends AndroidViewModel{
         selectedImage.setValue(uri);
     }
 
-    public void setTitle(String newTitle) { title.postValue(newTitle);}
+    public void setTitle(String newTitle) { title.setValue(newTitle);}
 
     public MutableLiveData<String> getTitle() { return title; }
+
+    public void setPrivacy(int privacy) { mPrivacy.setValue(privacy); }
+
+    public MutableLiveData<Integer> getPrivacy() { return mPrivacy; }
 
     public MutableLiveData<ArrayList<PaletteTag>> getTags() { return mTagsList; }
 
@@ -189,6 +198,7 @@ public class PaletteViewModel extends AndroidViewModel{
         newColorPalette.setSwatches(mSwatchesList.getValue());
         newColorPalette.setTags(mTagsList.getValue());
         newColorPalette.setTitle(getTitle().getValue());
+        newColorPalette.setPrivacy(getPrivacy().getValue());
         if(mDocId.getValue()==null) {
             newColorPalette.setDocId(createNewDocId());         //generate a new id
             paletteRepo.savePaletteToDB(newColorPalette);
@@ -214,16 +224,18 @@ public class PaletteViewModel extends AndroidViewModel{
         ArrayList<Integer> swatches = mSwatchesList.getValue();
         Set<Integer> swatchesSet = new HashSet<>(swatches);
         Integer selectedColorRgb = selectedColor.getValue();
-        if (swatchesSet.add(selectedColorRgb)) {
-            addColorEvent.postValue(true);
+        if (selectedColorRgb == null) {
+            addColorEvent.postValue(NO_SELECTED_COLOR);
+        } else if (swatchesSet.add(selectedColorRgb)) {
+            addColorEvent.postValue(ADD_COLOR_SUCCEED);
             swatches.add(selectedColor.getValue());
             mSwatchesList.postValue(swatches);
         } else {
-            addColorEvent.postValue(false);
+            addColorEvent.postValue(COLOR_ALREADY_EXIST);
         }
     }
 
-    public LiveData<Boolean> getAddColorEvent() {
+    public LiveData<Integer> getAddColorEvent() {
         return addColorEvent;
     }
 
@@ -234,6 +246,6 @@ public class PaletteViewModel extends AndroidViewModel{
     public ArrayList<Integer> getOriginalSwatches(){ return mOriginalSwatchesList.getValue(); }
 
     public void updateEditableByDocId(String docId){
-        paletteRepo.updateEditableByDocId(docId,title,mSwatchesList,mTagsList);
+        paletteRepo.updateEditableByDocId(docId,title,mSwatchesList,mTagsList,mPrivacy);
     }
 }

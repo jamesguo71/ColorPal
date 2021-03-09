@@ -96,7 +96,8 @@ public class PaletteRepo  {
                                     if (task.isSuccessful()) {
                                         ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
                                         for (QueryDocumentSnapshot doc : task.getResult()) {
-                                            snapshots.add(doc);
+                                            if(doc.toObject(ColorPalette.class).getPrivacy()==0)
+                                                snapshots.add(doc);
                                         }
                                         mHomeColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
                                     } else {
@@ -237,6 +238,7 @@ public class PaletteRepo  {
                 updates.put("swatches", colorPalette.getSwatches());
                 updates.put("tags", colorPalette.getTags());
                 updates.put("title", colorPalette.getTitle());
+                updates.put("privacy", colorPalette.getPrivacy());
                 docRef.update(updates).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -255,7 +257,8 @@ public class PaletteRepo  {
 
     public void updateEditableByDocId(String docId, MutableLiveData<String> title,
                                       MutableLiveData<ArrayList<Integer>> swatchesList,
-                                      MutableLiveData<ArrayList<PaletteTag>> tagsList){
+                                      MutableLiveData<ArrayList<PaletteTag>> tagsList,
+                                      MutableLiveData<Integer> privacy){
         DocumentReference docRef = firebaseService.fetchPalettesReference().document(docId);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -267,6 +270,7 @@ public class PaletteRepo  {
                         title.postValue(colorPalette.getTitle());
                         swatchesList.postValue(colorPalette.getSwatches());
                         tagsList.postValue((ArrayList<PaletteTag>) colorPalette.getTags());
+                        privacy.postValue(colorPalette.getPrivacy());
                         Log.d(LOG_TAG, "Find documentSnapshot data.");
                     } else {
                         Log.d(LOG_TAG, "No such document");

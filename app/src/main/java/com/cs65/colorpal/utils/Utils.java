@@ -41,7 +41,8 @@ public class Utils {
 
         List<Palette.Swatch> newSwatches = new ArrayList<>();
         for (Integer swatch: swatches){
-            if(swatch != null)
+            if (swatch == null)
+                throw new IllegalArgumentException("Swatch value can't be null!");
             newSwatches.add(new Palette.Swatch(swatch, DUMMY));
         }
         return newSwatches;

@@ -53,6 +53,7 @@ public class FirebaseService {
         paletteData.put("tags", palette.getTags());
         paletteData.put("title", palette.getTitle());
         paletteData.put("docId", palette.getDocId());
+        paletteData.put("privacy", palette.getPrivacy());
         return paletteData;
     }
 

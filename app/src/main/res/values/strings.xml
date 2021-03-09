@@ -8,6 +8,7 @@
     <string name="search_hint">Search colors by tags</string>
     <string name="more_color">Tap image to add a color.</string>
     <string name="add_to_palette">Add to Palette</string>
-    <string name="successful_added_color">Sucessfully added selcted color!</string>
+    <string name="no_selected_color">Please select a color first</string>
+    <string name="successful_added_color">Successfully added selected color!</string>
     <string name="failed_to_add_color">The selected color is already in the palette!</string>
 </resources>

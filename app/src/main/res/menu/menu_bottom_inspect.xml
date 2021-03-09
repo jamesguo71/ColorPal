@@ -10,6 +10,12 @@
         android:icon="@drawable/ic_close_black_48dp"
         android:title="Cancel"/>
     <item
+        android:id="@+id/inspect_public_button"
+        android:enabled="true"
+        android:checkable="false"
+        android:icon="@drawable/ic_baseline_public_24"
+        android:title="Public"/>
+    <item
         android:id="@+id/inspect_add_button"
         android:enabled="true"
         android:checkable="false"
