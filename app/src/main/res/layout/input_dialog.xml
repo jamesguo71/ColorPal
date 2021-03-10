@@ -21,6 +21,7 @@
                 android:id="@+id/tag_input_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="16"
                 />
         </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>

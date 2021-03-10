@@ -63,7 +63,7 @@ public class Utils {
                             int index = label.getIndex();
                             imageLabels.add(new PaletteTag(text));
                         }
-                        imageLabelsLiveData.getValue().addAll(imageLabels);
+                        imageLabelsLiveData.getValue().addAll(imageLabels.subList(0, Math.min(imageLabels.size(), 4)));
                         imageLabelsLiveData.postValue(imageLabelsLiveData.getValue());
                     }
                 })
