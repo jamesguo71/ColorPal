@@ -198,7 +198,7 @@ public class PaletteRepo  {
         }.start();
     }
 
-    public MutableLiveData<ArrayList<ColorPalette>> searchByTag(String tag) {
+    public void searchByTag(String tag, MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList) {
         new Thread(){
             @Override
             public void run() {
@@ -216,7 +216,8 @@ public class PaletteRepo  {
                                 if (task.isSuccessful()) {
                                     ArrayList<QueryDocumentSnapshot> snapshots = new ArrayList<>();
                                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                                        snapshots.add(doc);
+                                        if(doc.toObject(ColorPalette.class).getPrivacy()==0)
+                                            snapshots.add(doc);
                                     }
                                     mHomeColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
                                 } else {
@@ -227,7 +228,7 @@ public class PaletteRepo  {
             }
         }.start();
 
-        return mHomeColorPaletteList;
+//        return mHomeColorPaletteList;
     }
 
     public void updatePalette(ColorPalette colorPalette, String docId){
