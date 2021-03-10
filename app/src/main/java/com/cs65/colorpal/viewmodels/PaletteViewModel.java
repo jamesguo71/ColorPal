@@ -209,8 +209,8 @@ public class PaletteViewModel extends AndroidViewModel{
 
     }
 
-    public void getPaletteById(String paletteId){
-        fetchedPalette = paletteRepo.getPaletteById(paletteId);
+    public LiveData<ColorPalette> getPaletteById(String paletteId){
+        return paletteRepo.getPaletteById(paletteId);
     }
 
     public void selectColor(int pixel) {

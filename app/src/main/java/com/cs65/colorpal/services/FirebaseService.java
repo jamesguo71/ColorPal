@@ -90,7 +90,8 @@ public class FirebaseService {
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 Bitmap bitmap = colorPalette.getBitmap();
-                Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 2, bitmap.getHeight() / 2, true)
+                if (bitmap != null)
+                    Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 2, bitmap.getHeight() / 2, true)
                         .compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();
 

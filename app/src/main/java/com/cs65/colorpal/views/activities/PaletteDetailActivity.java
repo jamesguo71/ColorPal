@@ -83,8 +83,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
 
     public void setupViewModel(){
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
-        paletteViewModel.getPaletteById(getIntent().getStringExtra(ID_KEY));
-        paletteViewModel.fetchedPalette.observe(this, Observer -> {
+        paletteViewModel.getPaletteById(getIntent().getStringExtra(ID_KEY)).observe(this, Observer -> {
 
             LinearProgressIndicator linearProgressIndicator = findViewById(R.id.progress_bar);
             ScrollView scrollView = findViewById(R.id.palette_detail_scrollView);
@@ -118,9 +117,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
             flexLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
             tagsView.setLayoutManager(flexLayoutManager);
             tagsView.setAdapter(tagsGridAdapter);
-
             Uri paletteUri = Uri.parse(Observer.getDownloadUrl());
-
             Picasso.with(this).load(paletteUri).into(imageView);
 
             privacyImageView = (ImageView) findViewById(R.id.palette_detail_privacy);

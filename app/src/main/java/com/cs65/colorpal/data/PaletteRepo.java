@@ -2,9 +2,11 @@ package com.cs65.colorpal.data;
 
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.palette.graphics.Palette;
 
@@ -282,7 +284,7 @@ public class PaletteRepo  {
         });
     }
 
-    public MutableLiveData getPaletteById(String paletteId){
+    public MutableLiveData<ColorPalette> getPaletteById(String paletteId){
         new Thread(){
             @Override
             public void run() {
@@ -295,8 +297,24 @@ public class PaletteRepo  {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                fetchedPalette.postValue(document.toObject(ColorPalette.class));
-
+                                ColorPalette palette = document.toObject(ColorPalette.class);
+                                if (palette != null) {
+                                    fetchedPalette.postValue(palette);
+                                    if (palette.getDownloadUrl().equals("")) {
+                                        new Thread() {
+                                            @Override
+                                            public void run() {
+                                                super.run();
+                                                try {
+                                                    Thread.sleep(100);
+                                                    getPaletteById(paletteId);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }.start();
+                                    }
+                                }
                             } else {
                                 Log.d(LOG_TAG, "No such document");
                             }
