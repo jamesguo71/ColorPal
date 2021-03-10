@@ -299,8 +299,9 @@ public class PaletteRepo  {
                             if (document.exists()) {
                                 ColorPalette palette = document.toObject(ColorPalette.class);
                                 if (palette != null) {
-                                    fetchedPalette.postValue(palette);
-                                    if (palette.getDownloadUrl().equals("")) {
+                                    if (!palette.getDownloadUrl().equals(""))
+                                        fetchedPalette.postValue(palette);
+                                    else {
                                         new Thread() {
                                             @Override
                                             public void run() {
