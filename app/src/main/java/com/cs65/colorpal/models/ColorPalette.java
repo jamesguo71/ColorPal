@@ -13,7 +13,7 @@ public class ColorPalette {
     private String downloadUrl = "";
     private String title = "";
     private String docId = "";
-    private int privacy;
+    private int privacy = 0;
     private ArrayList<Integer> swatches;
     private ArrayList<PaletteTag> tags;
 

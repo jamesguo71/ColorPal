@@ -90,7 +90,6 @@ public class PaletteRepo  {
                 super.run();
                 if(currentUser != null){
                     firebaseService.fetchPalettesReference()
-                            .whereNotEqualTo("userId", currentUser.getUid())
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override

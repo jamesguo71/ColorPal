@@ -2,8 +2,10 @@ package com.cs65.colorpal.views.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -207,7 +209,6 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
             case R.id.inspect_save_button:
                 paletteViewModel.setTitle(titleEditText.getText().toString());
                 Intent mainActvityIntent = new Intent(this, MainActivity.class);
-                mainActvityIntent.putExtra(MainActivity.WHICH_FRAGMENT_TAG,MainActivity.HOME_FRAGMENT_TAG);
                 try {
                     paletteViewModel.savePaletteToDB();
                 } catch (IOException e) {
@@ -219,6 +220,12 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
                 resultIntent.putExtra(PaletteDetailActivity.TITLE_KEY, paletteViewModel.getTitle().getValue());
                 resultIntent.putExtra(PaletteDetailActivity.PRIVACY_KEY,paletteViewModel.getPrivacy().getValue());
                 setResult(RESULT_OK, resultIntent);
+
+                SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.PREFERENCE_NAME,0);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(MainActivity.WHICH_FRAGMENT_TAG,MainActivity.LIBRARY_FRAGMENT_TAG);
+                editor.commit();
+
                 startActivity(mainActvityIntent);
                 return true;
             case R.id.inspect_add_button:

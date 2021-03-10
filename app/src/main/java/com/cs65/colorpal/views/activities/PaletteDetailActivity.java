@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
 import com.cs65.colorpal.viewmodels.PaletteViewModel;
@@ -55,16 +57,14 @@ public class PaletteDetailActivity extends AppCompatActivity {
     private CircularProgressIndicator circularProgressIndicator;
     private  ImageView privacyImageView;
     private PaletteViewModel paletteViewModel;
+    private ColorPalette colorPalette;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_palette_detail);
 
-        Intent intent = getIntent();
-        Uri paletteUri = Uri.parse(intent.getStringExtra(IMAGE_URL_KEY));
         imageView = findViewById(R.id.palette_detail_image);
-        Picasso.with(this).load(paletteUri).into(imageView);
         paletteColors = findViewById(R.id.palette_colors);
         tagsView = findViewById(R.id.palette_detail_tags_view);
 
@@ -82,6 +82,9 @@ public class PaletteDetailActivity extends AppCompatActivity {
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
         paletteViewModel.getPaletteById(getIntent().getStringExtra(ID_KEY));
         paletteViewModel.fetchedPalette.observe(this, Observer -> {
+
+            colorPalette = Observer;
+
             paletteDetailTitle.setText(Observer.getTitle());
             cardPaletteName.setText(Observer.getTitle());
             cardPaletteCreatorName.setText(Observer.getUsername());
@@ -107,6 +110,10 @@ public class PaletteDetailActivity extends AppCompatActivity {
             tagsView.setLayoutManager(flexLayoutManager);
             tagsView.setAdapter(tagsGridAdapter);
 
+            Uri paletteUri = Uri.parse(Observer.getDownloadUrl());
+
+            Picasso.with(this).load(paletteUri).into(imageView);
+
             privacyImageView = (ImageView) findViewById(R.id.palette_detail_privacy);
             setPrivacy(Observer.getPrivacy());
 
@@ -125,14 +132,16 @@ public class PaletteDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),InspectActivity.class);
-                intent.putExtra("from",PALETTE_DETAIL_ACTIVITY);
-                intent.putExtra(InspectActivity.PHOTO_URI, getIntent().getStringExtra(IMAGE_URL_KEY));
-                intent.putExtra(TITLE_KEY, getIntent().getStringExtra(TITLE_KEY));
-                intent.putIntegerArrayListExtra(SWATCHES_KEY, getIntent().getIntegerArrayListExtra(SWATCHES_KEY));
-                intent.putParcelableArrayListExtra(TAGS_KEY, getIntent().getParcelableArrayListExtra(TAGS_KEY));
-                intent.putExtra(ID_KEY, getIntent().getStringExtra(ID_KEY));
-                intent.putExtra(PRIVACY_KEY, getIntent().getIntExtra(PRIVACY_KEY,0));
-                startActivityForResult(intent, INSPECT_ACTIVITY_CODE);
+                if(colorPalette != null){
+                    intent.putExtra("from",PALETTE_DETAIL_ACTIVITY);
+                    intent.putExtra(InspectActivity.PHOTO_URI, colorPalette.getDownloadUrl());
+                    intent.putExtra(TITLE_KEY, colorPalette.getTitle());
+                    intent.putIntegerArrayListExtra(SWATCHES_KEY, colorPalette.getSwatches());
+                    intent.putParcelableArrayListExtra(TAGS_KEY, (ArrayList<? extends Parcelable>) colorPalette.getTags());
+                    intent.putExtra(ID_KEY, colorPalette.getDocId());
+                    intent.putExtra(PRIVACY_KEY, colorPalette.getPrivacy());
+                    startActivityForResult(intent, INSPECT_ACTIVITY_CODE);
+                }
 //                startActivity(intent);
             }
         });

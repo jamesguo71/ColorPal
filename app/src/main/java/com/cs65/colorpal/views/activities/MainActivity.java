@@ -1,6 +1,8 @@
 package com.cs65.colorpal.views.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public static final String CAMERA_IMAGE_SUFFIX = ".jpg";
     public static final String PHOTO_URI = "photoUri";
     public static final String HOME_FRAGMENT_TAG = "HomeFragment";
+    public static final String LIBRARY_FRAGMENT_TAG = "LibraryFragment";
     private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
     private Uri photoURI;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private FragmentContainerView fragmentContainerView;
     private LinearLayout progressBarContainer;
     private TextView progressBarMessageTextView;
+    public static final String PREFERENCE_NAME = "colorpalPreferences";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,16 +75,27 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             e.printStackTrace();
         }
 
-        if (getIntent().getStringExtra(WHICH_FRAGMENT_TAG) != null){
-            openFragment(new LibraryFragment());
-        }
-        if(savedInstanceState == null){
-            openFragment(new HomeFragment());
-        }
+
+        setCorrectFragment(savedInstanceState);
         setBottomNavigationView();
         setUpTopNavigationView();
     }
 
+    public void setCorrectFragment(Bundle bundle ){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCE_NAME,0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String fragmentName = sharedPreferences.getString(WHICH_FRAGMENT_TAG, HOME_FRAGMENT_TAG);
+
+        Log.d("papelog", fragmentName);
+
+        if(fragmentName.equals(LIBRARY_FRAGMENT_TAG)) {
+            openFragment(new LibraryFragment());
+            editor.remove(WHICH_FRAGMENT_TAG);
+            editor.commit();
+        } else if(bundle == null){
+            openFragment(new HomeFragment());
+        }
+    }
 
     public void setActivityTitle(String title){
         toolbarTitleView.setText(title);
