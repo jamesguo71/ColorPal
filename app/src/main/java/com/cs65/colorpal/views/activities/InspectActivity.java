@@ -81,7 +81,6 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         titleEditText = findViewById(R.id.inspect_title);
 
         paletteViewModel.getSelectedImage().observe(this, uri -> onImageSelected(uri));
-        paletteViewModel.getColorPaletteData().observe(this, palette -> paletteViewModel.initSwatchesArrayList());
         paletteViewModel.getSwatches().observe(this, list -> addSwatches(Utils.toSwatches(list)));
         paletteViewModel.getTags().observe(this, paletteTags -> tagsGridAdapter.setTags(paletteTags));
         paletteViewModel.getSelectedColor().observe(this, rgb -> selectedColor.setCardBackgroundColor(rgb));
@@ -89,6 +88,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         paletteViewModel.getPrivacy().observe(this, privacy -> onPrivacyChanged(privacy));
 
         if(savedInstanceState==null) {
+            paletteViewModel.getColorPaletteData().observe(this, palette -> paletteViewModel.initSwatchesArrayList());
             Intent intent = getIntent();
             if (intent != null && intent.getExtras() != null) {
                 Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
@@ -146,7 +146,6 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     }
 
     private void addSwatches(List<Palette.Swatch> swatches) {
-        Log.d("inspect","add swatches");
         if (!swatches.isEmpty()) {
             SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches, v -> openSwatchDetails());
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
