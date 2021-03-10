@@ -16,6 +16,7 @@ import androidx.palette.graphics.Palette;
 import com.cs65.colorpal.data.PaletteRepo;
 import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.models.PaletteTag;
+import com.cs65.colorpal.utils.Event;
 import com.cs65.colorpal.utils.Utils;
 
 import java.io.FileDescriptor;
@@ -44,7 +45,7 @@ public class PaletteViewModel extends AndroidViewModel{
     public MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
     private MutableLiveData<ArrayList<PaletteTag>> mTagsList = new MutableLiveData<>();
     private MutableLiveData<Integer> selectedColor = new MutableLiveData<>();
-    private MutableLiveData<Integer> addColorEvent = new MutableLiveData<>();
+    private MutableLiveData<Event<Integer>> addColorEvent = new MutableLiveData<>();
     private MutableLiveData<String> title = new MutableLiveData<>();
     private MutableLiveData<String> mDocId = new MutableLiveData<>();
     private MutableLiveData<Integer> mPrivacy = new MutableLiveData<>();
@@ -229,17 +230,17 @@ public class PaletteViewModel extends AndroidViewModel{
         Set<Integer> swatchesSet = new HashSet<>(swatches);
         Integer selectedColorRgb = selectedColor.getValue();
         if (selectedColorRgb == null) {
-            addColorEvent.postValue(NO_SELECTED_COLOR);
+            addColorEvent.postValue(new Event(NO_SELECTED_COLOR));
         } else if (swatchesSet.add(selectedColorRgb)) {
-            addColorEvent.postValue(ADD_COLOR_SUCCEED);
+            addColorEvent.postValue(new Event(ADD_COLOR_SUCCEED));
             swatches.add(selectedColor.getValue());
             mSwatchesList.postValue(swatches);
         } else {
-            addColorEvent.postValue(COLOR_ALREADY_EXIST);
+            addColorEvent.postValue(new Event(COLOR_ALREADY_EXIST));
         }
     }
 
-    public LiveData<Integer> getAddColorEvent() {
+    public LiveData<Event<Integer>> getAddColorEvent() {
         return addColorEvent;
     }
 
