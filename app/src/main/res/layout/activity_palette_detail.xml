@@ -38,7 +38,40 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <LinearLayout
+        android:layout_below="@id/appBar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/progress_bar_container"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/pink"
+            android:id="@+id/progress_bar_message"
+            android:textSize="16dp"
+            android:text="Loading Palette ..."
+            android:paddingVertical="20dp"/>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_bar"
+            app:indicatorColor="@color/pink"
+            android:indeterminateBehavior="cycle"
+            android:paddingHorizontal="70dp"
+            app:trackThickness="10dp"
+            android:indeterminate="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
     <ScrollView
+        android:visibility="gone"
+        android:id="@+id/palette_detail_scrollView"
         android:layout_below="@id/appBar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

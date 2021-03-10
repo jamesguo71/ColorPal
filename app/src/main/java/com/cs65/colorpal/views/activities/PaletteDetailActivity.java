@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -82,6 +85,12 @@ public class PaletteDetailActivity extends AppCompatActivity {
         paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
         paletteViewModel.getPaletteById(getIntent().getStringExtra(ID_KEY));
         paletteViewModel.fetchedPalette.observe(this, Observer -> {
+
+            LinearProgressIndicator linearProgressIndicator = findViewById(R.id.progress_bar);
+            ScrollView scrollView = findViewById(R.id.palette_detail_scrollView);
+
+            linearProgressIndicator.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
 
             colorPalette = Observer;
 

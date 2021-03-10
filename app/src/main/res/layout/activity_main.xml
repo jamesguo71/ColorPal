@@ -72,7 +72,7 @@
             android:textColor="@color/pink"
             android:id="@+id/progress_bar_message"
             android:textSize="16dp"
-            android:text="Loading ..."
+            android:text="Loading Palette..."
             android:paddingVertical="20dp"/>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
