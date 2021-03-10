@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.cs65.colorpal.views.activities.PaletteDetailActivity.FROM;
+import static com.cs65.colorpal.views.activities.PaletteDetailActivity.SWATCHES_KEY;
 
 public class InspectActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     private PaletteViewModel paletteViewModel;
@@ -87,24 +88,26 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
         paletteViewModel.getTitle().observe(this, title -> titleEditText.setText(title));
         paletteViewModel.getPrivacy().observe(this, privacy -> onPrivacyChanged(privacy));
 
-        Intent intent = getIntent();
-        if(intent!=null && intent.getExtras()!=null) {
-            Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
-            String from = intent.getStringExtra(FROM);
-            paletteViewModel.setSelectedImageUri(photoUri);
+        if(savedInstanceState==null) {
+            Intent intent = getIntent();
+            if (intent != null && intent.getExtras() != null) {
+                Uri photoUri = Uri.parse(intent.getStringExtra(PHOTO_URI));
+                String from = intent.getStringExtra(FROM);
+                paletteViewModel.setSelectedImageUri(photoUri);
 
-            if( from == null){
-                paletteViewModel.extractNewFromPhoneUri(photoUri);
-            } else if (from.equals(UnsplashFragment.UNSPLASH_FRAGMENT)){
-                paletteViewModel.extractNewFromExternalUri(photoUri);
-            } else if (from.equals(PaletteDetailActivity.PALETTE_DETAIL_ACTIVITY)){
-                String docId = intent.getStringExtra(PaletteDetailActivity.ID_KEY);
-                paletteViewModel.setTitle(intent.getStringExtra(PaletteDetailActivity.TITLE_KEY));
-                paletteViewModel.setDocId(docId);
-                paletteViewModel.setSelectedImageUri(Uri.parse(intent.getStringExtra(PHOTO_URI)));
-                paletteViewModel.setOriginalSwatchesList(intent.getIntegerArrayListExtra(PaletteDetailActivity.SWATCHES_KEY));
-                paletteViewModel.setPrivacy(intent.getIntExtra(PaletteDetailActivity.PRIVACY_KEY,0));
-                paletteViewModel.updateEditableByDocId(docId);
+                if (from == null) {
+                    paletteViewModel.extractNewFromPhoneUri(photoUri);
+                } else if (from.equals(UnsplashFragment.UNSPLASH_FRAGMENT)) {
+                    paletteViewModel.extractNewFromExternalUri(photoUri);
+                } else if (from.equals(PaletteDetailActivity.PALETTE_DETAIL_ACTIVITY)) {
+                    String docId = intent.getStringExtra(PaletteDetailActivity.ID_KEY);
+                    paletteViewModel.setTitle(intent.getStringExtra(PaletteDetailActivity.TITLE_KEY));
+                    paletteViewModel.setDocId(docId);
+                    paletteViewModel.setSelectedImageUri(Uri.parse(intent.getStringExtra(PHOTO_URI)));
+                    paletteViewModel.setOriginalSwatchesList(intent.getIntegerArrayListExtra(PaletteDetailActivity.SWATCHES_KEY));
+                    paletteViewModel.setPrivacy(intent.getIntExtra(PaletteDetailActivity.PRIVACY_KEY, 0));
+                    paletteViewModel.updateEditableByDocId(docId);
+                }
             }
         }
 
@@ -143,6 +146,7 @@ public class InspectActivity extends AppCompatActivity implements BottomNavigati
     }
 
     private void addSwatches(List<Palette.Swatch> swatches) {
+        Log.d("inspect","add swatches");
         if (!swatches.isEmpty()) {
             SwatchListAdapter swatchesViewAdapter = new SwatchListAdapter(swatches, v -> openSwatchDetails());
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
