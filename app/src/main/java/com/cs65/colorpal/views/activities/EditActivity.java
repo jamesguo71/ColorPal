@@ -28,6 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class EditActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
@@ -130,7 +131,7 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         builder.setPositiveButton("YES", (dialog, which) -> {
             swatchGridAdapter.remove(editViewModel.getSelectedColor().getValue());
             swatchGridAdapter.notifyItemRemoved(editViewModel.getSelectedColor().getValue());
-            editViewModel.setSelectedColor(editViewModel.getSelectedColor().getValue()-1);
+            editViewModel.setSelectedColor(max(0,editViewModel.getSelectedColor().getValue()-1));
             onSelectedColorChanged();
             dialog.dismiss();
         });
