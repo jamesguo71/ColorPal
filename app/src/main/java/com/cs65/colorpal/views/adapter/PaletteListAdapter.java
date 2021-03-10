@@ -2,6 +2,7 @@ package com.cs65.colorpal.views.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,13 +128,13 @@ public class PaletteListAdapter extends RecyclerView.Adapter<PaletteListAdapter.
             Intent intent = new Intent(context, PaletteDetailActivity.class);
 
             // We can also pass "id" (DocId of ColorPalette?) to DetailActivity and retrieve the info via repo
-            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getDownloadUrl());
-            intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
-            intent.putParcelableArrayListExtra(PaletteDetailActivity.TAGS_KEY, (ArrayList<PaletteTag>) palette.getTags());
-            intent.putExtra(PaletteDetailActivity.TITLE_KEY, palette.getTitle());
-            intent.putExtra(PaletteDetailActivity.USERNAME_KEY, palette.getUsername());
+//            intent.putExtra(PaletteDetailActivity.IMAGE_URL_KEY, palette.getDownloadUrl());
+//            intent.putExtra(PaletteDetailActivity.SWATCHES_KEY, palette.getSwatches());
+//            intent.putParcelableArrayListExtra(PaletteDetailActivity.TAGS_KEY, (ArrayList<PaletteTag>) palette.getTags());
+//            intent.putExtra(PaletteDetailActivity.TITLE_KEY, palette.getTitle());
+//            intent.putExtra(PaletteDetailActivity.USERNAME_KEY, palette.getUsername());
             intent.putExtra(PaletteDetailActivity.ID_KEY, palette.getDocId());
-            intent.putExtra(PaletteDetailActivity.PRIVACY_KEY, palette.getPrivacy());
+//            intent.putExtra(PaletteDetailActivity.PRIVACY_KEY, palette.getPrivacy());
             if(fragmentName.equals(HomeFragment.HOME_FRAGMENT_TAG))
                 intent.putExtra(PaletteDetailActivity.SHOW_EDIT_BUTTON_TAG, false);
 

@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 getAuthCredentials(account);
             } catch (ApiException e) {
-                Log.w(TAG, "Google sign in failed", e);
+                Log.w(TAG,  e.toString());
             }
         }
     }

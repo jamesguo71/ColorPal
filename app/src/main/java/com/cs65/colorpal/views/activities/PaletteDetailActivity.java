@@ -4,17 +4,24 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
+import com.cs65.colorpal.models.ColorPalette;
 import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.SwatchListAdapter;
 import com.cs65.colorpal.views.adapter.TagsGridAdapter;
 import com.google.android.flexbox.FlexDirection;
@@ -22,6 +29,7 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,16 +59,15 @@ public class PaletteDetailActivity extends AppCompatActivity {
     private SwatchListAdapter adapter;
     private CircularProgressIndicator circularProgressIndicator;
     private  ImageView privacyImageView;
+    private PaletteViewModel paletteViewModel;
+    private ColorPalette colorPalette;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_palette_detail);
 
-        Intent intent = getIntent();
-        Uri paletteUri = Uri.parse(intent.getStringExtra(IMAGE_URL_KEY));
         imageView = findViewById(R.id.palette_detail_image);
-        Picasso.with(this).load(paletteUri).into(imageView);
         paletteColors = findViewById(R.id.palette_colors);
         tagsView = findViewById(R.id.palette_detail_tags_view);
 
@@ -70,34 +77,57 @@ public class PaletteDetailActivity extends AppCompatActivity {
         cardPaletteName = findViewById(R.id.card_name);
         cardPaletteCreatorName = findViewById(R.id.card_creators_name);
 
-        paletteDetailTitle.setText(intent.getStringExtra(TITLE_KEY));
-        cardPaletteName.setText(intent.getStringExtra(TITLE_KEY));
-        cardPaletteCreatorName.setText(intent.getStringExtra(USERNAME_KEY));
-
-        ArrayList<Integer> swatchValues = intent.getIntegerArrayListExtra(SWATCHES_KEY);
-        List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);
-        adapter = new SwatchListAdapter(swatches, v -> {
-            Intent i = new Intent(this, SwatchesDetailActivity.class);
-            i.putIntegerArrayListExtra(SwatchesDetailActivity.SWATCH_VALUES, swatchValues);
-            startActivity(i);
-        });
-        paletteColors.setAdapter(adapter);
-        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
-        layoutManager.setFlexDirection(FlexDirection.ROW);
-        paletteColors.setLayoutManager(layoutManager);
-
-        List<PaletteTag> tags = intent.getParcelableArrayListExtra(TAGS_KEY);
-        tagsView = findViewById(R.id.palette_detail_tags_view);
-        tagsGridAdapter = new TagsGridAdapter(tags, this, false);
-        FlexboxLayoutManager flexLayoutManager = new FlexboxLayoutManager(this);
-        flexLayoutManager.setFlexDirection(FlexDirection.ROW);
-        flexLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
-        tagsView.setLayoutManager(flexLayoutManager);
-        tagsView.setAdapter(tagsGridAdapter);
-
-        privacyImageView = (ImageView) findViewById(R.id.palette_detail_privacy);
-        setPrivacy(intent.getIntExtra(PRIVACY_KEY,0));
         setUpEditButton();
+        setupViewModel();
+    }
+
+    public void setupViewModel(){
+        paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
+        paletteViewModel.getPaletteById(getIntent().getStringExtra(ID_KEY));
+        paletteViewModel.fetchedPalette.observe(this, Observer -> {
+
+            LinearProgressIndicator linearProgressIndicator = findViewById(R.id.progress_bar);
+            ScrollView scrollView = findViewById(R.id.palette_detail_scrollView);
+
+            linearProgressIndicator.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+
+            colorPalette = Observer;
+
+            paletteDetailTitle.setText(Observer.getTitle());
+            cardPaletteName.setText(Observer.getTitle());
+            cardPaletteCreatorName.setText(Observer.getUsername());
+
+            ArrayList<Integer> swatchValues = Observer.getSwatches();
+            List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);
+            adapter = new SwatchListAdapter(swatches, v -> {
+                Intent i = new Intent(this, SwatchesDetailActivity.class);
+                i.putIntegerArrayListExtra(SwatchesDetailActivity.SWATCH_VALUES, swatchValues);
+                startActivity(i);
+            });
+            paletteColors.setAdapter(adapter);
+            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+            layoutManager.setFlexDirection(FlexDirection.ROW);
+            paletteColors.setLayoutManager(layoutManager);
+
+            List<PaletteTag> tags = Observer.getTags();
+            tagsView = findViewById(R.id.palette_detail_tags_view);
+            tagsGridAdapter = new TagsGridAdapter(tags, this, false);
+            FlexboxLayoutManager flexLayoutManager = new FlexboxLayoutManager(this);
+            flexLayoutManager.setFlexDirection(FlexDirection.ROW);
+            flexLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
+            tagsView.setLayoutManager(flexLayoutManager);
+            tagsView.setAdapter(tagsGridAdapter);
+
+            Uri paletteUri = Uri.parse(Observer.getDownloadUrl());
+
+            Picasso.with(this).load(paletteUri).into(imageView);
+
+            privacyImageView = (ImageView) findViewById(R.id.palette_detail_privacy);
+            setPrivacy(Observer.getPrivacy());
+
+
+        });
     }
 
     public void setUpEditButton(){
@@ -111,14 +141,16 @@ public class PaletteDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),InspectActivity.class);
-                intent.putExtra("from",PALETTE_DETAIL_ACTIVITY);
-                intent.putExtra(InspectActivity.PHOTO_URI, getIntent().getStringExtra(IMAGE_URL_KEY));
-                intent.putExtra(TITLE_KEY, getIntent().getStringExtra(TITLE_KEY));
-                intent.putIntegerArrayListExtra(SWATCHES_KEY, getIntent().getIntegerArrayListExtra(SWATCHES_KEY));
-                intent.putParcelableArrayListExtra(TAGS_KEY, getIntent().getParcelableArrayListExtra(TAGS_KEY));
-                intent.putExtra(ID_KEY, getIntent().getStringExtra(ID_KEY));
-                intent.putExtra(PRIVACY_KEY, getIntent().getIntExtra(PRIVACY_KEY,0));
-                startActivityForResult(intent, INSPECT_ACTIVITY_CODE);
+                if(colorPalette != null){
+                    intent.putExtra("from",PALETTE_DETAIL_ACTIVITY);
+                    intent.putExtra(InspectActivity.PHOTO_URI, colorPalette.getDownloadUrl());
+                    intent.putExtra(TITLE_KEY, colorPalette.getTitle());
+                    intent.putIntegerArrayListExtra(SWATCHES_KEY, colorPalette.getSwatches());
+                    intent.putParcelableArrayListExtra(TAGS_KEY, (ArrayList<? extends Parcelable>) colorPalette.getTags());
+                    intent.putExtra(ID_KEY, colorPalette.getDocId());
+                    intent.putExtra(PRIVACY_KEY, colorPalette.getPrivacy());
+                    startActivityForResult(intent, INSPECT_ACTIVITY_CODE);
+                }
 //                startActivity(intent);
             }
         });

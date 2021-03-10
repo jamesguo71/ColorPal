@@ -1,16 +1,21 @@
 package com.cs65.colorpal.views.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -48,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public static final String CAMERA_IMAGE_SUFFIX = ".jpg";
     public static final String PHOTO_URI = "photoUri";
     public static final String HOME_FRAGMENT_TAG = "HomeFragment";
+    public static final String LIBRARY_FRAGMENT_TAG = "LibraryFragment";
     private MutableLiveData<Uri> currentPhotoPath;
     private FirebaseAuth mAuth;
     private Uri photoURI;
@@ -58,23 +64,41 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private FragmentContainerView fragmentContainerView;
     private LinearLayout progressBarContainer;
     private TextView progressBarMessageTextView;
+    public static final String PREFERENCE_NAME = "colorpalPreferences";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (getIntent().getStringExtra(WHICH_FRAGMENT_TAG) != null){
-            openFragment(new LibraryFragment());
-        }
-        else if(savedInstanceState == null){
-            openFragment(new HomeFragment());
-        }
-        setBottomNavigationView();
-        setUpTopNavigationView();
         try {
             initializeVariables();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+
+        setCorrectFragment(savedInstanceState);
+        setBottomNavigationView();
+        setUpTopNavigationView();
+    }
+
+    public void setCorrectFragment(Bundle bundle ){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCE_NAME,0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String fragmentName = sharedPreferences.getString(WHICH_FRAGMENT_TAG, HOME_FRAGMENT_TAG);
+
+        Log.d("papelog", fragmentName);
+
+        if(fragmentName.equals(LIBRARY_FRAGMENT_TAG)) {
+            openFragment(new LibraryFragment());
+            editor.remove(WHICH_FRAGMENT_TAG);
+            editor.commit();
+        } else if(bundle == null){
+            openFragment(new HomeFragment());
+        }
+    }
+
+    public void setActivityTitle(String title){
+        toolbarTitleView.setText(title);
     }
 
     private File createImageFile() throws IOException {
@@ -180,18 +204,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.home_button:
-                toolbarTitleView.setText("Explore");
                 HomeFragment homeFragment = new HomeFragment();
                 openFragment(homeFragment);
                 return true;
             case R.id.my_palettes_button:
-                toolbarTitleView.setText("My Palettes");
                 LibraryFragment libraryFragment = new LibraryFragment();
                 openFragment(libraryFragment);
                 doneLoadingHanddler();
                 return true;
             case R.id.unsplash_button:
-                toolbarTitleView.setText("Images");
                 openFragment(unsplashFragment);
                 doneLoadingHanddler();
                 return true;

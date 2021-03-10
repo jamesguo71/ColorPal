@@ -40,6 +40,7 @@ public class UnsplashFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_unsplash, container, false);
         unsplashImages = new ArrayList<>();
         mainActivity = (MainActivity) getActivity();
+        mainActivity.setActivityTitle("Images");
         try {
             setupSearchView(savedInstanceState);
         } catch (JSONException e) {
@@ -56,7 +57,7 @@ public class UnsplashFragment extends Fragment {
         if (args != null) {
             String requestedQuery = getArguments().getString(TAG_KEY);
             searchTag(requestedQuery);
-        } else {
+        } else if (unsplashViewModel.query.getValue() == null){
             if (savedInstanceState == null) unsplashViewModel.runQuery("color palettes");
         }
 
@@ -73,6 +74,7 @@ public class UnsplashFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             public boolean onQueryTextSubmit(String query) {
                 try {
+                    unsplashViewModel.query.setValue(query);
                     unsplashViewModel.runQuery(query);
                     mainActivity.isLoadingHandler("Searching images for " + query + "...");
                 } catch (JSONException e) {

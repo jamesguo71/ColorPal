@@ -15,18 +15,6 @@
         android:orientation="vertical"
         tools:context=".views.fragments.HomeFragment">
 
-<!--        <SearchView-->
-<!--            android:tooltipText="Search for an image."-->
-<!--            android:id="@+id/unsplash_searchview"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="20dp"-->
-<!--            android:focusable="auto"-->
-<!--            android:focusableInTouchMode="false"-->
-<!--            android:focusedByDefault="false"-->
-<!--            android:forceHasOverlappingRendering="false"-->
-<!--            app:queryBackground="@color/pink"-->
-<!--            android:queryHint="Looking for an image?" />-->
 
         <SearchView
             android:layout_margin="20dp"

@@ -48,6 +48,7 @@ public class PaletteViewModel extends AndroidViewModel{
     private MutableLiveData<String> title = new MutableLiveData<>();
     private MutableLiveData<String> mDocId = new MutableLiveData<>();
     private MutableLiveData<Integer> mPrivacy = new MutableLiveData<>();
+    public LiveData<ColorPalette> fetchedPalette;
 
     public PaletteViewModel(Application application) throws InterruptedException {
         super(application);
@@ -109,7 +110,6 @@ public class PaletteViewModel extends AndroidViewModel{
     public void fetchUserLibraryColorPalettes() throws InterruptedException {
         mUserLibraryColorPaletteList = paletteRepo.fetchUserLibraryColorPalettes();
     }
-
     public void searchByTag(String tag){
         mHomeColorPaletteList = paletteRepo.searchByTag(tag);
     }
@@ -206,6 +206,10 @@ public class PaletteViewModel extends AndroidViewModel{
             paletteRepo.updatePalette(newColorPalette,mDocId.getValue());
         }
 
+    }
+
+    public void getPaletteById(String paletteId){
+        fetchedPalette = paletteRepo.getPaletteById(paletteId);
     }
 
     public void selectColor(int pixel) {
