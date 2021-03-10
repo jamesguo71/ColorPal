@@ -17,11 +17,13 @@ import java.util.ArrayList;
 public class UnsplashViewModel extends AndroidViewModel {
     private static UnsplashRepo unsplashRepo;
     private static MutableLiveData<ArrayList<UnsplashImage>> unsplashImages;
+    public static MutableLiveData<String> query;
 
     public UnsplashViewModel(Application application) throws JSONException {
         super(application);
         unsplashRepo = new UnsplashRepo(application);
         unsplashImages = new MutableLiveData<>();
+        query = new MutableLiveData<>();
     }
 
     public void  runQuery (String query) throws JSONException {
