@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment{
     }
 
     private void updateHomePalettes(){
+        Log.d("papelog", String.valueOf(paletteViewModel.mHomeColorPaletteList.getValue().size()));
         adapter.setPalettes(paletteViewModel.mHomeColorPaletteList.getValue());
     }
 

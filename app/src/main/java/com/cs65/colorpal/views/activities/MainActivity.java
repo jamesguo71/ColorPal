@@ -1,21 +1,17 @@
 package com.cs65.colorpal.views.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -69,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setBottomNavigationView();
+        setUpTopNavigationView();
         try {
             initializeVariables();
         } catch (JSONException e) {
@@ -77,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         setCorrectFragment(savedInstanceState);
-        setBottomNavigationView();
-        setUpTopNavigationView();
     }
 
     public void setCorrectFragment(Bundle bundle ){
@@ -86,15 +82,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String fragmentName = sharedPreferences.getString(WHICH_FRAGMENT_TAG, HOME_FRAGMENT_TAG);
 
-        Log.d("papelog", fragmentName);
 
         if(fragmentName.equals(LIBRARY_FRAGMENT_TAG)) {
             openFragment(new LibraryFragment());
             editor.remove(WHICH_FRAGMENT_TAG);
+            setBottomNavigationCurrentView(R.id.my_palettes_button);
             editor.commit();
         } else if(bundle == null){
             openFragment(new HomeFragment());
         }
+    }
+
+    public void setBottomNavigationCurrentView(int id){
+        bottomNavigationView.setSelectedItemId(id);
     }
 
     public void setActivityTitle(String title){
