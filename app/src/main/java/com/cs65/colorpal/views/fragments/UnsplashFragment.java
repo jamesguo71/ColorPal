@@ -68,7 +68,7 @@ public class UnsplashFragment extends Fragment {
         });
 
         searchView = view.findViewById(R.id.unsplash_searchview);
-//        searchView.onActionViewExpanded();
+        searchView.onActionViewExpanded();
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
