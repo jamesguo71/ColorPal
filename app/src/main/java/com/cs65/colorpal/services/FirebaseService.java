@@ -91,7 +91,7 @@ public class FirebaseService {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 Bitmap bitmap = colorPalette.getBitmap();
                 Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 2, bitmap.getHeight() / 2, true)
-                        .compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        .compress(Bitmap.CompressFormat.JPEG, 50, baos);
                 byte[] data = baos.toByteArray();
 
                 // Asynchronously uploads byte data to this StorageReference

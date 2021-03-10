@@ -4,17 +4,20 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs65.colorpal.R;
 import com.cs65.colorpal.models.PaletteTag;
 import com.cs65.colorpal.utils.Utils;
+import com.cs65.colorpal.viewmodels.PaletteViewModel;
 import com.cs65.colorpal.views.adapter.SwatchListAdapter;
 import com.cs65.colorpal.views.adapter.TagsGridAdapter;
 import com.google.android.flexbox.FlexDirection;
@@ -51,6 +54,7 @@ public class PaletteDetailActivity extends AppCompatActivity {
     private SwatchListAdapter adapter;
     private CircularProgressIndicator circularProgressIndicator;
     private  ImageView privacyImageView;
+    private PaletteViewModel paletteViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,34 +74,44 @@ public class PaletteDetailActivity extends AppCompatActivity {
         cardPaletteName = findViewById(R.id.card_name);
         cardPaletteCreatorName = findViewById(R.id.card_creators_name);
 
-        paletteDetailTitle.setText(intent.getStringExtra(TITLE_KEY));
-        cardPaletteName.setText(intent.getStringExtra(TITLE_KEY));
-        cardPaletteCreatorName.setText(intent.getStringExtra(USERNAME_KEY));
-
-        ArrayList<Integer> swatchValues = intent.getIntegerArrayListExtra(SWATCHES_KEY);
-        List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);
-        adapter = new SwatchListAdapter(swatches, v -> {
-            Intent i = new Intent(this, SwatchesDetailActivity.class);
-            i.putIntegerArrayListExtra(SwatchesDetailActivity.SWATCH_VALUES, swatchValues);
-            startActivity(i);
-        });
-        paletteColors.setAdapter(adapter);
-        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
-        layoutManager.setFlexDirection(FlexDirection.ROW);
-        paletteColors.setLayoutManager(layoutManager);
-
-        List<PaletteTag> tags = intent.getParcelableArrayListExtra(TAGS_KEY);
-        tagsView = findViewById(R.id.palette_detail_tags_view);
-        tagsGridAdapter = new TagsGridAdapter(tags, this, false);
-        FlexboxLayoutManager flexLayoutManager = new FlexboxLayoutManager(this);
-        flexLayoutManager.setFlexDirection(FlexDirection.ROW);
-        flexLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
-        tagsView.setLayoutManager(flexLayoutManager);
-        tagsView.setAdapter(tagsGridAdapter);
-
-        privacyImageView = (ImageView) findViewById(R.id.palette_detail_privacy);
-        setPrivacy(intent.getIntExtra(PRIVACY_KEY,0));
         setUpEditButton();
+        setupViewModel();
+    }
+
+    public void setupViewModel(){
+        paletteViewModel = ViewModelProviders.of(this).get(PaletteViewModel.class);
+        paletteViewModel.getPaletteById(getIntent().getStringExtra(ID_KEY));
+        paletteViewModel.fetchedPalette.observe(this, Observer -> {
+            paletteDetailTitle.setText(Observer.getTitle());
+            cardPaletteName.setText(Observer.getTitle());
+            cardPaletteCreatorName.setText(Observer.getUsername());
+
+            ArrayList<Integer> swatchValues = Observer.getSwatches();
+            List<Palette.Swatch> swatches = Utils.toSwatches(swatchValues);
+            adapter = new SwatchListAdapter(swatches, v -> {
+                Intent i = new Intent(this, SwatchesDetailActivity.class);
+                i.putIntegerArrayListExtra(SwatchesDetailActivity.SWATCH_VALUES, swatchValues);
+                startActivity(i);
+            });
+            paletteColors.setAdapter(adapter);
+            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+            layoutManager.setFlexDirection(FlexDirection.ROW);
+            paletteColors.setLayoutManager(layoutManager);
+
+            List<PaletteTag> tags = Observer.getTags();
+            tagsView = findViewById(R.id.palette_detail_tags_view);
+            tagsGridAdapter = new TagsGridAdapter(tags, this, false);
+            FlexboxLayoutManager flexLayoutManager = new FlexboxLayoutManager(this);
+            flexLayoutManager.setFlexDirection(FlexDirection.ROW);
+            flexLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
+            tagsView.setLayoutManager(flexLayoutManager);
+            tagsView.setAdapter(tagsGridAdapter);
+
+            privacyImageView = (ImageView) findViewById(R.id.palette_detail_privacy);
+            setPrivacy(Observer.getPrivacy());
+
+
+        });
     }
 
     public void setUpEditButton(){

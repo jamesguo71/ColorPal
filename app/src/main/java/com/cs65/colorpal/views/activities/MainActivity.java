@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -62,19 +65,25 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (getIntent().getStringExtra(WHICH_FRAGMENT_TAG) != null){
-            openFragment(new LibraryFragment());
-        }
-        else if(savedInstanceState == null){
-            openFragment(new HomeFragment());
-        }
-        setBottomNavigationView();
-        setUpTopNavigationView();
         try {
             initializeVariables();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        if (getIntent().getStringExtra(WHICH_FRAGMENT_TAG) != null){
+            openFragment(new LibraryFragment());
+        }
+        if(savedInstanceState == null){
+            openFragment(new HomeFragment());
+        }
+        setBottomNavigationView();
+        setUpTopNavigationView();
+    }
+
+
+    public void setActivityTitle(String title){
+        toolbarTitleView.setText(title);
     }
 
     private File createImageFile() throws IOException {
@@ -180,18 +189,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.home_button:
-                toolbarTitleView.setText("Explore");
                 HomeFragment homeFragment = new HomeFragment();
                 openFragment(homeFragment);
                 return true;
             case R.id.my_palettes_button:
-                toolbarTitleView.setText("My Palettes");
                 LibraryFragment libraryFragment = new LibraryFragment();
                 openFragment(libraryFragment);
                 doneLoadingHanddler();
                 return true;
             case R.id.unsplash_button:
-                toolbarTitleView.setText("Images");
                 openFragment(unsplashFragment);
                 doneLoadingHanddler();
                 return true;

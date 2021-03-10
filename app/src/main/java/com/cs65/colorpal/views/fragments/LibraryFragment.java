@@ -104,6 +104,8 @@ public class LibraryFragment extends Fragment{
     }
 
     public void initializeVariables() throws InterruptedException {
+
+
         paletteViewModel = ViewModelProviders.of(requireActivity()).get(PaletteViewModel.class);
         paletteViewModel.fetchUserLibraryColorPalettes();
         paletteViewModel.mUserLibraryColorPaletteList.observe(getViewLifecycleOwner(), Observer -> {
@@ -111,6 +113,11 @@ public class LibraryFragment extends Fragment{
             updateLibraryPalettes();
             mainActivity.doneLoadingHanddler();
         });
+
+        mainActivity = ((MainActivity) getActivity());
+        mainActivity.isLoadingHandler("Loading Palettes...");
+        mainActivity.setActivityTitle("Library");
+
 
         emptyTextView = (ConstraintLayout) view.findViewById(R.id.empty_text_view);
 
@@ -121,9 +128,6 @@ public class LibraryFragment extends Fragment{
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(deleteItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(palettesRecyclerView);
-
-        mainActivity = ((MainActivity) getActivity());
-        mainActivity.isLoadingHandler("Loading Palettes...");
 
         imageView = (ImageView) mainActivity.findViewById(R.id.image);
 

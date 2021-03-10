@@ -52,6 +52,7 @@ public class PaletteRepo  {
     private static final String LOG_TAG =  "PaletteRepo";
     private static MutableLiveData<ArrayList<ColorPalette>> mHomeColorPaletteList;
     private static MutableLiveData<ArrayList<ColorPalette>> mUserLibraryColorPaletteList;
+    private static MutableLiveData<ColorPalette> fetchedPalette;
     private FirebaseUser currentUser;
 
     public PaletteRepo(Application application){
@@ -59,6 +60,7 @@ public class PaletteRepo  {
         firebaseService = new FirebaseService();
         mHomeColorPaletteList = new MutableLiveData<>();
         mUserLibraryColorPaletteList = new MutableLiveData<>();
+        fetchedPalette = new MutableLiveData<>();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
@@ -215,7 +217,6 @@ public class PaletteRepo  {
                                     for (QueryDocumentSnapshot doc : task.getResult()) {
                                         snapshots.add(doc);
                                     }
-                                    Log.d("papelog", String.valueOf(task.getResult().size()));
                                     mHomeColorPaletteList.postValue(convertFromSnapshotsToColourPalettes(snapshots));
                                 } else {
                                     Log.d(LOG_TAG, "Error getting documents: ", task.getException());
@@ -280,5 +281,33 @@ public class PaletteRepo  {
                 }
             }
         });
+    }
+
+    public MutableLiveData getPaletteById(String paletteId){
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                    firebaseService.fetchPalettesReference()
+                            .document(paletteId)
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                fetchedPalette.postValue(document.toObject(ColorPalette.class));
+
+                            } else {
+                                Log.d(LOG_TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(LOG_TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+            }
+        }.start();
+        return fetchedPalette;
     }
 }

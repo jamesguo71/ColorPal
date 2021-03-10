@@ -40,6 +40,7 @@ public class UnsplashFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_unsplash, container, false);
         unsplashImages = new ArrayList<>();
         mainActivity = (MainActivity) getActivity();
+        mainActivity.setActivityTitle("Images");
         try {
             setupSearchView(savedInstanceState);
         } catch (JSONException e) {
