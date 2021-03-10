@@ -85,7 +85,7 @@ public class EditActivity extends AppCompatActivity implements BottomNavigationV
         //set swatch adapter
         swatchesView = findViewById(R.id.swatches_grid);
         swatchGridAdapter = new SwatchGridAdapter(editViewModel.getSwatches().getValue(),editViewModel,true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, min(editViewModel.getSwatches().getValue().size(),8));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 8);
         swatchesView.setLayoutManager(gridLayoutManager);
         swatchesView.setAdapter(swatchGridAdapter);
 
